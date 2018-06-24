@@ -32,7 +32,7 @@ const asideMenuConfig = [
     path: '/table',
     icon: 'table',
     isAuth:function(){
-      return false
+      return true
     },
     children: [
       {

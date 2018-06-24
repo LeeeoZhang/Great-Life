@@ -1,28 +1,43 @@
-import React, { PureComponent } from 'react';
-import { Balloon, Icon } from '@icedesign/base';
+import React, {PureComponent} from 'react';
+import {Balloon, Icon, Select} from '@icedesign/base';
 import IceImg from '@icedesign/img';
 import Layout from '@icedesign/layout';
 import Menu from '@icedesign/menu';
 import FoundationSymbol from 'foundation-symbol';
 import cx from 'classnames';
-import { Link } from 'react-router-dom';
-import { headerMenuConfig } from './../menuConfig';
+import {Link} from 'react-router-dom';
+import {headerMenuConfig} from './../menuConfig';
 import Logo from './Logo';
 
+//账号选择列表数据源
+const accountSelectData = [
+  {label: 'A账号', value: 'A'},
+  {label: 'B账号', value: 'B'},
+]
+//账号选择列表样式
+const accountSelectStyle = {
+  width:150,
+}
+
 export default class Header extends PureComponent {
+
+  onAccountSelect = (value, option) => {
+    console.log(value)
+  }
+
   render() {
-    const { width, theme, isMobile, className, style } = this.props;
+    const {width, theme, isMobile, className, style} = this.props;
 
     return (
       <Layout.Header
         theme={theme}
         className={cx('ice-design-layout-header', className)}
-        style={{ ...style, width }}
+        style={{...style, width}}
       >
-        <Logo />
+        <Logo/>
         <div
           className="ice-design-layout-header-menu"
-          style={{ display: 'flex' }}
+          style={{display: 'flex'}}
         >
           {/* Header 菜单项 begin */}
           {headerMenuConfig && headerMenuConfig.length > 0 ? (
@@ -42,14 +57,14 @@ export default class Header extends PureComponent {
                     {linkProps.to ? (
                       <Link {...linkProps}>
                         {nav.icon ? (
-                          <FoundationSymbol type={nav.icon} size="small" />
+                          <FoundationSymbol type={nav.icon} size="small"/>
                         ) : null}
                         {!isMobile ? nav.name : null}
                       </Link>
                     ) : (
                       <a {...linkProps}>
                         {nav.icon ? (
-                          <FoundationSymbol type={nav.icon} size="small" />
+                          <FoundationSymbol type={nav.icon} size="small"/>
                         ) : null}
                         {!isMobile ? nav.name : null}
                       </a>
@@ -62,7 +77,7 @@ export default class Header extends PureComponent {
           {/* Header 菜单项 end */}
 
           {/* Header 右侧内容块 */}
-
+          <Select onChange={this.onAccountSelect} dataSource={accountSelectData} style={accountSelectStyle}/>
           <Balloon
             trigger={
               <div
@@ -80,13 +95,13 @@ export default class Header extends PureComponent {
                   className="user-avatar"
                 />
                 <div className="user-profile">
-                  <span className="user-name" style={{ fontSize: '13px' }}>
+                  <span className="user-name" style={{fontSize: '13px'}}>
                     淘小宝
                   </span>
-                  <br />
+                  <br/>
                   <span
                     className="user-department"
-                    style={{ fontSize: '12px', color: '#999' }}
+                    style={{fontSize: '12px', color: '#999'}}
                   >
                     技术部
                   </span>
@@ -104,17 +119,17 @@ export default class Header extends PureComponent {
             <ul>
               <li className="user-profile-menu-item">
                 <Link to="/">
-                  <FoundationSymbol type="person" size="small" />我的主页
+                  <FoundationSymbol type="person" size="small"/>我的主页
                 </Link>
               </li>
               <li className="user-profile-menu-item">
                 <Link to="/">
-                  <FoundationSymbol type="repair" size="small" />设置
+                  <FoundationSymbol type="repair" size="small"/>设置
                 </Link>
               </li>
               <li className="user-profile-menu-item">
                 <Link to="/">
-                  <FoundationSymbol type="compass" size="small" />退出
+                  <FoundationSymbol type="compass" size="small"/>退出
                 </Link>
               </li>
             </ul>
