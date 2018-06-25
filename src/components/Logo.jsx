@@ -5,7 +5,7 @@ export default class Logo extends PureComponent {
   render() {
     return (
       <div className="logo" style={{}}>
-        <Link to="/" className="logo-text">
+        <Link to="/" className="logo-text" replace>
           LOGO
         </Link>
       </div>

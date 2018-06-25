@@ -1,6 +1,7 @@
 // 菜单配置
 // headerMenuConfig：头部导航配置
 // asideMenuConfig：侧边导航配置
+import {getAuth} from "./utils"
 
 const headerMenuConfig = [];
 
@@ -10,7 +11,7 @@ const asideMenuConfig = [
     path: '/dashboard',
     icon: 'home2',
     isAuth:function(){
-      return true
+      return getAuth() && getAuth().dashboard.isAuth === 1
     },
   },
   {
@@ -18,7 +19,7 @@ const asideMenuConfig = [
     path: '/chart',
     icon: 'chart1',
     isAuth:function(){
-      return true
+      return getAuth() &&  getAuth().charts.isAuth === 1
     },
     children: [
       {

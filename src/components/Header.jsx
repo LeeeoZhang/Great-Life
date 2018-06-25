@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react';
-import {Balloon, Icon, Select} from '@icedesign/base';
+import {Balloon, Icon} from '@icedesign/base';
 import IceImg from '@icedesign/img';
 import Layout from '@icedesign/layout';
 import Menu from '@icedesign/menu';
@@ -9,21 +9,8 @@ import {Link} from 'react-router-dom';
 import {headerMenuConfig} from './../menuConfig';
 import Logo from './Logo';
 
-//账号选择列表数据源
-const accountSelectData = [
-  {label: 'A账号', value: 'A'},
-  {label: 'B账号', value: 'B'},
-]
-//账号选择列表样式
-const accountSelectStyle = {
-  width:150,
-}
 
 export default class Header extends PureComponent {
-
-  onAccountSelect = (value, option) => {
-    console.log(value)
-  }
 
   render() {
     const {width, theme, isMobile, className, style} = this.props;
@@ -77,7 +64,6 @@ export default class Header extends PureComponent {
           {/* Header 菜单项 end */}
 
           {/* Header 右侧内容块 */}
-          <Select onChange={this.onAccountSelect} dataSource={accountSelectData} style={accountSelectStyle}/>
           <Balloon
             trigger={
               <div

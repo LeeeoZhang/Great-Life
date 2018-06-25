@@ -15,7 +15,6 @@ import Empty from './pages/Empty'
 import List from './pages/List'
 import CardList from './pages/CardList'
 import HeaderAsideFooterResponsiveLayout from './layouts/HeaderAsideFooterResponsiveLayout'
-import Login from './pages/Login'
 import BlankLayout from './layouts/BlankLayout'
 import NotFound from './pages/NotFound'
 import LoadingIndicator from '@/components/LoadingIndicator'
@@ -23,7 +22,7 @@ import LoadingIndicator from '@/components/LoadingIndicator'
 //代码分割
 const BasicTable = Loadable({
   loader:()=>import('./pages/BasicTable'),
-  loading:LoadingIndicator
+  loading:LoadingIndicator,
 })
 const TableDisplay = Loadable({
   loader:()=>import('./pages/TableDisplay'),
@@ -33,7 +32,10 @@ const BlankComponent = Loadable({
   loader:()=>import('@/components/BlankComponent'),
   loading:LoadingIndicator
 })
-
+const Login = Loadable({
+  loader:()=>import('./pages/Login'),
+  loading:LoadingIndicator
+})
 
 const routerConfig = [
   {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Layout from '@icedesign/layout';
-
+import { withRouter } from 'react-router'
 import './Layout.scss';
 
 export default class BlankLayout extends Component {

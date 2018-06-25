@@ -1,3 +1,8 @@
-import Dashboard from './Dashboard';
+import Dashboard from './Dashboard'
+import {withAuth,getAuth} from '@/utils'
 
-export default Dashboard;
+function authInDashboard () {
+  return getAuth().dashboard.isAuth === 1
+}
+
+export default withAuth(authInDashboard)(Dashboard)
