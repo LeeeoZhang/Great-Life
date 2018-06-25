@@ -7,7 +7,7 @@ const headerMenuConfig = [];
 const asideMenuConfig = [
   {
     name: 'Dashboard',
-    path: '/',
+    path: '/dashboard',
     icon: 'home2',
     isAuth:function(){
       return true

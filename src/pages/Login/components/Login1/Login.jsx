@@ -9,6 +9,7 @@ import {
 import IceIcon from '@icedesign/icon';
 import './Login.scss';
 import { login } from '@/service'
+import DOMAIN from '@/domain'
 
 const styles = {
   container: {
@@ -118,6 +119,8 @@ export default class Login extends Component {
         account: '',
         password: '',
       },
+      codeUrl:'',
+      picurl:`${DOMAIN}/admin/user/entry?t=1525365852204`,
     };
   }
 
