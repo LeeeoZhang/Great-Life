@@ -1,52 +1,89 @@
 // 以下文件格式为描述路由的协议格式
 // 你可以调整 routerConfig 里的内容
 // 变量名 routerConfig 为 iceworks 检测关键字，请不要修改名称
-import Loadable from 'react-loadable'
-import HeaderAsideFooterLayout from './layouts/HeaderAsideFooterLayout'
-import Dashboard from './pages/Dashboard'
-import Charts from './pages/Charts'
-import Portlets from './pages/Portlets'
-import Terms from './pages/Terms'
-import Result from './pages/Result'
-import Fail from './pages/Fail'
-import ServerError from './pages/ServerError'
-import Forbidden from './pages/Forbidden'
-import Empty from './pages/Empty'
-import List from './pages/List'
-import CardList from './pages/CardList'
-import HeaderAsideFooterResponsiveLayout from './layouts/HeaderAsideFooterResponsiveLayout'
-import BlankLayout from './layouts/BlankLayout'
-import NotFound from './pages/NotFound'
-import LoadingIndicator from '@/components/LoadingIndicator'
+import Loadable from 'react-loadable';
+import HeaderAsideFooterLayout from './layouts/HeaderAsideFooterLayout';
+import Dashboard from './pages/Account';
+import Charts from './pages/Charts';
+import Portlets from './pages/Portlets';
+import Terms from './pages/Terms';
+import Result from './pages/Result';
+import Fail from './pages/Fail';
+import ServerError from './pages/ServerError';
+import Forbidden from './pages/Forbidden';
+import Empty from './pages/Empty';
+import List from './pages/List';
+import CardList from './pages/CardList';
+import HeaderAsideFooterResponsiveLayout from './layouts/HeaderAsideFooterResponsiveLayout';
+import BlankLayout from './layouts/BlankLayout';
+import NotFound from './pages/NotFound';
+
+import Test from './pages/Test';
+
+import Form from './pages/Form';
+import LoadingIndicator from '@/components/LoadingIndicator';
 
 //代码分割
+const Account = Loadable({
+  loader: () => import('./pages/Account'),
+  loading: LoadingIndicator,
+});
 const BasicTable = Loadable({
-  loader:()=>import('./pages/BasicTable'),
-  loading:LoadingIndicator,
-})
+  loader: () => import('./pages/BasicTable'),
+  loading: LoadingIndicator,
+});
 const TableDisplay = Loadable({
-  loader:()=>import('./pages/TableDisplay'),
-  loading:LoadingIndicator
-})
+  loader: () => import('./pages/TableDisplay'),
+  loading: LoadingIndicator,
+});
 const BlankComponent = Loadable({
-  loader:()=>import('@/components/BlankComponent'),
-  loading:LoadingIndicator
-})
+  loader: () => import('@/components/BlankComponent'),
+  loading: LoadingIndicator,
+});
 const Login = Loadable({
-  loader:()=>import('./pages/Login'),
-  loading:LoadingIndicator
-})
+  loader: () => import('./pages/Login'),
+  loading: LoadingIndicator,
+});
 
 const routerConfig = [
   {
-    path: '/',
+    path: '/account',
     layout: HeaderAsideFooterLayout,
-    component: BlankComponent,
+    component: Account,
   },
   {
-    path: '/dashboard',
+    path: '/result',
     layout: HeaderAsideFooterLayout,
-    component: Dashboard,
+    component: Result,
+    children: [
+      {
+        path: 'success',
+        layout: HeaderAsideFooterLayout,
+        component: Result,
+      },
+      {
+        path: 'fail',
+        layout: HeaderAsideFooterLayout,
+        component: Fail,
+      },
+    ],
+  },
+  {
+    path: '/portlets',
+    layout: HeaderAsideFooterLayout,
+    component: Portlets,
+    children: [
+      {
+        path: 'base',
+        layout: HeaderAsideFooterLayout,
+        component: Portlets,
+      },
+      {
+        path: 'terms',
+        layout: HeaderAsideFooterLayout,
+        component: Terms,
+      },
+    ],
   },
   {
     path: '/table',
@@ -110,38 +147,9 @@ const routerConfig = [
     ],
   },
   {
-    path: '/result',
+    path: '/',
     layout: HeaderAsideFooterLayout,
-    component: Result,
-    children: [
-      {
-        path: 'success',
-        layout: HeaderAsideFooterLayout,
-        component: Result,
-      },
-      {
-        path: 'fail',
-        layout: HeaderAsideFooterLayout,
-        component: Fail,
-      },
-    ],
-  },
-  {
-    path: '/portlets',
-    layout: HeaderAsideFooterLayout,
-    component: Portlets,
-    children: [
-      {
-        path: 'base',
-        layout: HeaderAsideFooterLayout,
-        component: Portlets,
-      },
-      {
-        path: 'terms',
-        layout: HeaderAsideFooterLayout,
-        component: Terms,
-      },
-    ],
+    component: BlankComponent,
   },
   {
     path: '/chart',
@@ -161,10 +169,20 @@ const routerConfig = [
     component: Login,
   },
   {
+    path: '/test',
+    layout: HeaderAsideFooterLayout,
+    component: Test,
+  },
+  {
+    path: '/form',
+    layout: HeaderAsideFooterLayout,
+    component: Form,
+  },
+  {
     path: '*',
     layout: HeaderAsideFooterLayout,
     component: NotFound,
   },
-]
+];
 
-export default routerConfig
+export default routerConfig;

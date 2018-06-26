@@ -3,8 +3,9 @@ import { Redirect } from 'react-router-dom'
 
 //获取权限列表，权限列表存储在sessionStorage中
 export function getAuth() {
-  const authList = JSON.parse(sessionStorage.getItem('authList'))
-  return authList || false
+  return true
+  // const authList = JSON.parse(sessionStorage.getItem('authList'))
+  // return authList || false
 }
 
 //移除权限列表
@@ -36,7 +37,6 @@ export function withAuth(auth) {
     }
   }
 }
-
 
 //基于组件的权限包装
 export function withAuthOfComponent(auth) {

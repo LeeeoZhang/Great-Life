@@ -2,7 +2,7 @@ import React from 'react'
 import {withAuth,getAuth} from "../utils"
 
 function isAuthList (){
-  return !!getAuth()
+  return true
 }
 //这是一个默认的页面
 const BlankComponent = ()=>{

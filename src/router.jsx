@@ -28,7 +28,6 @@ function recursiveRouterConfigV4(config = []) {
     }
     routeMap.push(route);
   });
-  console.log(routeMap);
   return routeMap;
 }
 
