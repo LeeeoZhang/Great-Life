@@ -12,7 +12,7 @@ export default class AccountForm extends React.Component {
 
   static displayName = 'AccountForm'
 
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       formData: {
@@ -22,23 +22,18 @@ export default class AccountForm extends React.Component {
     }
   }
 
-
-  onFormChange = (value) => {
-
-  }
-
   onSubmitNewAccount = () => {
     const {addAccount} = this.props
-    this.refs.form.validateAll((error,value)=>{
+    this.refs.form.validateAll((error, value) => {
       error || addAccount(value)
     })
   }
 
-  render () {
+  render() {
     const {formData} = this.state
     const {__loading} = this.props
     return (
-      <IceFormBinderWrapper value={formData} onChange={this.onFormChange} ref="form">
+      <IceFormBinderWrapper value={formData} ref="form">
         <Fragment>
           <Row style={styles.formItem}>
             <Col xxs="6" s="3" l="3" style={styles.formLabel}>输入新账号:&nbsp;&nbsp;</Col>

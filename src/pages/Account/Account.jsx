@@ -33,6 +33,10 @@ export default class Account extends Component {
     console.log(data)
   }
 
+  onUpdate = async (data) => {
+    console.log(data)
+  }
+
   render () {
     const {accountList} = this.props.bindingData
     const {__loading,lists} = accountList
@@ -42,7 +46,7 @@ export default class Account extends Component {
           <IceTitle text="添加新账号" decoration/>
           <AccountForm __loading={__loading} addAccount={this.addAccount}/>
           <IceTitle text="账号列表" decoration/>
-          <AccountList accountList={lists} __loading={__loading}/>
+          <AccountList accountList={lists} __loading={__loading} onUpdate={this.onUpdate}/>
         </IceContainer>
       </div>
     )
