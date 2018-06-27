@@ -55,7 +55,7 @@ export default class AccountList extends React.Component {
           return (<Input value={value} onChange={value=>{this.onUserNameChange(value,index)}}/>)
         }}/>
         <Table.Column title="密码" dataIndex="password" cell={(value,index,record)=>{
-          return (<Input value={value} onChange={value=>{this.onPasswordChange(value,index)}}/>)
+          return (<Input htmlType="password" value={value} onChange={value=>{this.onPasswordChange(value,index)}}/>)
         }}/>
         <Table.Column title="状态" dataIndex="isActive" cell={(value,index,record)=>{
           return (<RadioGroup dataSource={statusList} shape="button" value={+value} onChange={value=>{this.onStatusChange(value,index)}}/>)
