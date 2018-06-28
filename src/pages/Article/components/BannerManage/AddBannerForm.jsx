@@ -25,6 +25,7 @@ export default class AddBannerForm extends React.Component {
   }
 
   field = new Field(this, {
+    deepReset: true,
     onChange: (name, value) => {
       this.field.setValue(name, value)
     }
@@ -37,12 +38,13 @@ export default class AddBannerForm extends React.Component {
   }
 
   onFileUpload = info => {
+    console.log(info)
     if(info.file.status === 'uploading') console.log('上传中')
     if(info.file.status === 'error') console.log('上传出错')
     if(info.file.status === 'done') console.log('上传成功')
-    if(info.fileList && info.fileList.length > 0 && info.file.status === 'done') {
+    if(info.fileList && info.fileList.length > 0) {
       //上传成功后从info.file里获取服务器响应的图片id
-      this.setState({fileId:info.file.response})
+      //this.setState({fileId:info.file.response})
       return info.fileList
     }
     return []
@@ -72,9 +74,6 @@ export default class AddBannerForm extends React.Component {
           <FormItem label="请选择图片：" {...formItemLayout}>
             <ImageUpload {...uploadConfig} {...init('bannerList', {
               rules: [{required: true, message: '请选择图片'}],
-              valueName: 'fileList',
-              //从事件中获得文件列表
-              getValueFromEvent:this.onFileUpload,
             })} className="uploader"/>
           </FormItem>
           <FormItem label=" "  {...formItemLayout}>
