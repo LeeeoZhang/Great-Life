@@ -50,7 +50,7 @@ export default class AccountList extends React.Component {
     const {__loading} = this.props
     const {accountList} = this.state
     return (
-      <Table dataSource={accountList} isLoading={__loading} style={styles.accountList} >
+      <Table dataSource={accountList} isLoading={__loading} style={styles.accountList}>
         <Table.Column title="账号" dataIndex="userName" cell={(value,index,record)=>{
           return (<Input value={value} onChange={value=>{this.onUserNameChange(value,index)}}/>)
         }}/>
@@ -60,7 +60,7 @@ export default class AccountList extends React.Component {
         <Table.Column title="状态" dataIndex="isActive" cell={(value,index,record)=>{
           return (<RadioGroup dataSource={statusList} shape="button" value={+value} onChange={value=>{this.onStatusChange(value,index)}}/>)
         }}/>
-        <Table.Column align="center" title="操作" dataIndex="isActive" cell={(value,index,record)=>{
+        <Table.Column align="center" title="操作"  cell={(value,index,record)=>{
           return (<Button loading={__loading} onClick={()=> this.onUpdate(index)}>更新</Button>)
         }}/>
       </Table>

@@ -1,6 +1,5 @@
 import React from 'react'
 import {Tab} from '@icedesign/base'
-import DataBinder from '@icedesign/data-binder'
 import IceContainer from '@icedesign/container'
 import BannerManage from './components/BannerManage'
 
@@ -11,15 +10,8 @@ const tabConfigs = [
   {title: '文章编辑', key: 'content', content: '文章编辑'},
 ]
 
-@DataBinder({
-  bannerList:{
-    defaultBindingData:{
-      lists:[],
-    },
-  }
-})
 export default class Article extends React.Component {
-  static displayName = 'Form'
+  static displayName = 'Article'
 
   constructor (props) {
     super(props)
@@ -27,15 +19,13 @@ export default class Article extends React.Component {
   }
 
   render () {
-    const {bannerList} = this.props.bindingData
-    const {__loading,lists} = bannerList
     return (
       <div className="article-page">
         <IceContainer>
           <Tab>
             {tabConfigs.map(config => (
               <TabPane key={config.key} tab={config.title}>
-                {typeof config.content ==='string' ? config.content : <config.content __loading={__loading}/>}
+                {typeof config.content ==='string' ? config.content : <config.content/>}
               </TabPane>
             ))}
           </Tab>

@@ -1,13 +1,17 @@
-import React , {Fragment}from 'react'
-import {Input, Grid, Button,Upload} from '@icedesign/base'
-import {
-  FormBinderWrapper as IceFormBinderWrapper,
-  FormBinder as IceFormBinder,
-  FormError as IceFormError,
-} from '@icedesign/form-binder'
+import React, {Fragment} from 'react'
+import {Input, Button, Upload, Form, Field} from '@icedesign/base'
 import './AddBannerForm.scss'
-const {Row,Col} = Grid
+
+const FormItem = Form.Item
 const {ImageUpload} = Upload
+const formItemLayout = {
+  labelCol: {
+    fixedSpan: 8
+  },
+  wrapperCol: {
+    span: 10
+  }
+}
 
 export default class AddBannerForm extends React.Component {
 
@@ -16,99 +20,69 @@ export default class AddBannerForm extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      formData:{
-        bannerName:'',
-        bannerPath:'',
-        bannerList: {
-          file:null,
-          fileList:[]
-        },
-      }
+      fileId:'',
     }
   }
 
-  componentWillReceiveProps(nextProps){
+  field = new Field(this, {
+    onChange: (name, value) => {
+      this.field.setValue(name, value)
+    }
+  })
 
-  }
-
-
-  onAddNewBanner = () =>{
-    this.refs.form.validateAll((error,values)=> {
-      error || console.log(values)
+  onAddNewBanner = () => {
+    this.field.validate((error, values) => {
+      console.log(error, values)
     })
   }
 
+  onFileUpload = info => {
+    if(info.file.status === 'uploading') console.log('上传中')
+    if(info.file.status === 'error') console.log('上传出错')
+    if(info.file.status === 'done') console.log('上传成功')
+    if(info.fileList && info.fileList.length > 0 && info.file.status === 'done') {
+      //上传成功后从info.file里获取服务器响应的图片id
+      this.setState({fileId:info.file.response})
+      return info.fileList
+    }
+    return []
+  }
 
 
   render () {
     const {__loading} = this.props
-    const {formData} = this.state
+    const init = this.field.init
+    //上传配置
     const uploadConfig = {
-      action:'',
-      limit:1,
-      accept:'image/png, image/jpg, image/jpeg',
-      listType:"picture-card",
+      action: '//ltplus.zmtlm.cn/admin/welfare/upload',
+      limit: 1,
+      accept: 'image/png, image/jpg, image/jpeg',
+      listType: "picture-card",
+      withCredentials:true,
     }
     return (
       <Fragment>
-        <IceFormBinderWrapper ref="form" value={formData}>
-          <Fragment>
-            <Row style={styles.formItem}>
-              <Col xxs="6" s="3" l="3" style={styles.formLabel}>图片标题:&nbsp;&nbsp;</Col>
-              <Col s="12" l="10">
-                <IceFormBinder name="bannerName" required message="请输入图片标题">
-                  <Input size="large" placeholder="填写图片标题" style={styles.input}/>
-                </IceFormBinder>
-                <IceFormError name="bannerName"/>
-              </Col>
-            </Row>
-            <Row style={styles.formItem}>
-              <Col xxs="6" s="3" l="3" style={styles.formLabel}>小程序路径:&nbsp;&nbsp;</Col>
-              <Col s="12" l="10">
-                <IceFormBinder name="bannerPath" >
-                  <Input size="large" placeholder="例如：pages/pageName" style={styles.input}/>
-                </IceFormBinder>
-              </Col>
-            </Row>
-            <Row style={styles.formItem}>
-              <Col xxs="6" s="3" l="3" style={styles.formLabel}>选择图片:&nbsp;&nbsp;</Col>
-              <Col s="12" l="10">
-                <IceFormBinder name="bannerList" required message="请选择图片">
-                  <ImageUpload {...uploadConfig} className="uploader"/>
-                </IceFormBinder>
-                <Row>
-                  <Col>
-                    <IceFormError name="bannerList"/>
-                  </Col>
-                </Row>
-              </Col>
-            </Row>
-            <Row style={styles.formItem}>
-              <Col offset="3">
-                <Button type="primary" size="large" loading={__loading} onClick={this.onAddNewBanner}>提交</Button>
-              </Col>
-            </Row>
-          </Fragment>
-        </IceFormBinderWrapper>
+        <Form direction="ver" field={this.field} size="large">
+          <FormItem label="图片标题：" {...formItemLayout}>
+            <Input placeholder="请输入图片标题" {...init('bannerTitle', {rules: [{required: true, message: '请输入图片标题'}]})}/>
+          </FormItem>
+          <FormItem label="小程序路径：" {...formItemLayout}>
+            <Input placeholder="例如：pages/**" {...init('bannerPath')}/>
+          </FormItem>
+          <FormItem label="请选择图片：" {...formItemLayout}>
+            <ImageUpload {...uploadConfig} {...init('bannerList', {
+              rules: [{required: true, message: '请选择图片'}],
+              valueName: 'fileList',
+              //从事件中获得文件列表
+              getValueFromEvent:this.onFileUpload,
+            })} className="uploader"/>
+          </FormItem>
+          <FormItem label=" "  {...formItemLayout}>
+            <Button type="primary" size="large" loading={__loading} onClick={this.onAddNewBanner}>提交</Button>
+          </FormItem>
+        </Form>
       </Fragment>
     )
   }
 }
 
-const styles = {
-  input: {
-    width: '100%'
-  },
-  formItem: {
-    marginBottom: '20px',
-    alignItems: 'center'
-  },
-  formLabel: {
-    height: '32px',
-    lineHeight: '32px',
-    textAlign: 'right',
-  },
-  uploader:{
-    margin:0,
-  }
-}
