@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import IceContainer from '@icedesign/container'
 import DataBinder from '@icedesign/data-binder'
 import IceTitle from '@icedesign/title'
@@ -19,7 +19,7 @@ import './Account.scss'
     }
   }
 })
-export default class Account extends Component {
+export default class Account extends React.Component {
   static displayName = 'Account'
 
   constructor (props) {

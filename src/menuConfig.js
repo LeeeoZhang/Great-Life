@@ -16,6 +16,11 @@ const asideMenuConfig = [
     },
   },
   {
+    name: '文章管理',
+    path: '/article',
+    icon: 'content',
+  },
+  {
     name: '图表页',
     path: '/chart',
     icon: 'chart1',
@@ -96,11 +101,6 @@ const asideMenuConfig = [
   {
     name: '\u6D4B\u8BD5\u9875',
     path: '/test',
-    icon: 'home',
-  },
-  {
-    name: '\u8868\u5355\u9875',
-    path: '/form',
     icon: 'home',
   },
 ];
