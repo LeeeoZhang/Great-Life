@@ -2,12 +2,14 @@ import React from 'react'
 import {Tab} from '@icedesign/base'
 import IceContainer from '@icedesign/container'
 import BannerManage from './components/BannerManage'
+import NavManage from './components/NavManage'
+import ArticleManage from './components/ArticleManage'
 
 const TabPane = Tab.TabPane
 const tabConfigs = [
   {title: '轮播头图管理', key: 'banner', content: BannerManage},
-  {title: '文章导航管理', key: 'nav', content: '文章导航'},
-  {title: '文章编辑', key: 'content', content: '文章编辑'},
+  {title: '文章导航管理', key: 'nav', content: NavManage},
+  {title: '文章编辑', key: 'content', content: ArticleManage},
 ]
 
 export default class Article extends React.Component {

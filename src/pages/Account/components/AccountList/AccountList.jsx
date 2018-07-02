@@ -46,6 +46,10 @@ export default class AccountList extends React.Component {
     this.props.onUpdate(this.state.accountList[index])
   }
 
+  onDel = (id) => {
+    console.log(id)
+  }
+
   render () {
     const {__loading} = this.props
     const {accountList} = this.state
@@ -61,7 +65,12 @@ export default class AccountList extends React.Component {
           return (<RadioGroup dataSource={statusList} shape="button" value={+value} onChange={value=>{this.onStatusChange(value,index)}}/>)
         }}/>
         <Table.Column align="center" title="操作"  cell={(value,index,record)=>{
-          return (<Button loading={__loading} onClick={()=> this.onUpdate(index)}>更新</Button>)
+          return (
+            <Fragment>
+              <Button type="primary" loading={__loading} onClick={()=> this.onUpdate(index)} style={styles.actionButton}>更新</Button>
+              <Button shape="warning" loading={__loading} onClick={()=> this.onDel(record.id)} style={styles.actionButton}>删除</Button>
+            </Fragment>
+          )
         }}/>
       </Table>
     )
@@ -72,4 +81,7 @@ const styles = {
   accountList:{
     marginBottom:50,
   },
+  actionButton: {
+    margin:'0 5px'
+  }
 }
