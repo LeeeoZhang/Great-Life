@@ -5,6 +5,8 @@ import DataBinder from '@icedesign/data-binder'
 import AddBannerForm from './AddBannerForm'
 import BannerList from './BannerList'
 
+
+
 @DataBinder({
   bannerList:{
     defaultBindingData:{

@@ -1,7 +1,9 @@
 import React, {Fragment} from 'react'
-import {Input, Button, Upload, Form, Field} from '@icedesign/base'
+import {Input, Button, Upload, Form, Field, Grid} from '@icedesign/base'
 import './AddBannerForm.scss'
 
+
+const {Row, Col} = Grid
 const FormItem = Form.Item
 const {ImageUpload} = Upload
 const formItemLayout = {
@@ -20,12 +22,11 @@ export default class AddBannerForm extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      fileId:'',
+      fileId: '',
     }
   }
 
   field = new Field(this, {
-    deepReset: true,
     onChange: (name, value) => {
       this.field.setValue(name, value)
     }
@@ -33,21 +34,36 @@ export default class AddBannerForm extends React.Component {
 
   onAddNewBanner = () => {
     this.field.validate((error, values) => {
-      console.log(error, values)
+      error || console.log(this.formatUploadInfo(values))
     })
   }
 
-  onFileUpload = info => {
-    console.log(info)
-    if(info.file.status === 'uploading') console.log('上传中')
-    if(info.file.status === 'error') console.log('上传出错')
-    if(info.file.status === 'done') console.log('上传成功')
-    if(info.fileList && info.fileList.length > 0) {
-      //上传成功后从info.file里获取服务器响应的图片id
-      //this.setState({fileId:info.file.response})
+  //格式化上传组件的响应
+  formatUploadResponse = (res) => {
+    return {
+      code: res.code === 200 ? '0' : '1',
+      imgURL: res.data ? res.data.httpUrl : '',
+      fileURL: res.data ? res.data.httpUrl : '',
+      downloadURL: res.data ? res.data.httpUrl : '',
+      id: res.data ? res.data.id : ''
+    }
+  }
+
+  //格式化上传组件的值
+  formatUploadValue = info => {
+    if (info.fileList && info.fileList.length > 0) {
       return info.fileList
     }
     return []
+  }
+
+  //格式化上传信息
+  formatUploadInfo = values => {
+    return {
+      title:values.bannerTitle,
+      path:values.bannerPath,
+      id:values.bannerFile[0].response.id
+    }
   }
 
 
@@ -60,7 +76,8 @@ export default class AddBannerForm extends React.Component {
       limit: 1,
       accept: 'image/png, image/jpg, image/jpeg',
       listType: "picture-card",
-      withCredentials:true,
+      withCredentials: true,
+      formatter: this.formatUploadResponse,
     }
     return (
       <Fragment>
@@ -71,10 +88,11 @@ export default class AddBannerForm extends React.Component {
           <FormItem label="小程序路径：" {...formItemLayout}>
             <Input placeholder="例如：pages/**" {...init('bannerPath')}/>
           </FormItem>
-          <FormItem label="请选择图片：" {...formItemLayout}>
-            <ImageUpload {...uploadConfig} {...init('bannerList', {
-              rules: [{required: true, message: '请选择图片'}],
-            })} className="uploader"/>
+
+          <FormItem label="选择图片：" {...formItemLayout}>
+            <ImageUpload {...uploadConfig} {...init('bannerFile',
+              {rules: [{required: true, message: '请选择图片'}], valueName: 'fileList', getValueFromEvent: this.formatUploadValue})}
+                         className="uploader"/>
           </FormItem>
           <FormItem label=" "  {...formItemLayout}>
             <Button type="primary" size="large" loading={__loading} onClick={this.onAddNewBanner}>提交</Button>
@@ -82,6 +100,19 @@ export default class AddBannerForm extends React.Component {
         </Form>
       </Fragment>
     )
+  }
+}
+
+const styles = {
+  formItem: {
+    marginBottom: '20px',
+  },
+  formLabel: {
+    height: '40px',
+    lineHeight: '40px',
+    textAlign: 'right',
+    paddingRight: '8px',
+    color: '#666666',
   }
 }
 

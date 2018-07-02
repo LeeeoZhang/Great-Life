@@ -36,7 +36,7 @@ export default class AccountForm extends React.Component {
       <IceFormBinderWrapper value={formData} ref="form">
         <Fragment>
           <Row style={styles.formItem}>
-            <Col xxs="6" s="3" l="3" style={styles.formLabel}>输入新账号:&nbsp;&nbsp;</Col>
+            <Col xxs="6" s="3" l="3" style={styles.formLabel}>新账号:&nbsp;&nbsp;</Col>
             <Col s="12" l="10">
               <IceFormBinder name="accountName" required message="请输入账号名">
                 <Input size="large" placeholder="填写新账号" style={styles.input}/>
@@ -45,7 +45,7 @@ export default class AccountForm extends React.Component {
             </Col>
           </Row>
           <Row style={styles.formItem}>
-            <Col xxs="6" s="3" l="3" style={styles.formLabel}>输入新账号密码:&nbsp;&nbsp;</Col>
+            <Col xxs="6" s="3" l="3" style={styles.formLabel}>新账号密码:&nbsp;&nbsp;</Col>
             <Col s="12" l="10">
               <IceFormBinder name="accountPassword" required message="请输入账号密码">
                 <Input size="large" placeholder="填写密码" style={styles.input}/>
