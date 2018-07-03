@@ -21,6 +21,7 @@
     "axios": "^0.17.1",
     "babel-runtime": "^6.26.0",
     "bizcharts": "latest",
+    "braft-editor": "^1.9.7",
     "classnames": "^2.2.5",
     "enquire-js": "^0.1.2",
     "foundation-symbol": "^0.1.0",

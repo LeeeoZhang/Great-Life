@@ -26,8 +26,7 @@ export default class NavList extends React.Component {
   }
 
   onUpdate = index => {
-    console.log(index)
-    console.log(this.state.navList[index])
+    this.props.onUpdate(this.state.navList[index])
   }
 
   onDel = id => {

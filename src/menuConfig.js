@@ -1,17 +1,17 @@
 // 菜单配置
 // headerMenuConfig：头部导航配置
 // asideMenuConfig：侧边导航配置
-import { getAuth } from './utils';
+import {getAuth} from './utils'
 
-const headerMenuConfig = [];
+const headerMenuConfig = []
 
 const asideMenuConfig = [
   {
     name: '账号管理',
     path: '/account',
     icon: 'person',
-    isAuth: function() {
-      return true;
+    isAuth: function () {
+      return true
       //return getAuth() && getAuth().dashboard.isAuth === 1;
     },
   },
@@ -24,8 +24,8 @@ const asideMenuConfig = [
     name: '图表页',
     path: '/chart',
     icon: 'chart1',
-    isAuth: function() {
-      return true;
+    isAuth: function () {
+      return true
       //return getAuth() && getAuth().charts.isAuth === 1;
     },
     children: [
@@ -39,8 +39,8 @@ const asideMenuConfig = [
     name: '表格页',
     path: '/table',
     icon: 'table',
-    isAuth: function() {
-      return true;
+    isAuth: function () {
+      return true
     },
     children: [
       {
@@ -103,6 +103,6 @@ const asideMenuConfig = [
     path: '/test',
     icon: 'home',
   },
-];
+]
 
-export { headerMenuConfig, asideMenuConfig };
+export {headerMenuConfig, asideMenuConfig}

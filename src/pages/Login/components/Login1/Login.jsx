@@ -31,7 +31,7 @@ export default class Login extends Component {
         account: '',
         password: '',
       },
-      codeUrl:`${DOMAIN}/admin/user/entry?t=1525365852204`,
+      codeUrl: `${DOMAIN}/admin/user/entry?t=1525365852204`,
     }
   }
 
@@ -42,9 +42,9 @@ export default class Login extends Component {
   }
 
   //点击验证码
-  clickCode = ()=>{
+  clickCode = () => {
     this.setState({
-      codeUrl:`${DOMAIN}/admin/user/entry?t=${new Date().getTime()}`
+      codeUrl: `${DOMAIN}/admin/user/entry?t=${new Date().getTime()}`
     })
   }
 
@@ -56,7 +56,7 @@ export default class Login extends Component {
       } else {
         const res = await this.login(values).catch(() => false)
         if (res) {
-          setAuth({dashboard:{isAuth:0},charts:{isAuth:1}})
+          setAuth({dashboard: {isAuth: 0}, charts: {isAuth: 1}})
           this.props.history.push('/')
           Toast.success('登录成功')
         } else {
@@ -259,13 +259,13 @@ const styles = {
   codeInput: {
     width: '100%'
   },
-  codeWrap:{
-    width:'100%',
-    height:'40px',
+  codeWrap: {
+    width: '100%',
+    height: '40px',
   },
-  codeImg:{
-    width:'100%',
-    height:'100%',
+  codeImg: {
+    width: '100%',
+    height: '100%',
   },
   formItemOfCode: {
     position: 'relative',

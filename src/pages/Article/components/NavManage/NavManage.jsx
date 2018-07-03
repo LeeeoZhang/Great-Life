@@ -27,6 +27,9 @@ export default class NavManage extends React.Component {
     this.state = {}
   }
 
+  onUpdate = data => {
+    console.log(data)
+  }
 
   render () {
     const {navList} = this.props.bindingData
@@ -37,7 +40,7 @@ export default class NavManage extends React.Component {
         <IceTitle text="添加新导航" decoration/>
         <AddNavForm __loading={__loading}/>
         <IceTitle text="导航列表" decoration/>
-        <NavList __loading={__loading} navList={lists}/>
+        <NavList __loading={__loading} navList={lists} onUpdate={this.onUpdate}/>
       </Fragment>
     )
   }
