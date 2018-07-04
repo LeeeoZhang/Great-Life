@@ -1,16 +1,16 @@
-import React , {Fragment}from 'react'
+import React, {Fragment} from 'react'
 import {
   FormBinderWrapper as IceFormBinderWrapper,
   FormBinder as IceFormBinder,
   FormError as IceFormError,
 } from '@icedesign/form-binder'
-import { Grid,Input,Button,Feedback } from "@icedesign/base"
+import {Grid, Input, Button, Feedback} from "@icedesign/base"
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/braft.css'
 
 import {uploadArticleIMG} from '@/service'
 
-const {Row,Col} = Grid
+const {Row, Col} = Grid
 const Toast = Feedback.toast
 
 export default class AddArticleForm extends React.Component {
@@ -21,60 +21,62 @@ export default class AddArticleForm extends React.Component {
     super(props)
     this.state = {
       //文章信息
-      articleInfo:{
-        title:'',   //标题
-        author:'',  //作者
-        desc:'',    //描述
+      articleInfo: {
+        title: '',   //标题
+        author: '',  //作者
+        desc: '',    //描述
       },
-      articleHTML:'',
+      articleHTML: '',
     }
   }
 
-  onSubmitNewArticle = ()=>{
+  onSubmitNewArticle = () => {
     this.refs.form.validateAll((error, value) => {
-      if(!this.state.articleHTML) Toast.error('编辑文章详情')
+      if (!this.state.articleHTML) Toast.error('编辑文章详情')
       error || console.log(value)
     })
   }
 
   //当编辑器发生变化时的处理函数，参数是HTML字符串
-  onEditorChange = htmlStr =>{
-    console.log(htmlStr)
+  onEditorChange = htmlStr => {
+    this.setState({articleHTML: htmlStr})
   }
 
-  //当编辑器插入图片的上传处理函数
+  //当编辑器插入图片时的上传处理函数
   onEditorUpload = async param => {
     //填充formData
     const fd = new FormData()
-    fd.append('file',param.file)
+    fd.append('file', param.file)
     //上传文章图片
     const res = await uploadArticleIMG({
-      method:'post',
-      data:fd,
-      // https://github.com/margox/braft-editor
+      method: 'post',
+      data: fd,
+      //https://github.com/margox/braft-editor
       //原生ajax的进度事件，调用参数中的进度事件
-      onUploadProgress:(event)=>param.progress(event.loaded/event.total*100)
-    }).catch(()=>false)
-    if(res) {
+      onUploadProgress: event => param.progress(event.loaded / event.total * 100)
+    }).catch(() => false)
+    if (res) {
       param.success({
-        url:res.data.httpUrl
+        url: res.data.httpUrl,
+        id: res.data.id,
       })
     }
   }
 
+  //检查编辑器插入的多媒体是否复合要求，返回true/false
   validEditorFile = file => {
     return true
   }
 
-  render(){
+  render () {
     const {articleInfo} = this.state
     const {__loading} = this.props
     const editorConfig = {
-      contentFormat:'html',
-      onHTMLChange:this.onEditorChange,
-      media:{
-        uploadFn:this.onEditorUpload,
-        validateFn:this.validEditorFile,
+      contentFormat: 'html',
+      onHTMLChange: this.onEditorChange,
+      media: {
+        uploadFn: this.onEditorUpload,
+        validateFn: this.validEditorFile,
       }
     }
     return (
@@ -139,7 +141,7 @@ const styles = {
     textAlign: 'right',
   },
   editorWrap: {
-    border:'1px solid #DCDEE3',
-    borderRadius:'5px',
+    border: '1px solid #DCDEE3',
+    borderRadius: '5px',
   }
 }
