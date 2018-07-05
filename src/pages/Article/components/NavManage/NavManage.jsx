@@ -31,6 +31,10 @@ export default class NavManage extends React.Component {
     console.log(data)
   }
 
+  componentDidMount(){
+    console.log('导航管理加载')
+  }
+
   render () {
     const {navList} = this.props.bindingData
     const {__loading,lists} = navList

@@ -57,6 +57,7 @@ export default class EditArticle extends React.Component {
     return true
   }
 
+  //点击确认修改按钮时，检查信息是否填写完整
   onSubmitEditArticle = () => {
     this.refs.form.validateAll((error, value) => {
       if (!this.state.editArticleHTML) Toast.error('请编辑文章详情')
@@ -64,9 +65,14 @@ export default class EditArticle extends React.Component {
     })
   }
 
-  //从更新文章返回返回
+  //从更新文章返回
   backFromEdit = () => {
     this.props.backFromEdit()
+  }
+
+  //提交修改信息
+  submitEditArticle = async () => {
+
   }
 
   render () {
@@ -120,7 +126,7 @@ export default class EditArticle extends React.Component {
           </Row>
           <Row style={styles.formItem}>
             <Col offset="1">
-              <Button style={styles.buttonSpace} type="primary" size="large" loading={__loading} onClick={this.onSubmitEditArticle}>提交</Button>
+              <Button style={styles.buttonSpace} type="primary" size="large" loading={__loading} onClick={this.onSubmitEditArticle}>确认修改</Button>
               <Button style={styles.buttonSpace} type="primary" size="large" loading={__loading} onClick={this.backFromEdit}>返回</Button>
             </Col>
           </Row>

@@ -7,24 +7,21 @@ export default class BannerList extends React.Component {
 
   constructor (props) {
     super(props)
-    this.state = {
-      bannerList:[...props.bannerList]
-    }
+    this.state = {}
   }
 
-  componentWillReceiveProps(nextProps){
-    this.setState({
-      bannerList:[...nextProps.bannerList]
-    })
+  //点击修改按钮
+  onEdit = id => {
+    this.props.getBannerDetail(id)
   }
 
-  onEdit = (id) => {
-
+  //点击删除按钮
+  onDel = id => {
+    this.props.delBanner(id)
   }
 
   render () {
-    const {bannerList} = this.state
-    const {__loading} = this.props
+    const {__loading,bannerList} = this.props
     return (
       <Fragment>
         <Table dataSource={bannerList} isLoading={__loading} style={styles.bannerList}>
@@ -34,11 +31,16 @@ export default class BannerList extends React.Component {
           <Table.Column title="小程序路径" dataIndex="path" cell={(value,index,record)=>{
             return (<div>{value}</div>)
           }}/>
-          <Table.Column title="图片详情" dataIndex="path" cell={(value,index,record)=>{
+          <Table.Column title="图片详情" dataIndex="imgUrl" cell={(value,index,record)=>{
             return (<img src={value} style={styles.imageDetail}/>)
           }}/>
           <Table.Column align="center" title="操作"  cell={(value,index,record)=>{
-            return (<Button loading={__loading} onClick={()=> this.onEdit(record.id)}>修改</Button>)
+            return (
+              <Fragment>
+                <Button style={styles.actionBtn} type="primary" loading={__loading} onClick={()=> this.onEdit(record.id)}>修改</Button>
+                <Button style={styles.actionBtn} shape="warning" loading={__loading} onClick={()=> this.onDel(record.id)}>删除</Button>
+              </Fragment>
+            )
           }}/>
         </Table>
       </Fragment>
@@ -52,7 +54,9 @@ const styles = {
   },
   imageDetail: {
     width:'100px',
-    height:'50px',
-  }
+  },
+  actionBtn: {
+    margin: '3px',
+  },
 }
 

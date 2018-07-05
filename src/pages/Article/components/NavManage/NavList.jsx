@@ -46,7 +46,7 @@ export default class NavList extends React.Component {
           <Table.Column align="center" title="操作" cell={(value, index, record) => {
             return (
               <Fragment>
-                <Button type="primary" style={styles.actionButton} onClick={() => this.onUpdate(index)}>更新</Button>
+                <Button type="primary" style={styles.actionButton} onClick={() => this.onUpdate(index)}>修改</Button>
                 <Button shape="warning" style={styles.actionButton} onClick={() => this.onDel(record.id)}>删除</Button>
               </Fragment>
             )

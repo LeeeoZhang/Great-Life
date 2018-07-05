@@ -47,17 +47,22 @@ export default class ArticleManage extends React.Component {
     }
   }
 
+  componentDidMount (){
+    console.log('挂载了')
+  }
+
   //更新翻页
   updateArticleList = (paginationInfo) => {
     console.log(paginationInfo)
   }
 
   //获取文章详情进行回填更新，并打开编辑页面
-  getArticleDetail = async id => {
+  getArticleDetail = id => {
     console.log(id)
     this.setState({isEdit: true,editId:id})
   }
 
+  //从编辑文章处返回并重新获取第一页数据
   backFromEdit = () =>{
     this.setState({isEdit:false})
     //窗口回滚
@@ -67,11 +72,11 @@ export default class ArticleManage extends React.Component {
   render () {
     const {articleList,articleDetail} = this.props.bindingData
     const {__loading, lists, count} = articleList
-    const {isEdit} = this.state
+    const {isEdit,editId} = this.state
     return (
       <Fragment>
         {isEdit ?
-          <EditArticle __loading={__loading} backFromEdit={this.backFromEdit} articleDetail={articleDetail}/> :
+          <EditArticle __loading={__loading} backFromEdit={this.backFromEdit} articleDetail={articleDetail} editId={editId}/> :
           <Tab type="wrapped">
             <TabPane key="addArticleForm" tab="添加文章">
               <AddArticleForm __loading={__loading}/>

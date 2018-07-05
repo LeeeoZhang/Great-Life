@@ -61,7 +61,7 @@ export default class ArticleList extends React.Component {
           <Table.Column title="创建时间" dataIndex="createTime"/>
           <Table.Column align="center" title="操作" cell={(value, index, record) => (
             <Fragment>
-              <Button size="small" onClick={()=>this.onUpdate(record.id)} type="primary" style={styles.actionBtn}>更新</Button>
+              <Button size="small" onClick={()=>this.onUpdate(record.id)} type="primary" style={styles.actionBtn}>修改</Button>
               <Balloon
                 trigger={<Button size="small" onClick={()=>this.getPathAndQrCode(record.id)} style={styles.actionBtn}>详情</Button>}
                 align="lt"
