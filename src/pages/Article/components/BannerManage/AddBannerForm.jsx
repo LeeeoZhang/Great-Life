@@ -38,7 +38,7 @@ export default class AddBannerForm extends React.Component {
     })
   }
 
-  //格式化上传组件的响应
+  //格式化图片上传组件的响应
   formatUploadResponse = (res) => {
     return {
       code: res.code === 200 ? '0' : '1',
@@ -49,7 +49,7 @@ export default class AddBannerForm extends React.Component {
     }
   }
 
-  //格式化上传组件的值
+  //格式化图片上传组件的值
   formatUploadValue = info => {
     if (info.fileList && info.fileList.length > 0) {
       return info.fileList
@@ -57,7 +57,7 @@ export default class AddBannerForm extends React.Component {
     return []
   }
 
-  //格式化上传信息
+  //格式化提交信息
   formatUploadInfo = values => {
     return {
       title:values.bannerTitle,
@@ -86,7 +86,7 @@ export default class AddBannerForm extends React.Component {
             <Input placeholder="请输入图片标题" {...init('bannerTitle', {rules: [{required: true, message: '请输入图片标题'}]})}/>
           </FormItem>
           <FormItem label="小程序路径：" {...formItemLayout}>
-            <Input placeholder="例如：pages/**" {...init('bannerPath')}/>
+            <Input placeholder="形如：pages/*" {...init('bannerPath')}/>
           </FormItem>
 
           <FormItem label="选择图片：" {...formItemLayout}>
