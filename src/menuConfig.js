@@ -10,10 +10,7 @@ const asideMenuConfig = [
     name: '账号管理',
     path: '/account',
     icon: 'person',
-    isAuth: function () {
-      return true
-      //return getAuth() && getAuth().dashboard.isAuth === 1;
-    },
+    isAuth:()=>true
   },
   {
     name: '文章管理',
@@ -24,10 +21,6 @@ const asideMenuConfig = [
     name: '图表页',
     path: '/chart',
     icon: 'chart1',
-    isAuth: function () {
-      return true
-      //return getAuth() && getAuth().charts.isAuth === 1;
-    },
     children: [
       {
         name: '常用图表',
@@ -39,9 +32,6 @@ const asideMenuConfig = [
     name: '表格页',
     path: '/table',
     icon: 'table',
-    isAuth: function () {
-      return true
-    },
     children: [
       {
         name: '基础表格',

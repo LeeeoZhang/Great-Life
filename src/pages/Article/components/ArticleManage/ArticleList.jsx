@@ -36,13 +36,12 @@ export default class ArticleList extends React.Component {
 
   //点击更新文章，通知获取文章详情进行回填
   onUpdate = id => {
-    const {getArticleDetail} = this.props
-    getArticleDetail(id)
+    this.props.getArticleDetail(id)
   }
 
   //点击删除文章
-  onDel = async id => {
-    console.log(id)
+  onDel = id => {
+    this.props.delArticle(id)
   }
 
   //点击文章详情,获取小程序路径和二维码

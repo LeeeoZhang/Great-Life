@@ -3,8 +3,8 @@ import { Table, Button,Input,Radio } from '@icedesign/base'
 
 const RadioGroup = Radio.Group
 const statusList = [
-  {label:'活跃',value:0},
-  {label:'禁用',value:1},
+  {label:'活跃',value:1},
+  {label:'禁用',value:0},
 ]
 
 export default class AccountList extends React.Component {
@@ -24,18 +24,14 @@ export default class AccountList extends React.Component {
     })
   }
 
-  onUserNameChange =(value,index) => {
-    const newList = [...this.state.accountList]
-    newList[index].userName = value
-    this.setState({accountList:newList})
-  }
-
+  //修改密码
   onPasswordChange = (value,index) => {
     const newList = [...this.state.accountList]
     newList[index].password = value
     this.setState({accountList:newList})
   }
 
+  //修改状态
   onStatusChange = (value,index) => {
     const newList = [...this.state.accountList]
     newList[index].isActive = value
@@ -47,7 +43,7 @@ export default class AccountList extends React.Component {
   }
 
   onDel = (id) => {
-    console.log(id)
+    this.props.delAccount(id)
   }
 
   render () {
@@ -55,8 +51,8 @@ export default class AccountList extends React.Component {
     const {accountList} = this.state
     return (
       <Table dataSource={accountList} isLoading={__loading} style={styles.accountList}>
-        <Table.Column title="账号" dataIndex="userName" cell={(value,index,record)=>{
-          return (<Input value={value} onChange={value=>{this.onUserNameChange(value,index)}}/>)
+        <Table.Column title="账号" dataIndex="username" cell={(value,index,record)=>{
+          return (<div>{value}</div>)
         }}/>
         <Table.Column title="密码" dataIndex="password" cell={(value,index,record)=>{
           return (<Input htmlType="password" value={value} onChange={value=>{this.onPasswordChange(value,index)}}/>)

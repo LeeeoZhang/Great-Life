@@ -1,8 +1,4 @@
 import Account from './Account'
-import {withAuth,getAuth} from '@/utils'
+import {withAuth} from '@/utils'
 
-function authInAccount () {
-  return true
-}
-
-export default withAuth(authInAccount)(Account)
+export default withAuth()(Account)

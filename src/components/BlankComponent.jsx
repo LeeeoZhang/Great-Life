@@ -1,13 +1,10 @@
 import React from 'react'
-import {withAuth,getAuth} from "../utils"
+import {withAuth} from "../utils"
 
-function isAuthList (){
-  return true
-}
 //这是一个默认的页面
 const BlankComponent = ()=>{
   return (
     <div/>
   )
 }
-export default withAuth(isAuthList)(BlankComponent)
+export default withAuth()(BlankComponent)

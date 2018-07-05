@@ -7,32 +7,46 @@ import {
 import {Grid, Input, Button, Feedback} from "@icedesign/base"
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/braft.css'
+import {uploadArticleIMG} from '@/service'
 
 const {Row, Col} = Grid
 const Toast = Feedback.toast
 
-export default class EditArticle extends React.Component {
+export default class ArticleForm extends React.Component {
 
-  static displayName = 'EditArticle'
+  static displayName = 'ArticleForm'
 
   constructor (props) {
     super(props)
     this.state = {
-      editArticleInfo: {
-        title: props.articleDetail.title,   //标题
-        author: props.articleDetail.author,  //作者
-        desc: props.articleDetail.desc,    //描述
+      articleInfo:{
+        title:props.articleDetail ? props.articleDetail.title : '',
+        author:props.articleDetail ? props.articleDetail.author : '',
+        desc:props.articleDetail ? props.articleDetail.desc : '',
       },
-      editArticleHTML: props.articleDetail.content,
+      articleHTML:props.articleDetail ? props.articleDetail.content : '',
     }
   }
 
-  onEditorChange = htmlStr => {
-    this.setState({editArticleHTML:htmlStr},()=>{
-      console.log(this.state)
+  //把组件内的数据报告至父组件
+  submitInfo = () => {
+    const {articleHTML} = this.state
+    const {onSubmitInfo} = this.props
+    this.refs.form.validateAll((error, values) => {
+      if (!articleHTML) {
+        Toast.error('请编辑文章详情')
+      } else {
+        error || onSubmitInfo(values,articleHTML)
+      }
     })
   }
 
+  //当编辑器发生变化时的处理函数，参数是HTML字符串
+  onEditorChange = htmlStr => {
+    this.setState({articleHTML: htmlStr})
+  }
+
+  //当编辑器插入图片时的上传处理函数
   onEditorUpload = async param => {
     //填充formData
     const fd = new FormData()
@@ -53,34 +67,22 @@ export default class EditArticle extends React.Component {
     }
   }
 
+  //检查编辑器插入的多媒体是否符合要求，返回true/false
   validEditorFile = file => {
     return true
   }
 
-  //点击确认修改按钮时，检查信息是否填写完整
-  onSubmitEditArticle = () => {
-    this.refs.form.validateAll((error, value) => {
-      if (!this.state.editArticleHTML) Toast.error('请编辑文章详情')
-      error || console.log(value)
-    })
-  }
-
-  //从更新文章返回
+  //从修改文章返回
   backFromEdit = () => {
     this.props.backFromEdit()
   }
 
-  //提交修改信息
-  submitEditArticle = async () => {
-
-  }
-
   render () {
-    const {__loading} = this.props
-    const {editArticleInfo,editArticleHTML} = this.state
+    const {__loading,articleDetail,type} = this.props
+    const {articleInfo} = this.state
     const editorConfig = {
       contentFormat: 'html',
-      initialContent:editArticleHTML,
+      initialContent:articleDetail ? articleDetail.content: '',
       onHTMLChange: this.onEditorChange,
       media: {
         uploadFn: this.onEditorUpload,
@@ -88,7 +90,7 @@ export default class EditArticle extends React.Component {
       }
     }
     return (
-      <IceFormBinderWrapper value={editArticleInfo} ref="form">
+      <IceFormBinderWrapper value={articleInfo} ref="form">
         <Fragment>
           <Row style={styles.formItem}>
             <Col xxs="6" s="3" l="3" style={styles.formLabel}>文章标题：</Col>
@@ -126,8 +128,10 @@ export default class EditArticle extends React.Component {
           </Row>
           <Row style={styles.formItem}>
             <Col offset="1">
-              <Button style={styles.buttonSpace} type="primary" size="large" loading={__loading} onClick={this.onSubmitEditArticle}>确认修改</Button>
-              <Button style={styles.buttonSpace} type="primary" size="large" loading={__loading} onClick={this.backFromEdit}>返回</Button>
+              <Button style={styles.buttonSpace} type="primary" size="large" loading={__loading} onClick={this.submitInfo}>
+                {type === 'edit' ? '确认修改':'确认添加'}
+              </Button>
+              {type === 'edit' ? <Button style={styles.buttonSpace} size="large" onClick={this.backFromEdit}>返回</Button> : null}
             </Col>
           </Row>
         </Fragment>
@@ -153,7 +157,13 @@ const styles = {
     border: '1px solid #DCDEE3',
     borderRadius: '5px',
   },
-  buttonSpace:{
-    margin:'0 3px'
+  buttonSpace: {
+    margin:'0 3px',
   }
 }
+
+
+
+
+
+

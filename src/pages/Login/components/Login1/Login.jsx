@@ -28,8 +28,9 @@ export default class Login extends Component {
     super(props)
     this.state = {
       value: {
-        account: '',
+        username: '',
         password: '',
+        picCaptcha:'',
       },
       codeUrl: `${DOMAIN}/admin/user/entry?t=1525365852204`,
     }
@@ -54,25 +55,22 @@ export default class Login extends Component {
       if (errors) {
         console.log('errors', errors)
       } else {
-        const res = await this.login(values).catch(() => false)
+        console.log(values)
+        const res = await login({method:'post',data:values}).catch(() => false)
         if (res) {
-          setAuth({dashboard: {isAuth: 0}, charts: {isAuth: 1}})
+          setAuth({type:res.data.type})
           this.props.history.push('/')
           Toast.success('登录成功')
         } else {
-          Toast.error('登录错误')
+          this.setState({
+            codeUrl: `${DOMAIN}/admin/user/entry?t=${new Date().getTime()}`
+          })
         }
       }
     })
   }
 
-  login = (data) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(data)
-      }, 3000)
-    })
-  }
+
 
   render () {
     const {codeUrl} = this.state
@@ -104,7 +102,7 @@ export default class Login extends Component {
                     size="small"
                     style={styles.inputIcon}
                   />
-                  <IceFormBinder name="account" required message="请输入账号">
+                  <IceFormBinder name="username" required message="请输入账号">
                     <Input
                       size="large"
                       maxLength={20}
@@ -113,7 +111,7 @@ export default class Login extends Component {
                   </IceFormBinder>
                 </Col>
                 <Col>
-                  <IceFormError name="account"/>
+                  <IceFormError name="username"/>
                 </Col>
               </Row>
               <Row style={styles.formItem}>
@@ -134,7 +132,7 @@ export default class Login extends Component {
               <Row style={styles.formItemOfCode}>
                 <Col span="12">
                   <IceIcon type="lock" size="small" style={styles.inputIcon}/>
-                  <IceFormBinder name="code" required message="请输入验证码">
+                  <IceFormBinder name="picCaptcha" required message="请输入验证码">
                     <Input
                       placeholder="验证码"
                       style={styles.codeInput}
@@ -147,7 +145,7 @@ export default class Login extends Component {
                   </div>
                 </Col>
                 <Col>
-                  <IceFormError name="code"/>
+                  <IceFormError name="picCaptcha"/>
                 </Col>
               </Row>
               <Row style={styles.formItem}>

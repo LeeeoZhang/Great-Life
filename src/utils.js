@@ -3,9 +3,8 @@ import { Redirect } from 'react-router-dom'
 
 //获取权限列表，权限列表存储在sessionStorage中
 export function getAuth() {
-  return true
-  // const authList = JSON.parse(sessionStorage.getItem('authList'))
-  // return authList || false
+  const authList = JSON.parse(sessionStorage.getItem('authList'))
+  return authList || false
 }
 
 //移除权限列表
@@ -28,7 +27,7 @@ export function withAuth(auth) {
       render(){
         if(!getAuth()){
           return (<Redirect to="/login"/>)
-        } else if (auth()) {
+        } else if (!auth || auth()) {
           return (<Component/>)
         } else {
           return (<Redirect to="/exception/403"/>)
@@ -43,7 +42,7 @@ export function withAuthOfComponent(auth) {
   return function(Component){
     return class extends React.Component {
       render(){
-        if(auth()){
+        if(auth() || !auth){
           return (<Component/>)
         } else {
           return null

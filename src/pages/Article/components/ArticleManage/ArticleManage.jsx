@@ -1,10 +1,9 @@
 import React, {Fragment} from 'react'
 import {Tab} from "@icedesign/base"
 import DataBinder from '@icedesign/data-binder'
-import AddArticleForm from './AddArticleForm'
-import EditArticle from './EditArticle'
 import ArticleList from './ArticleList'
-import NavManage from "../NavManage"
+import NavManage from '../NavManage'
+import ArticleForm from './ArticleForm'
 
 const TabPane = Tab.TabPane
 
@@ -43,12 +42,26 @@ export default class ArticleManage extends React.Component {
     super(props)
     this.state = {
       isEdit: false,
-      editId:''
+      editId:'',
     }
   }
 
   componentDidMount (){
     console.log('挂载了')
+  }
+
+  //添加文章
+  addArticle = (info,htmlStr) =>{
+    console.log(info,htmlStr)
+  }
+
+  //编辑文章
+  editArticle = (info,htmlStr) =>{
+    console.log(info,htmlStr)
+  }
+
+  delArticle = id =>{
+    console.log(id)
   }
 
   //更新翻页
@@ -70,16 +83,21 @@ export default class ArticleManage extends React.Component {
   }
 
   render () {
-    const {articleList,articleDetail} = this.props.bindingData
-    const {__loading, lists, count} = articleList
-    const {isEdit,editId} = this.state
+    const {articleList} = this.props.bindingData
+    const {__loading, lists, count,articleDetail} = articleList
+    const {isEdit} = this.state
     return (
       <Fragment>
         {isEdit ?
-          <EditArticle __loading={__loading} backFromEdit={this.backFromEdit} articleDetail={articleDetail} editId={editId}/> :
+          <ArticleForm __loading={__loading}
+                       backFromEdit={this.backFromEdit}
+                       onSubmitInfo={this.editArticle}
+                       articleDetail={articleDetail}
+                       type="edit"
+          /> :
           <Tab type="wrapped">
             <TabPane key="addArticleForm" tab="添加文章">
-              <AddArticleForm __loading={__loading}/>
+              <ArticleForm __loading={__loading} type="add" onSubmitInfo={this.addArticle}/>
             </TabPane>
             <TabPane key="articleList" tab="文章列表">
               <ArticleList
@@ -88,6 +106,7 @@ export default class ArticleManage extends React.Component {
                 updateArticleList={this.updateArticleList}
                 getArticleDetail={this.getArticleDetail}
                 count={count}
+                delArticle={this.delArticle}
               />
             </TabPane>
           </Tab>

@@ -1,3 +1,5 @@
 import Article from './Article'
+import {withAuth} from '@/utils'
 
-export default Article
+export default withAuth()(Article)
+

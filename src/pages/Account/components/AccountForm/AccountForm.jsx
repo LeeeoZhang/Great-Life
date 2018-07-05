@@ -12,7 +12,7 @@ export default class AccountForm extends React.Component {
 
   static displayName = 'AccountForm'
 
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       formData: {
@@ -25,11 +25,20 @@ export default class AccountForm extends React.Component {
   onSubmitNewAccount = () => {
     const {addAccount} = this.props
     this.refs.form.validateAll((error, value) => {
-      error || addAccount(value)
+      error || addAccount(value,this.clearForm)
     })
   }
 
-  render() {
+  clearForm = () => {
+    this.setState({
+      formData: {
+        accountName:'',
+        accountPassword:'',
+      }
+    })
+  }
+
+  render () {
     const {formData} = this.state
     const {__loading} = this.props
     return (
