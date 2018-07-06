@@ -13,6 +13,7 @@ const Toast = Feedback.toast
   bannerList: {
     url:`${DOMAIN}/admin/article/listsCarousel`,
     responseFormatter:(responseHandler,res,originResponse)=>{
+      console.log(originResponse,res)
       const formatResponse = {
         status: originResponse.code === 200 ? 'SUCCESS':'ERROR',
         data:res
@@ -84,7 +85,6 @@ export default class BannerManage extends React.Component {
   }
 
   //从编辑页返回
-  //TODO：请求一次首页数据
   backFromEdit = () => {
     this.setState({isEdit:false,editId:'',bannerDetail:null})
     this.getBannerList()

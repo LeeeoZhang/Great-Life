@@ -52,7 +52,7 @@ export default class BannerForm extends React.Component {
   }
 
   //格式化图片上传组件的响应
-  formatUploadResponse = (res) => {
+  formatUploadResponse = res => {
     return {
       code: res.code === 200 ? '0' : '1',
       imgURL: res.data ? res.data.httpUrl : '',
