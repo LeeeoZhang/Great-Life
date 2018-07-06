@@ -17,16 +17,27 @@ import CardList from './pages/CardList'
 import HeaderAsideFooterResponsiveLayout from './layouts/HeaderAsideFooterResponsiveLayout'
 import BlankLayout from './layouts/BlankLayout'
 import NotFound from './pages/NotFound'
-import Test from './pages/Test'
 import LoadingIndicator from '@/components/LoadingIndicator'
 
 //代码分割
+const Login = Loadable({
+  loader: () => import('./pages/Login'),
+  loading: LoadingIndicator,
+})
+const BlankComponent = Loadable({
+  loader: () => import('@/components/BlankComponent'),
+  loading: LoadingIndicator,
+})
 const Account = Loadable({
   loader: () => import('./pages/Account'),
   loading: LoadingIndicator,
 })
 const Article = Loadable({
-  loader:()=>import('./pages/Article'),
+  loader: () => import('./pages/Article'),
+  loading: LoadingIndicator,
+})
+const Merchant = Loadable({
+  loader: () => import('./pages/Merchant'),
   loading: LoadingIndicator,
 })
 
@@ -38,16 +49,13 @@ const TableDisplay = Loadable({
   loader: () => import('./pages/TableDisplay'),
   loading: LoadingIndicator,
 })
-const BlankComponent = Loadable({
-  loader: () => import('@/components/BlankComponent'),
-  loading: LoadingIndicator,
-})
-const Login = Loadable({
-  loader: () => import('./pages/Login'),
-  loading: LoadingIndicator,
-})
 
 const routerConfig = [
+  {
+    path: '/login',
+    layout: BlankLayout,
+    component: Login,
+  },
   {
     path: '/',
     layout: HeaderAsideFooterLayout,
@@ -62,6 +70,11 @@ const routerConfig = [
     path: '/article',
     layout: HeaderAsideFooterLayout,
     component: Article,
+  },
+  {
+    path: '/merchant',
+    layout: HeaderAsideFooterLayout,
+    component: Merchant,
   },
   {
     path: '/portlets',
@@ -169,16 +182,6 @@ const routerConfig = [
         component: Charts,
       },
     ],
-  },
-  {
-    path: '/login',
-    layout: BlankLayout,
-    component: Login,
-  },
-  {
-    path: '/test',
-    layout: HeaderAsideFooterLayout,
-    component: Test,
   },
   {
     path: '*',

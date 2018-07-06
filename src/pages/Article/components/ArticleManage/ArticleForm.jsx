@@ -4,12 +4,13 @@ import {
   FormBinder as IceFormBinder,
   FormError as IceFormError,
 } from '@icedesign/form-binder'
-import {Grid, Input, Button, Feedback} from "@icedesign/base"
+import {Grid, Input, Button, Feedback,Select} from "@icedesign/base"
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/braft.css'
 import {uploadArticleIMG} from '@/service'
 
 const {Row, Col} = Grid
+const {Option} = Select
 const Toast = Feedback.toast
 
 export default class ArticleForm extends React.Component {
@@ -23,6 +24,7 @@ export default class ArticleForm extends React.Component {
         title:props.articleDetail ? props.articleDetail.title : '',
         author:props.articleDetail ? props.articleDetail.author : '',
         desc:props.articleDetail ? props.articleDetail.desc : '',
+        navId:props.articleDetail ? String(props.articleDetail.navId) : '',
       },
       articleHTML:props.articleDetail ? props.articleDetail.content : '',
     }
@@ -77,8 +79,34 @@ export default class ArticleForm extends React.Component {
     this.props.backFromEdit()
   }
 
+  clearForm = ()=>{
+    this.setState({
+      articleInfo:{
+        title:'',
+        author: '',
+        desc:'',
+        navId:'',
+      },
+      articleHTML:'',
+    })
+  }
+
+  //打开导航选择是请求导航列表
+  openNavSelector = () =>{
+    console.log('打开')
+  }
+
+  formatNavList = navList => {
+   return navList.map(item=>{
+      return {
+        label:item.title,
+        value:String(item.id),
+      }
+    })
+  }
+
   render () {
-    const {__loading,articleDetail,type} = this.props
+    const {__loading,articleDetail,type,navList} = this.props
     const {articleInfo} = this.state
     const editorConfig = {
       contentFormat: 'html',
@@ -115,6 +143,15 @@ export default class ArticleForm extends React.Component {
             <Col s="12" l="10">
               <IceFormBinder name="desc" required message="请输入文章描述">
                 <Input size="large" maxLength={32} hasLimitHint placeholder="字数在32以内" style={styles.input} multiple/>
+              </IceFormBinder>
+              <IceFormError name="desc"/>
+            </Col>
+          </Row>
+          <Row style={styles.formItem}>
+            <Col xxs="6" s="3" l="3" style={styles.formLabel} align="top">添加至：</Col>
+            <Col s="12" l="10">
+              <IceFormBinder name="navId" required message="请选择需添加至的导航">
+                <Select dataSource={this.formatNavList(navList)} onOpen={this.openNavSelector}/>
               </IceFormBinder>
               <IceFormError name="desc"/>
             </Col>

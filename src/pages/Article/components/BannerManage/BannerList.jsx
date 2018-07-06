@@ -11,8 +11,8 @@ export default class BannerList extends React.Component {
   }
 
   //点击修改按钮
-  onEdit = id => {
-    this.props.getBannerDetail(id)
+  onEdit = (index,id) => {
+    this.props.getBannerDetail(index,id)
   }
 
   //点击删除按钮
@@ -37,7 +37,7 @@ export default class BannerList extends React.Component {
           <Table.Column align="center" title="操作"  cell={(value,index,record)=>{
             return (
               <Fragment>
-                <Button style={styles.actionBtn} type="primary" loading={__loading} onClick={()=> this.onEdit(record.id)}>修改</Button>
+                <Button style={styles.actionBtn} type="primary" loading={__loading} onClick={()=> this.onEdit(index,record.id)}>修改</Button>
                 <Button style={styles.actionBtn} shape="warning" loading={__loading} onClick={()=> this.onDel(record.id)}>删除</Button>
               </Fragment>
             )
@@ -53,7 +53,7 @@ const styles = {
     marginBottom:'30px',
   },
   imageDetail: {
-    width:'100px',
+    width:'80px',
   },
   actionBtn: {
     margin: '3px',

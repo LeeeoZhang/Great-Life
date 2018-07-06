@@ -5,8 +5,11 @@ import BannerManage from './components/BannerManage'
 import NavManage from './components/NavManage'
 import ArticleManage from './components/ArticleManage'
 
+
+
 const TabPane = Tab.TabPane
 export default class Article extends React.Component {
+
   static displayName = 'Article'
 
   constructor (props) {

@@ -36,10 +36,21 @@ export default class Login extends Component {
     }
   }
 
+  //新增回车提交表单
+  componentDidMount(){
+    document.addEventListener('keydown',this.handleEnterKey)
+  }
+
+  componentWillUnmount(){
+    document.removeEventListener('keydown',this.handleEnterKey)
+  }
+
   formChange = (value) => {
-    this.setState({
-      value,
-    })
+    this.setState({value})
+  }
+
+  handleEnterKey = (event) => {
+    event.keyCode === 13 && this.handleSubmit()
   }
 
   //点击验证码
@@ -50,7 +61,7 @@ export default class Login extends Component {
   }
 
   handleSubmit = (e) => {
-    e.preventDefault()
+    e && e.preventDefault()
     this.refs.form.validateAll(async (errors, values) => {
       if (errors) {
         console.log('errors', errors)
@@ -69,8 +80,6 @@ export default class Login extends Component {
       }
     })
   }
-
-
 
   render () {
     const {codeUrl} = this.state
@@ -130,7 +139,7 @@ export default class Login extends Component {
                 </Col>
               </Row>
               <Row style={styles.formItemOfCode}>
-                <Col span="12">
+                <Col span="12" style={styles.formItemCol}>
                   <IceIcon type="lock" size="small" style={styles.inputIcon}/>
                   <IceFormBinder name="picCaptcha" required message="请输入验证码">
                     <Input
@@ -139,7 +148,7 @@ export default class Login extends Component {
                     />
                   </IceFormBinder>
                 </Col>
-                <Col span="10" offset="1">
+                <Col span="11" offset="1">
                   <div style={styles.codeWrap} onClick={this.clickCode}>
                     <img src={codeUrl} alt="验证码" style={styles.codeImg}/>
                   </div>
@@ -171,8 +180,7 @@ const styles = {
     height: '100vh',
     paddingTop: '100px',
     background: '#f0f2f5',
-    backgroundImage:
-      'url(https://img.alicdn.com/tfs/TB1kOoAqv1TBuNjy0FjXXajyXXa-600-600.png)',
+    backgroundImage: 'url(https://img.alicdn.com/tfs/TB1kOoAqv1TBuNjy0FjXXajyXXa-600-600.png)',
   },
   header: {
     display: 'flex',
@@ -269,6 +277,7 @@ const styles = {
     position: 'relative',
     marginBottom: '25px',
     flexDirection: 'row',
+    flexWrap:'wrap',
     padding: '0',
   },
 }
