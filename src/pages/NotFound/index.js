@@ -1,3 +1,4 @@
 import NotFound from './NotFound';
+import {withAuth} from '@/utils'
 
-export default NotFound;
+export default withAuth()(NotFound);

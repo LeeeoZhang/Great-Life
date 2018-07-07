@@ -21,7 +21,9 @@ export default class MerchantForm extends React.Component {
 
   constructor (props) {
     super(props)
-    this.state = {}
+    this.state = {
+      areaStr: '',
+    }
   }
 
   field = new Field(this, {
@@ -30,7 +32,24 @@ export default class MerchantForm extends React.Component {
       this.field.setValue(name, value)
     }
   })
+  submitInfo = () => {
+    const {onSubmitInfo} = this.props
+    this.field.validate((error, values) => {
+      error || onSubmitInfo(this.formatUploadInfo(values),this.clearForm)
+    })
+  }
 
+  //格式化选择地区的value格式
+  formatAreaSelectValue = (value, data, extra) => {
+    let areaStr = ''
+    //当清空选择时不存在extra
+    extra && extra.selectedPath.forEach(path => areaStr += path.label)
+    this.setState({areaStr})
+    return value
+
+  }
+
+  //格式化上传图片res的格式
   formatUploadResponse = res => {
     return {
       code: res.code === 200 ? '0' : '1',
@@ -41,6 +60,7 @@ export default class MerchantForm extends React.Component {
     }
   }
 
+  //格式化上传图片的回调结果格式
   formatUploadValue = info => {
     if (info.fileList && info.fileList.length > 0) {
       return info.fileList
@@ -51,7 +71,7 @@ export default class MerchantForm extends React.Component {
   createInitFileList = merchantDetail => {
     const initFileList = []
     const file = {}
-    if(merchantDetail) {
+    if (merchantDetail) {
       file.name = file.fileName = 'file'
       file.status = 'done'
       file.downloadURL = file.fileURL = file.imgURL = merchantDetail.imgUrl
@@ -61,8 +81,24 @@ export default class MerchantForm extends React.Component {
     return initFileList
   }
 
+  //格式化提交的数据
+  formatUploadInfo = values => {
+    const {areaStr} = this.state
+    return {
+      title:values.merchantTitle,
+      area:areaStr,
+      areaId:values.merchantArea,
+      field:values.merchantImg[0].response ? values.merchantImg[0].response.id : values.merchantImg[0].id,
+      address:values.merchantAreaDetail,
+    }
+  }
+
+  clearForm = () => {
+    this.field.reset()
+  }
+
   render () {
-    const {__loading, merchantDetail} = this.props
+    const {__loading, merchantDetail, type} = this.props
     const init = this.field.init
     const uploadConfig = {
       action: `${DOMAIN}/admin/file/upload`,
@@ -84,7 +120,14 @@ export default class MerchantForm extends React.Component {
           <CascaderSelect hasClear style={styles.cascaderSelectWidth} dataSource={AreaData}
                           placeholder="请选择商家所在省市区/县" {...init('merchantArea', {
             rules: [{required: true, message: '请选择商家所在省市区'}],
-            initValue: merchantDetail ? merchantDetail.area : '',
+            initValue: merchantDetail ? merchantDetail.areaId : '',
+            getValueFromEvent: this.formatAreaSelectValue
+          })}/>
+        </FormItem>
+        <FormItem label="商家详细地址：" {...formItemLayout}>
+          <Input multiple placeholder="请输入商家详细地址" {...init('merchantAreaDetail', {
+            rules: [{required: true, message: '请输入商家详细地址'}],
+            initValue: merchantDetail ? merchantDetail.address : '',
           })}/>
         </FormItem>
         <FormItem label="选择商家图片：" {...formItemLayout}>
@@ -95,6 +138,12 @@ export default class MerchantForm extends React.Component {
             getValueFromEvent: this.formatUploadValue
           })}/>
         </FormItem>
+        <FormItem label=" "  {...formItemLayout}>
+          <Button style={styles.buttonSpace} type="primary" size="large" loading={__loading} onClick={this.submitInfo}>
+            {type === 'edit' ? '确认修改' : '新增'}
+          </Button>
+          {type === 'edit' ? <Button style={styles.buttonSpace} onClick={this.backFromEdit}>返回</Button> : null}
+        </FormItem>
       </Form>
     )
   }
@@ -103,5 +152,8 @@ export default class MerchantForm extends React.Component {
 const styles = {
   cascaderSelectWidth: {
     width: '300px'
-  }
+  },
+  buttonSpace: {
+    margin: '0 3px',
+  },
 }

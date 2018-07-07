@@ -13,7 +13,6 @@ const Toast = Feedback.toast
   bannerList: {
     url:`${DOMAIN}/admin/article/listsCarousel`,
     responseFormatter:(responseHandler,res,originResponse)=>{
-      console.log(originResponse,res)
       const formatResponse = {
         status: originResponse.code === 200 ? 'SUCCESS':'ERROR',
         data:res

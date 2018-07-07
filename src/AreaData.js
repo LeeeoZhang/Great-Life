@@ -4496,7 +4496,6 @@ const AreaData = [{
     "label": "长沙",
     "children": [
       { "value": "2008", "label": "宁乡县" },
-      { "value": "2004", "label": "长沙市" },
       { "value": "2005", "label": "浏阳市" },
       { "value": "2006", "label": "长沙县" },
       { "value": "2007", "label": "望城县" },

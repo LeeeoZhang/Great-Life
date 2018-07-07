@@ -1,48 +1,45 @@
 import React, {Fragment} from 'react'
-import {Tab} from "@icedesign/base"
+import {Tab, Feedback} from "@icedesign/base"
 import DataBinder from '@icedesign/data-binder'
 import ArticleList from './ArticleList'
 import NavManage from '../NavManage'
 import ArticleForm from './ArticleForm'
+import DOMAIN from '@/domain'
+import {addArticle, editArticle,getArticleDetail,delArticle} from '@/service'
 
 const TabPane = Tab.TabPane
+const Toast = Feedback.toast
 
 @DataBinder({
   articleList: {
+    url: `${DOMAIN}/admin/article/lists`,
+    params: {
+      page: 1,
+      size: 10,
+    },
+    responseFormatter: (responseHandler, res, originResponse) => {
+      const formatResponse = {
+        status: originResponse.code === 200 ? 'SUCCESS' : 'ERROR',
+        data: res
+      }
+      responseHandler(formatResponse, originResponse)
+    },
     defaultBindingData: {
-      lists: [
-        {title: '测试文章1', createTime: '2018年10月31日', auth: 'xxx', id: 1},
-        {title: '测试文章1', createTime: '2018年10月31日', auth: 'xxx', id: 2},
-        {title: '测试文章1', createTime: '2018年10月31日', auth: 'xxx', id: 3},
-        {title: '测试文章1', createTime: '2018年10月31日', auth: 'xxx', id: 4},
-        {title: '测试文章1', createTime: '2018年10月31日', auth: 'xxx', id: 5},
-        {title: '测试文章1', createTime: '2018年10月31日', auth: 'xxx', id: 6},
-        {title: '测试文章1', createTime: '2018年10月31日', auth: 'xxx', id: 7},
-        {title: '测试文章1', createTime: '2018年10月31日', auth: 'xxx', id: 8},
-        {title: '测试文章1', createTime: '2018年10月31日', auth: 'xxx', id: 9},
-        {title: '测试文章1', createTime: '2018年10月31日', auth: 'xxx', id: 10},
-      ],
-      count: 100,
+      data: [],
+      count: 0,
     },
   },
-  navList : {
-    defaultBindingData:{
-      lists:[
-        {title:'测试导航1',createTime:'2018-09-09',id:1,},
-        {title:'测试导航2',createTime:'2018-09-09',id:2,},
-        {title:'测试导航3',createTime:'2018-09-09',id:3,},
-        {title:'测试导航4',createTime:'2018-09-09',id:4,},
-        {title:'测试导航5',createTime:'2018-09-09',id:5,},
-      ],
+  navList: {
+    url: `${DOMAIN}/admin/article/listsType`,
+    responseFormatter: (responseHandler, res, originResponse) => {
+      const formatResponse = {
+        status: originResponse.code === 200 ? 'SUCCESS' : 'ERROR',
+        data: res
+      }
+      responseHandler(formatResponse, originResponse)
     },
-  },
-  articleDetail: {
     defaultBindingData: {
-      content: '',
-      title: '测试标题',
-      author: '张宁',
-      desc: 'yoyo',
-      navId:1,
+      lists: [],
     },
   },
 })
@@ -55,50 +52,81 @@ export default class ArticleManage extends React.Component {
     this.state = {
       isEdit: false,
       editId: '',
+      articleDetail:null,
     }
   }
 
   componentDidMount () {
-    console.log('挂载了')
+    this.getArticleList()
   }
 
+
   //添加文章
-  addArticle = (info, htmlStr) => {
-    console.log(info, htmlStr)
+  addArticle = async (data, clear) => {
+    const res = await addArticle({data}).catch(() => false)
+    if (res) {
+      Toast.success('添加成功')
+      clear()
+      this.getArticleList()
+    }
   }
 
   //编辑文章
-  editArticle = (info, htmlStr) => {
-    console.log(info, htmlStr)
+  editArticle = async (data) => {
+    data.id = this.state.editId
+    const res = await editArticle({data}).catch(()=>false)
+    if(res) {
+      Toast.success('修改成功')
+      this.backFromEdit()
+    }
   }
 
-  delArticle = id => {
-    console.log(id)
+  //删除文章
+  delArticle = async id => {
+    const res = await delArticle({params:{id}}).catch(()=>false)
+    if(res) {
+      Toast.success('删除成功')
+      this.getArticleList()
+    }
   }
 
   //更新翻页
-  updateArticleList = (paginationInfo) => {
-    console.log(paginationInfo)
+  //@param paginationInfo {page,size}
+  updateArticleList = ({page, size}) => {
+    this.getArticleList(page, size)
   }
 
   //获取文章详情进行回填更新，并打开编辑页面
-  getArticleDetail = id => {
-    console.log(id)
-    this.setState({isEdit: true, editId: id})
+  getArticleDetail = async id => {
+    this.setState({editId: id})
+    this.props.updateBindingData('navList')
+    const res  = await getArticleDetail({params:{id}}).catch(()=>false)
+    if(res) {
+      this.setState({articleDetail:res.data,isEdit:true})
+    }
   }
 
   //从编辑文章处返回并重新获取第一页数据
   backFromEdit = () => {
+    this.getArticleList()
     this.setState({isEdit: false})
     //窗口回滚
     window.scrollTo(0, 0)
   }
 
+  getArticleList = (page = 1, size = 10) => {
+    this.props.updateBindingData('articleList', {params: {page, size}})
+  }
+
+  getNavList = () => {
+    this.props.updateBindingData('navList')
+  }
+
   render () {
-    const {articleList,navList,articleDetail} = this.props.bindingData
+    const {articleList, navList} = this.props.bindingData
     const {count} = articleList
     const __loading = this.props.bindingData.__loading
-    const {isEdit} = this.state
+    const {isEdit,articleDetail} = this.state
     return (
       <Fragment>
         {isEdit ?
@@ -108,20 +136,22 @@ export default class ArticleManage extends React.Component {
                        articleDetail={articleDetail}
                        type="edit"
                        navList={navList.lists}
+                       getNavList={this.getNavList}
           /> :
           <Tab type="wrapped">
-            <TabPane key="addArticleForm" tab="添加文章">
-              <ArticleForm __loading={__loading} type="add" onSubmitInfo={this.addArticle} navList={navList.lists}/>
-            </TabPane>
             <TabPane key="articleList" tab="文章列表">
               <ArticleList
-                articleList={articleList.lists}
+                articleList={articleList.data}
                 __loading={__loading}
                 updateArticleList={this.updateArticleList}
                 getArticleDetail={this.getArticleDetail}
                 count={count}
                 delArticle={this.delArticle}
               />
+            </TabPane>
+            <TabPane key="addArticleForm" tab="添加文章">
+              <ArticleForm __loading={__loading} type="add" onSubmitInfo={this.addArticle} navList={navList.lists}
+                           getNavList={this.getNavList}/>
             </TabPane>
           </Tab>
         }

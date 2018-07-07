@@ -4,13 +4,12 @@ import {
   FormBinder as IceFormBinder,
   FormError as IceFormError,
 } from '@icedesign/form-binder'
-import {Grid, Input, Button, Feedback,Select} from "@icedesign/base"
+import {Grid, Input, Button, Feedback, Select} from "@icedesign/base"
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/braft.css'
 import {uploadArticleIMG} from '@/service'
 
 const {Row, Col} = Grid
-const {Option} = Select
 const Toast = Feedback.toast
 
 export default class ArticleForm extends React.Component {
@@ -20,13 +19,14 @@ export default class ArticleForm extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      articleInfo:{
-        title:props.articleDetail ? props.articleDetail.title : '',
-        author:props.articleDetail ? props.articleDetail.author : '',
-        desc:props.articleDetail ? props.articleDetail.desc : '',
-        navId:props.articleDetail ? String(props.articleDetail.navId) : '',
+      articleInfo: {
+        title: props.articleDetail ? props.articleDetail.title : '',
+        author: props.articleDetail ? props.articleDetail.author : '',
+        desc: props.articleDetail ? props.articleDetail.desc : '',
+        navId: props.articleDetail ? String(props.articleDetail.type) : '',
+        id: props.articleDetail ? props.articleDetail.id : '',
       },
-      articleHTML:props.articleDetail ? props.articleDetail.content : '',
+      articleHTML: props.articleDetail ? props.articleDetail.content : '',
     }
   }
 
@@ -38,7 +38,7 @@ export default class ArticleForm extends React.Component {
       if (!articleHTML) {
         Toast.error('请编辑文章详情')
       } else {
-        error || onSubmitInfo(values,articleHTML)
+        error || onSubmitInfo(this.formatSubmitInfo(values, articleHTML), this.clearForm)
       }
     })
   }
@@ -79,38 +79,51 @@ export default class ArticleForm extends React.Component {
     this.props.backFromEdit()
   }
 
-  clearForm = ()=>{
+  clearForm = () => {
+    this.editor.clear()
     this.setState({
-      articleInfo:{
-        title:'',
+      articleInfo: {
+        title: '',
         author: '',
-        desc:'',
-        navId:'',
+        desc: '',
+        navId: '',
       },
-      articleHTML:'',
+      articleHTML: '',
     })
   }
 
   //打开导航选择是请求导航列表
-  openNavSelector = () =>{
-    console.log('打开')
+  openNavSelector = () => {
+    this.props.getNavList()
   }
 
   formatNavList = navList => {
-   return navList.map(item=>{
+    return navList.map(item => {
       return {
-        label:item.title,
-        value:String(item.id),
+        label: item.title,
+        value: String(item.id),
       }
     })
   }
 
+  //格式化提交数据
+  formatSubmitInfo = (values, articleHTML) => {
+    return {
+      title: values.title,
+      author: values.author,
+      desc: values.desc,
+      type: values.navId,
+      content: articleHTML,
+    }
+  }
+
   render () {
-    const {__loading,articleDetail,type,navList} = this.props
-    const {articleInfo} = this.state
+    const {__loading, type, navList} = this.props
+    const {articleInfo, articleHTML} = this.state
     const editorConfig = {
       contentFormat: 'html',
-      initialContent:articleDetail ? articleDetail.content: '',
+      initialContent: articleHTML,
+      contentId: articleInfo.id,
       onHTMLChange: this.onEditorChange,
       media: {
         uploadFn: this.onEditorUpload,
@@ -151,9 +164,9 @@ export default class ArticleForm extends React.Component {
             <Col xxs="6" s="3" l="3" style={styles.formLabel} align="top">添加至：</Col>
             <Col s="12" l="10">
               <IceFormBinder name="navId" required message="请选择需添加至的导航">
-                <Select dataSource={this.formatNavList(navList)} onOpen={this.openNavSelector}/>
+                <Select style={styles.input} dataSource={this.formatNavList(navList)} onOpen={this.openNavSelector}/>
               </IceFormBinder>
-              <IceFormError name="desc"/>
+              <IceFormError name="navId"/>
             </Col>
           </Row>
           <Row style={styles.formItem}>
@@ -165,10 +178,12 @@ export default class ArticleForm extends React.Component {
           </Row>
           <Row style={styles.formItem}>
             <Col offset="1">
-              <Button style={styles.buttonSpace} type="primary" size="large" loading={__loading} onClick={this.submitInfo}>
-                {type === 'edit' ? '确认修改':'确认添加'}
+              <Button style={styles.buttonSpace} type="primary" size="large" loading={__loading}
+                      onClick={this.submitInfo}>
+                {type === 'edit' ? '确认修改' : '确认添加'}
               </Button>
-              {type === 'edit' ? <Button style={styles.buttonSpace} size="large" onClick={this.backFromEdit}>返回</Button> : null}
+              {type === 'edit' ?
+                <Button style={styles.buttonSpace} size="large" onClick={this.backFromEdit}>返回</Button> : null}
             </Col>
           </Row>
         </Fragment>
@@ -195,7 +210,7 @@ const styles = {
     borderRadius: '5px',
   },
   buttonSpace: {
-    margin:'0 3px',
+    margin: '0 3px',
   }
 }
 
