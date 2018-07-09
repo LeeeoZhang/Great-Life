@@ -5,23 +5,28 @@ import IceContainer from '@icedesign/container'
 import IceTitle from '@icedesign/title'
 import MerchantForm from './components/MerchantForm'
 import MerchantList from './components/MerchantList'
+import DOMAIN from "../../domain"
+import {addMerchant,editMerchant,delMerchant} from '@/service'
+
+const Toast = Feedback.toast
 
 @DataBinder({
   merchantList : {
+    url:`${DOMAIN}/admin/merchant/lists`,
+    params:{
+      page:1,
+      size:10,
+    },
+    responseFormatter:(responseHandler,res,originResponse)=>{
+      const formatResponse = {
+        status: originResponse.code === 200 ? 'SUCCESS':'ERROR',
+        data:res
+      }
+      responseHandler(formatResponse,originResponse)
+    },
     defaultBindingData:{
-      lists:[
-        {id:1,title:'测试商家',address:'湖南省长沙市天心区文源街道中南林业科技大学',imgUrl:'http://ltplus.zmtlm.cn/uploads/20180623/96f2b47702af036ded82c0ab190c0b6f.jpeg'},
-        {id:2,title:'测试商家',address:'湖南省长沙市天心区文源街道中南林业科技大学',imgUrl:'http://ltplus.zmtlm.cn/uploads/20180623/96f2b47702af036ded82c0ab190c0b6f.jpeg'},
-        {id:3,title:'测试商家',address:'湖南省长沙市天心区文源街道中南林业科技大学',imgUrl:'http://ltplus.zmtlm.cn/uploads/20180623/96f2b47702af036ded82c0ab190c0b6f.jpeg'},
-        {id:4,title:'测试商家',address:'湖南省长沙市天心区文源街道中南林业科技大学',imgUrl:'http://ltplus.zmtlm.cn/uploads/20180623/96f2b47702af036ded82c0ab190c0b6f.jpeg'},
-        {id:5,title:'测试商家',address:'湖南省长沙市天心区文源街道中南林业科技大学',imgUrl:'http://ltplus.zmtlm.cn/uploads/20180623/96f2b47702af036ded82c0ab190c0b6f.jpeg'},
-        {id:6,title:'测试商家',address:'湖南省长沙市天心区文源街道',imgUrl:'http://ltplus.zmtlm.cn/uploads/20180623/96f2b47702af036ded82c0ab190c0b6f.jpeg'},
-        {id:7,title:'测试商家',address:'湖南省长沙市天心区文源街道',imgUrl:'http://ltplus.zmtlm.cn/uploads/20180623/96f2b47702af036ded82c0ab190c0b6f.jpeg'},
-        {id:8,title:'测试商家',address:'湖南省长沙市天心区文源街道',imgUrl:'http://ltplus.zmtlm.cn/uploads/20180623/96f2b47702af036ded82c0ab190c0b6f.jpeg'},
-        {id:9,title:'测试商家',address:'湖南省长沙市天心区文源街道',imgUrl:'http://ltplus.zmtlm.cn/uploads/20180623/96f2b47702af036ded82c0ab190c0b6f.jpeg'},
-        {id:10,title:'测试商家',address:'湖南省长沙市天心区文源街道',imgUrl:'http://ltplus.zmtlm.cn/uploads/20180623/96f2b47702af036ded82c0ab190c0b6f.jpeg'},
-      ],
-      count:100
+      lists:[],
+      count:0,
     }
   }
 })
@@ -35,22 +40,52 @@ export default class Merchant extends React.Component {
       isEdit : false,
       size:10,
       merchantDetail:null,
+      editId:'',
     }
+  }
+
+  componentDidMount () {
+    this.getMerchantList()
   }
 
   //添加商家
   addMerchant = async (data,clear) => {
-    console.log(data)
+    const res = await addMerchant({data}).catch(()=>false)
+    if(res) {
+      Toast.success('添加成功')
+      clear()
+      this.getMerchantList()
+    }
   }
 
   //修改商家
   editMerchant = async data => {
+    data.id = this.state.editId
+    const res = await editMerchant({data}).catch(()=>false)
+    if(res) {
+      this.backFromEdit()
+      Toast.success('修改成功')
+      this.getMerchantList()
+    }
+  }
 
+  //删除商家
+  delMerchant = async id => {
+    const res = await delMerchant({params:{id}}).catch(()=>false)
+    if(res) {
+      Toast.success('删除成功')
+      this.getMerchantList()
+    }
   }
 
   //获取商家详情并进行编辑
-  getMerchantThenEdit = async id => {
-
+  getMerchantThenEdit = (id,index) => {
+    const {merchantList} = this.props.bindingData
+    this.setState({
+      isEdit:true,
+      editId:id,
+      merchantDetail:{...merchantList.lists[index]},
+    })
   }
 
   //从编辑返回
@@ -58,8 +93,12 @@ export default class Merchant extends React.Component {
     this.setState({isEdit:false})
   }
 
+  getMerchantList = (page = 1,size = 10) => {
+    this.props.updateBindingData('merchantList',{params:{page,size}})
+  }
+
   render () {
-    const {isEdit,size} = this.state
+    const {isEdit,size,merchantDetail} = this.state
     const {merchantList} = this.props.bindingData
     const {count} = merchantList
     const {__loading} = merchantList
@@ -67,12 +106,16 @@ export default class Merchant extends React.Component {
       <Fragment>
         <IceContainer>
           {isEdit ?
-            <MerchantForm type="edit" backFromEdit={this.backFromEdit} onSubmitInfo={this.editMerchant}/>:
+            <div>
+              <IceTitle text="修改商家" decoration/>
+              <MerchantForm type="edit" merchantDetail={merchantDetail} backFromEdit={this.backFromEdit} onSubmitInfo={this.editMerchant}/>
+            </div>
+            :
             <Fragment>
               <IceTitle text="添加新商家" decoration/>
               <MerchantForm type="add" onSubmitInfo={this.addMerchant}/>
               <IceTitle text="商家列表" decoration/>
-              <MerchantList getMerchantThenEdit={this.getMerchantThenEdit} merchantList={merchantList.lists} __loading={__loading}/>
+              <MerchantList getMerchantThenEdit={this.getMerchantThenEdit} merchantList={merchantList.lists} __loading={__loading} delMerchant={this.delMerchant}/>
               <div style={styles.paginationWrap}>
                 <Pagination onChange={this.onPaginationChange}
                             showJump={false}
@@ -91,7 +134,7 @@ export default class Merchant extends React.Component {
 
 const styles = {
   paginationWrap: {
-    margin: '25px auto',
+    margin: '25px auto 70px',
     display: 'flex',
     justifyContent: 'flex-end',
   },

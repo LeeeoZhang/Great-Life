@@ -5,7 +5,7 @@ import ArticleList from './ArticleList'
 import NavManage from '../NavManage'
 import ArticleForm from './ArticleForm'
 import DOMAIN from '@/domain'
-import {addArticle, editArticle,getArticleDetail,delArticle} from '@/service'
+import {addArticle, editArticle, getArticleDetail, delArticle} from '@/service'
 
 const TabPane = Tab.TabPane
 const Toast = Feedback.toast
@@ -16,6 +16,7 @@ const Toast = Feedback.toast
     params: {
       page: 1,
       size: 10,
+      title: '',
     },
     responseFormatter: (responseHandler, res, originResponse) => {
       const formatResponse = {
@@ -25,7 +26,7 @@ const Toast = Feedback.toast
       responseHandler(formatResponse, originResponse)
     },
     defaultBindingData: {
-      data: [],
+      lists: [],
       count: 0,
     },
   },
@@ -52,7 +53,9 @@ export default class ArticleManage extends React.Component {
     this.state = {
       isEdit: false,
       editId: '',
-      articleDetail:null,
+      articleDetail: null,
+      //搜索关键字
+      key: '',
     }
   }
 
@@ -74,35 +77,42 @@ export default class ArticleManage extends React.Component {
   //编辑文章
   editArticle = async (data) => {
     data.id = this.state.editId
-    const res = await editArticle({data}).catch(()=>false)
-    if(res) {
-      Toast.success('修改成功')
+    const res = await editArticle({data}).catch(() => false)
+    if (res) {
       this.backFromEdit()
+      Toast.success('修改成功')
     }
   }
 
   //删除文章
   delArticle = async id => {
-    const res = await delArticle({params:{id}}).catch(()=>false)
-    if(res) {
+    const res = await delArticle({params: {id}}).catch(() => false)
+    if (res) {
       Toast.success('删除成功')
       this.getArticleList()
     }
   }
 
+  //搜索文章
+  searchArticle = key => {
+    this.setState({key})
+    this.getArticleList(1, 10, key)
+  }
+
   //更新翻页
   //@param paginationInfo {page,size}
   updateArticleList = ({page, size}) => {
-    this.getArticleList(page, size)
+    const {key} = this.state
+    this.getArticleList(page, size, key)
   }
 
   //获取文章详情进行回填更新，并打开编辑页面
   getArticleDetail = async id => {
     this.setState({editId: id})
     this.props.updateBindingData('navList')
-    const res  = await getArticleDetail({params:{id}}).catch(()=>false)
-    if(res) {
-      this.setState({articleDetail:res.data,isEdit:true})
+    const res = await getArticleDetail({params: {id}}).catch(() => false)
+    if (res) {
+      this.setState({articleDetail: res.data, isEdit: true})
     }
   }
 
@@ -114,8 +124,8 @@ export default class ArticleManage extends React.Component {
     window.scrollTo(0, 0)
   }
 
-  getArticleList = (page = 1, size = 10) => {
-    this.props.updateBindingData('articleList', {params: {page, size}})
+  getArticleList = (page = 1, size = 10, key = '') => {
+    this.props.updateBindingData('articleList', {params: {page, size, title:key}})
   }
 
   getNavList = () => {
@@ -126,7 +136,7 @@ export default class ArticleManage extends React.Component {
     const {articleList, navList} = this.props.bindingData
     const {count} = articleList
     const __loading = this.props.bindingData.__loading
-    const {isEdit,articleDetail} = this.state
+    const {isEdit, articleDetail} = this.state
     return (
       <Fragment>
         {isEdit ?
@@ -141,12 +151,13 @@ export default class ArticleManage extends React.Component {
           <Tab type="wrapped">
             <TabPane key="articleList" tab="文章列表">
               <ArticleList
-                articleList={articleList.data}
+                articleList={articleList.lists}
                 __loading={__loading}
                 updateArticleList={this.updateArticleList}
                 getArticleDetail={this.getArticleDetail}
                 count={count}
                 delArticle={this.delArticle}
+                searchArticle={this.searchArticle}
               />
             </TabPane>
             <TabPane key="addArticleForm" tab="添加文章">

@@ -40,6 +40,10 @@ const Merchant = Loadable({
   loader: () => import('./pages/Merchant'),
   loading: LoadingIndicator,
 })
+const Shop = Loadable({
+  loader: () => import('./pages/Shop'),
+  loading: LoadingIndicator,
+})
 
 const BasicTable = Loadable({
   loader: () => import('./pages/BasicTable'),
@@ -75,6 +79,11 @@ const routerConfig = [
     path: '/merchant',
     layout: HeaderAsideFooterLayout,
     component: Merchant,
+  },
+  {
+    path: '/shop',
+    layout: HeaderAsideFooterLayout,
+    component: Shop,
   },
   {
     path: '/portlets',

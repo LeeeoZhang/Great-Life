@@ -1,0 +1,3 @@
+import ShopManage from './ShopManage'
+
+export default ShopManage

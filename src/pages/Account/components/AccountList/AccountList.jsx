@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import { Table, Button,Input,Radio } from '@icedesign/base'
+import { Table, Button,Input,Radio ,Balloon} from '@icedesign/base'
 
 const RadioGroup = Radio.Group
 const statusList = [
@@ -64,7 +64,9 @@ export default class AccountList extends React.Component {
           return (
             <Fragment>
               <Button type="primary" loading={__loading} onClick={()=> this.onUpdate(index)} style={styles.actionButton}>更新</Button>
-              <Button shape="warning" loading={__loading} onClick={()=> this.onDel(record.id)} style={styles.actionButton}>删除</Button>
+              <Balloon>
+                <Button shape="warning" loading={__loading} onClick={()=> this.onDel(record.id)} style={styles.actionButton}>删除</Button>
+              </Balloon>
             </Fragment>
           )
         }}/>

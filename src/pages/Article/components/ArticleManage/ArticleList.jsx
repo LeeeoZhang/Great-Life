@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {Button, Table, Pagination,Balloon} from "@icedesign/base"
+import {Button, Table, Pagination,Balloon,Search,Grid} from "@icedesign/base"
 
 //详情弹窗，展示小程序路径和菊花码
 const PopDetail = props =>(
@@ -10,6 +10,7 @@ const PopDetail = props =>(
     <img style={styles.qrcode} src={props.articleDetail.qrcode} alt="qrcode"/>
   </Fragment>
 )
+const {Row,Col} = Grid
 
 export default class ArticleList extends React.Component {
 
@@ -20,10 +21,8 @@ export default class ArticleList extends React.Component {
     this.state = {
       //每页条数
       size: 10,
-      articleDetail:{
-        qrCode:'http://ltplus.zmtlm.cn/uploads/20180623/d46dc30be86413e785b9e2260cfeec55.jpeg',
-        path:'pages/article',
-      },
+      //受控分页器
+      current:1,
     }
   }
 
@@ -31,6 +30,7 @@ export default class ArticleList extends React.Component {
   onPaginationChange = (current, event) => {
     const {size} = this.state
     const {updateArticleList} = this.props
+    this.setState({current})
     updateArticleList({page: current, size})
   }
 
@@ -44,11 +44,23 @@ export default class ArticleList extends React.Component {
     this.props.delArticle(id)
   }
 
+  //搜索
+  onSearch = (data) => {
+    const {key} = data
+    this.setState({current:1})
+    this.props.searchArticle(key)
+  }
+
   render () {
     const {__loading, articleList, count} = this.props
-    const {size,articleDetail} = this.state
+    const {size,current} = this.state
     return (
       <Fragment>
+        <Row style={styles.searchInput}>
+          <Col s="12" l="10">
+            <Search autoWidth placeholder="搜索条件" onChange={this.onSearchInputChange} onSearch={this.onSearch}/>
+          </Col>
+        </Row>
         <Table isLoading={__loading} dataSource={articleList}>
           <Table.Column title="文章编号" dataIndex="id"/>
           <Table.Column title="文章标题" dataIndex="title"/>
@@ -76,6 +88,7 @@ export default class ArticleList extends React.Component {
                       shape="arrow-only"
                       total={count}
                       pageSize={size}
+                      current={current}
           />
         </div>
       </Fragment>
@@ -97,5 +110,8 @@ const styles = {
   },
   detailBalloon :{
     width:'250px',
+  },
+  searchInput : {
+    marginBottom:'20px',
   }
 }

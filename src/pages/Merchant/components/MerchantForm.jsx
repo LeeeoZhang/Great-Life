@@ -22,7 +22,7 @@ export default class MerchantForm extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      areaStr: '',
+      areaStr: props.merchantDetail ? props.merchantDetail.area: '',
     }
   }
 
@@ -35,7 +35,7 @@ export default class MerchantForm extends React.Component {
   submitInfo = () => {
     const {onSubmitInfo} = this.props
     this.field.validate((error, values) => {
-      error || onSubmitInfo(this.formatUploadInfo(values),this.clearForm)
+      error || onSubmitInfo(this.formatUploadInfo(values), this.clearForm)
     })
   }
 
@@ -85,12 +85,16 @@ export default class MerchantForm extends React.Component {
   formatUploadInfo = values => {
     const {areaStr} = this.state
     return {
-      title:values.merchantTitle,
-      area:areaStr,
-      areaId:values.merchantArea,
-      field:values.merchantImg[0].response ? values.merchantImg[0].response.id : values.merchantImg[0].id,
-      address:values.merchantAreaDetail,
+      title: values.merchantTitle,
+      area: areaStr,
+      areaId: values.merchantArea,
+      fileId: values.merchantImg[0].response ? values.merchantImg[0].response.id : values.merchantImg[0].id,
+      address: values.merchantAreaDetail,
     }
+  }
+
+  backFromEdit = () => {
+    this.props.backFromEdit()
   }
 
   clearForm = () => {
@@ -120,7 +124,7 @@ export default class MerchantForm extends React.Component {
           <CascaderSelect hasClear style={styles.cascaderSelectWidth} dataSource={AreaData}
                           placeholder="请选择商家所在省市区/县" {...init('merchantArea', {
             rules: [{required: true, message: '请选择商家所在省市区'}],
-            initValue: merchantDetail ? merchantDetail.areaId : '',
+            initValue: merchantDetail ? String(merchantDetail.areaId) : '0',
             getValueFromEvent: this.formatAreaSelectValue
           })}/>
         </FormItem>

@@ -39,9 +39,7 @@ export default class BannerForm extends React.Component {
 
   field = new Field(this, {
     //onChange修改
-    onChange: (name, value) => {
-      this.field.setValue(name, value)
-    }
+    onChange: (name, value) => this.field.setValue(name, value)
   })
 
   submitInfo = () => {

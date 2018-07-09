@@ -1,8 +1,7 @@
 // 菜单配置
 // headerMenuConfig：头部导航配置
 // asideMenuConfig：侧边导航配置
-import { getAuth } from './utils';
-import Merchant from "./pages/Merchant/Merchant"
+
 
 const headerMenuConfig = [];
 
@@ -21,6 +20,11 @@ const asideMenuConfig = [
   {
     name: '商家管理',
     path: '/merchant',
+    icon: 'shop',
+  },
+  {
+    name: '店铺管理',
+    path: '/shop',
     icon: 'shop',
   },
   {
