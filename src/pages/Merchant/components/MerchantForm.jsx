@@ -46,7 +46,6 @@ export default class MerchantForm extends React.Component {
     extra && extra.selectedPath.forEach(path => areaStr += path.label)
     this.setState({areaStr})
     return value
-
   }
 
   //格式化上传图片res的格式
