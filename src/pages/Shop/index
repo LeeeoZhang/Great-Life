@@ -1,3 +1,4 @@
-import ShopManage from './ShopManage'
+import  Shop  from './Shop'
+import {withAuth} from '@/utils'
 
-export default ShopManage
+export default withAuth()(Shop)

@@ -3,6 +3,8 @@ import DataBinder from '@icedesign/data-binder'
 import {Tab, Feedback} from "@icedesign/base"
 import IceContainer from '@icedesign/container'
 import ShopForm from './components/ShopForm'
+import ShopList from './components/ShopList'
+import ShopTypeListManage from './components/ShopTypeListManage'
 import DOMAIN from '@/domain'
 
 const TabPane = Tab.TabPane
@@ -20,7 +22,8 @@ const TabPane = Tab.TabPane
       lists: [],
     },
   },
-  typeList: {
+  shopTypeList: {
+    url:`${DOMAIN}/admin/shop/listsFootType`,
     responseFormatter: (responseHandler, res, originResponse) => {
       const formatResponse = {
         status: originResponse.code === 200 ? 'SUCCESS' : 'ERROR',
@@ -29,12 +32,7 @@ const TabPane = Tab.TabPane
       responseHandler(formatResponse, originResponse)
     },
     defaultBindingData: {
-      lists: [
-        {title:'川菜',id:'1'},
-        {title:'外国菜',id:'2'},
-        {title:'不知道什么菜',id:'3'},
-        {title:'香菜',id:'4'},
-      ],
+      lists: [],
     },
   },
   merchantList: {
@@ -51,37 +49,46 @@ const TabPane = Tab.TabPane
         {title:'测试商家2',id:'2'},
         {title:'测试商家3',id:'3'},
         {title:'测试商家4',id:'4'},
-        {title:'测试商家5',id:'5s'},
+        {title:'测试商家5',id:'5'},
       ],
     },
   },
 })
-export default class ShopManage extends React.Component {
+export default class Shop extends React.Component {
 
-  static displayName = 'ShopManage'
+  static displayName = 'Shop'
 
   constructor (props) {
     super(props)
+  }
+
+  componentDidMount () {
+    this.getShopTypeList()
   }
 
   addShop = (data) => {
     console.log(data)
   }
 
+  //获取店铺类型列表
+  getShopTypeList = () => {
+    this.props.updateBindingData('shopTypeList')
+  }
+
   render () {
     const __loading = this.props.bindingData.__loading
-    const {typeList,merchantList} = this.props.bindingData
+    const {merchantList,shopTypeList} = this.props.bindingData
     return (
       <IceContainer>
         <Tab>
-          <TabPane key="shopForm" tab="添加店铺">
-            <ShopForm __loading={__loading} type="add" onSubmitInfo={this.addShop} typeList={typeList.lists} merchantList={merchantList.lists}/>
+          <TabPane key="shopType" tab="店铺分类">
+            <ShopTypeListManage shopTypeList={shopTypeList.lists} __loading={__loading}/>
           </TabPane>
           <TabPane key="shopList" tab="店铺列表">
-
+            <ShopList/>
           </TabPane>
-          <TabPane key="shopType" tab="店铺分类">
-
+          <TabPane key="shopForm" tab="添加店铺">
+            <ShopForm __loading={__loading} type="add" onSubmitInfo={this.addShop} shopTypeList={shopTypeList.lists} merchantList={merchantList.lists}/>
           </TabPane>
         </Tab>
       </IceContainer>

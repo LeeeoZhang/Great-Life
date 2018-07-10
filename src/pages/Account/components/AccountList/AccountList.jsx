@@ -64,9 +64,7 @@ export default class AccountList extends React.Component {
           return (
             <Fragment>
               <Button type="primary" loading={__loading} onClick={()=> this.onUpdate(index)} style={styles.actionButton}>更新</Button>
-              <Balloon>
-                <Button shape="warning" loading={__loading} onClick={()=> this.onDel(record.id)} style={styles.actionButton}>删除</Button>
-              </Balloon>
+              <Button shape="warning" loading={__loading} onClick={()=> this.onDel(record.id)} style={styles.actionButton}>删除</Button>
             </Fragment>
           )
         }}/>

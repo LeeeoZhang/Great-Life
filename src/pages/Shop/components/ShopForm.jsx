@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {Input, Button, Upload, Form, Field, Select} from '@icedesign/base'
+import {Input, Button, Upload, Form, Field, Select,Feedback,Radio} from '@icedesign/base'
 import MapModal from './MapModal'
 
 import './ShopForm.scss'
@@ -7,6 +7,8 @@ import DOMAIN from '@/domain'
 
 const FormItem = Form.Item
 const {ImageUpload} = Upload
+const Toast = Feedback.toast
+const { Group: RadioGroup } = Radio
 const formItemLayout = {
   labelCol: {
     fixedSpan: 8
@@ -34,6 +36,12 @@ const shopKeyWordTips = (
 const carouselTips = (
   <div style={styles.tipsContent}>第一张轮播图将作为店铺列表的展示图片</div>
 )
+const recommendRadio = [
+  {value:'0',label:'否'},
+  {value:'1',label:'是'},
+]
+
+
 export default class ShopForm extends React.Component {
 
   static displayName = 'ShopForm'
@@ -46,10 +54,17 @@ export default class ShopForm extends React.Component {
     }
   }
 
+  //提交表单信息
   submitInfo = () => {
     const {onSubmitInfo} = this.props
     this.field.validate((error, values) => {
-      error || onSubmitInfo(this.formatUploadInfo(values), this.clearForm)
+      if(!error) {
+        if(this.checkMapInfo()) {
+          onSubmitInfo(this.formatUploadInfo(values), this.clearForm)
+        } else {
+          Toast.error('请选取店铺位置')
+        }
+      }
     })
   }
 
@@ -57,6 +72,7 @@ export default class ShopForm extends React.Component {
     onChange: (name, value) => this.field.setValue(name, value)
   })
 
+  //格式化上传图片的值
   formatUploadValue = info => {
     if (info.fileList && info.fileList.length > 0) {
       return info.fileList
@@ -64,33 +80,42 @@ export default class ShopForm extends React.Component {
     return []
   }
 
+  //格式化上传图片的服务器响应
   formatUploadResponse = res => {
     return {
       code: res.code === 200 ? '0' : '1',
       imgURL: res.data ? res.data.httpUrl : '',
       fileURL: res.data ? res.data.httpUrl : '',
       downloadURL: res.data ? res.data.httpUrl : '',
-      id: res.data ? res.data.id : ''
+      id: res.data ? String(res.data.id) : ''
     }
   }
 
-  createInitFileList = bannerDetail => {
+  //初始化一个图片列表
+  createInitFileList = shopDetail => {
     const initFileList = []
     const file = {}
-    if (bannerDetail) {
+    if (shopDetail) {
+
       file.name = file.fileName = 'file'
       file.status = 'done'
-      file.downloadURL = file.fileURL = file.imgURL = bannerDetail.imgUrl
-      file.id = bannerDetail.fileId
+      file.downloadURL = file.fileURL = file.imgURL = shopDetail.imgUrl
+      file.id = shopDetail.fileId
       initFileList.push(file)
     }
     return initFileList
   }
 
+  //格式化提交的表单信息
   formatUploadInfo = values => {
-    return values
+    return {
+      ...values,
+      fileId:values.shopCarousel[0].response ? values.shopCarousel.map(file=>file.response.id) : values.shopCarousel.map(file=>file.id),
+      mapInfo:this.state.mapInfo
+    }
   }
 
+  //格式化店铺类型选择列表
   formatTypeList = typeList => {
     return typeList.map(type => {
       return {
@@ -100,6 +125,7 @@ export default class ShopForm extends React.Component {
     })
   }
 
+  //格式化关联商家选择列表
   formatMerchantList = merchantList => {
     return merchantList.map(merchant => {
       return {
@@ -129,8 +155,8 @@ export default class ShopForm extends React.Component {
   checkMapInfo = () => {
     const {mapInfo}  = this.state
     if(mapInfo) {
-      const {areaId, areaStr, address, lat, lng} = mapInfo
-      return (areaId && areaStr && address && lat && lng)
+      const {areaId, areaStr, lat, lng} = mapInfo
+      return (areaId && areaStr  && lat && lng)
     } else {
       return false
     }
@@ -138,6 +164,7 @@ export default class ShopForm extends React.Component {
 
   clearForm = () => {
     this.field.reset()
+    this.setState({mapInfo:null})
   }
 
   render () {
@@ -168,6 +195,12 @@ export default class ShopForm extends React.Component {
           }
           <FormItem label="店铺名称：" {...formItemLayout}>
             <Input placeholder="请输入店铺名称" {...init('shopTitle', {
+              rules: [{required: true, message: '请输入店铺名称'}],
+              initValue: shopDetail ? shopDetail.title : '',
+            })}/>
+          </FormItem>
+          <FormItem label="人均消费：" {...formItemLayout}>
+            <Input placeholder="请输入人均消费" {...init('consumptionPerson', {
               rules: [{required: true, message: '请输入店铺名称'}],
               initValue: shopDetail ? shopDetail.title : '',
             })}/>
@@ -224,6 +257,12 @@ export default class ShopForm extends React.Component {
           </FormItem>
           <FormItem label="营业时间：" {...formItemLayout}>
             <Input placeholder="请输入营业时间" {...init('businessHours', {
+              rules: [{required: true, message: '请输入营业时间'}],
+              initValue: shopDetail ? shopDetail.title : '',
+            })}/>
+          </FormItem>
+          <FormItem label="是否是好店推荐：" {...formItemLayout}>
+            <RadioGroup dataSource={recommendRadio}  {...init('isRecommend', {
               rules: [{required: true, message: '请输入营业时间'}],
               initValue: shopDetail ? shopDetail.title : '',
             })}/>

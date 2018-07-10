@@ -104,7 +104,7 @@ export default class Header extends PureComponent {
             <ul>
               <Link to="/login">
                 <li className="user-profile-menu-item" onClick={this.removeAuth}>
-                    <FoundationSymbol type="compass" size="small"/>退出
+                    <FoundationSymbol type="backward" size="small"/>退出
                 </li>
               </Link>
             </ul>

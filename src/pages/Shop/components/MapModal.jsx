@@ -1,21 +1,22 @@
-import React,{Fragment} from 'react'
-import { Dialog,Grid,Input,Button,CascaderSelect } from '@icedesign/base'
+import React, {Fragment} from 'react'
+import {Dialog, Grid, Input, Button, CascaderSelect, Feedback} from '@icedesign/base'
 import AreaData from '@/AreaData'
 import qq from 'qq'
 
 const styles = {
-  mapSize:{
-    width:'980px',
-    height:'400px'
+  mapSize: {
+    width: '980px',
+    height: '400px'
   },
-  input :{
-    width:'90%'
+  input: {
+    width: '90%'
   },
-  userAction:{
-    margin:'20px 0'
+  userAction: {
+    margin: '20px 0'
   },
 }
-const {Row,Col} = Grid
+const {Row, Col} = Grid
+const Toast = Feedback.toast
 
 export default class MapModal extends React.Component {
 
@@ -24,42 +25,49 @@ export default class MapModal extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      areaStr:'',
-      areaId:'',
-      address:'',
+      areaStr: '',
+      areaId: '',
+      address: '',
     }
   }
 
+  //弹窗打开动画结束回调
   afterModalOpen = () => {
-    const center = new qq.maps.LatLng(39.916527,116.397128)
-    this.map = new qq.maps.Map(document.getElementById('map-ct'),{
+    const center = new qq.maps.LatLng(39.916527, 116.397128)
+    this.map = new qq.maps.Map(document.getElementById('map-ct'), {
       center,
-      zoom:17,
+      zoom: 17,
       draggable: false,
-      scrollwheel: false,
       disableDoubleClickZoom: false
     })
   }
 
-  afterModalClose =() => {
+  //弹窗关闭动画结束回调
+  afterModalClose = () => {
     this.map = null
     this.result = null
+    this.setState({
+      areaStr: '',
+      areaId: '',
+      address: '',
+    })
   }
 
   getLocation = () => {
-    const {areaStr,address} = this.state
+    const {areaStr, address} = this.state
     const geocoder = new qq.maps.Geocoder({
-      complete:(result)=>{
+      complete: (result) => {
         console.log(result)
         this.result = result
         this.map.setCenter(result.detail.location)
         const marker = new qq.maps.Marker({
-          map:this.map,
-          position:result.detail.location
+          map: this.map,
+          position: result.detail.location,
+          animation: qq.maps.MarkerAnimation.BOUNCE,
         })
       }
     })
-    geocoder.getLocation(areaStr+address)
+    geocoder.getLocation(areaStr + address)
   }
 
   //格式化选择地区的value格式
@@ -67,32 +75,39 @@ export default class MapModal extends React.Component {
     let areaStr = ''
     //当清空选择时不存在extra
     extra && extra.selectedPath.forEach(path => areaStr += path.label)
-    this.setState({areaStr,areaId:String(value)})
+    this.setState({areaStr, areaId: String(value)})
+    this.result = null
     return value
   }
 
   //输入详细地址
   inputAddress = value => {
-    this.setState({address:value})
+    this.setState({address: value})
   }
 
   submitMapInfo = () => {
-    const {areaId,areaStr,address} = this.state
-    this.props.closeMapModal()
-    this.props.submitMapInfo({
-      areaId,
-      areaStr,
-      address,
-      //纬度
-      lat:this.result.detail.location.getLat(),
-      //经度
-      lng:this.result.detail.location.getLng(),
-    })
+    const {areaId, areaStr, address} = this.state
+    if (!areaId) {
+      Toast.error('请选择省市区')
+    } else if (!this.result) {
+      Toast.error('请定位地址')
+    } else {
+      this.props.submitMapInfo({
+        areaId,
+        areaStr,
+        address,
+        //纬度
+        lat: this.result.detail.location.getLat(),
+        //经度
+        lng: this.result.detail.location.getLng(),
+      })
+      this.props.closeMapModal()
+    }
   }
 
   render () {
-    const {isMapModalShow,closeMapModal} = this.props
-    const {areaId,address} = this.state
+    const {isMapModalShow, closeMapModal} = this.props
+    const {areaId, address} = this.state
     return (
       <Dialog
         visible={isMapModalShow}
@@ -105,7 +120,8 @@ export default class MapModal extends React.Component {
       >
         <Row style={styles.userAction}>
           <Col xxs="5" s="5" l="5">
-            <CascaderSelect style={styles.input} dataSource={AreaData} onChange={this.formatAreaSelectValue} value={areaId}/>
+            <CascaderSelect hasClear style={styles.input} dataSource={AreaData} onChange={this.formatAreaSelectValue}
+                            value={areaId}/>
           </Col>
           <Col xxs="5" s="5" l="5">
             <Input style={styles.input} placeholder="输入详细地址" onChange={this.inputAddress} value={address}/>

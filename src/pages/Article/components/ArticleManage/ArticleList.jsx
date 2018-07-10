@@ -2,7 +2,7 @@ import React, {Fragment} from 'react'
 import {Button, Table, Pagination,Balloon,Search,Grid} from "@icedesign/base"
 
 //详情弹窗，展示小程序路径和菊花码
-const PopDetail = props =>(
+const PopDetail = props => (
   <Fragment>
     <h4>小程序路径：xxx</h4>
     <hr/>

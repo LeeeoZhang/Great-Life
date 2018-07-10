@@ -2,8 +2,6 @@
 // 你可以调整 routerConfig 里的内容
 // 变量名 routerConfig 为 iceworks 检测关键字，请不要修改名称
 import Loadable from 'react-loadable'
-import HeaderAsideFooterLayout from './layouts/HeaderAsideFooterLayout'
-import Dashboard from './pages/Account'
 import Charts from './pages/Charts'
 import Portlets from './pages/Portlets'
 import Terms from './pages/Terms'
@@ -14,12 +12,18 @@ import Forbidden from './pages/Forbidden'
 import Empty from './pages/Empty'
 import List from './pages/List'
 import CardList from './pages/CardList'
-import HeaderAsideFooterResponsiveLayout from './layouts/HeaderAsideFooterResponsiveLayout'
-import BlankLayout from './layouts/BlankLayout'
 import NotFound from './pages/NotFound'
 import LoadingIndicator from '@/components/LoadingIndicator'
 
 //代码分割
+const HeaderAsideFooterLayout = Loadable({
+  loader: () => import('./layouts/HeaderAsideFooterLayout'),
+  loading: LoadingIndicator,
+})
+const BlankLayout = Loadable({
+  loader: () => import('./layouts/BlankLayout'),
+  loading: LoadingIndicator,
+})
 const Login = Loadable({
   loader: () => import('./pages/Login'),
   loading: LoadingIndicator,

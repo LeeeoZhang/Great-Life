@@ -32,6 +32,7 @@ export default class MerchantForm extends React.Component {
       this.field.setValue(name, value)
     }
   })
+
   submitInfo = () => {
     const {onSubmitInfo} = this.props
     this.field.validate((error, values) => {
@@ -111,6 +112,7 @@ export default class MerchantForm extends React.Component {
       withCredentials: true,
       formatter: this.formatUploadResponse,
     }
+
     return (
       <Form direction="ver" field={this.field} size="large">
         <FormItem label="商家名称：" {...formItemLayout}>
