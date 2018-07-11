@@ -36,6 +36,9 @@ const shopKeyWordTips = (
 const carouselTips = (
   <div style={styles.tipsContent}>第一张轮播图将作为店铺列表的展示图片</div>
 )
+const mealTypeTips = (
+  <div style={styles.tipsContent}>菜系名称，如湘菜，粤菜。如不是美食类店铺，则可不填</div>
+)
 const recommendRadio = [
   {value:'0',label:'否'},
   {value:'1',label:'是'},
@@ -96,7 +99,6 @@ export default class ShopForm extends React.Component {
     const initFileList = []
     const file = {}
     if (shopDetail) {
-
       file.name = file.fileName = 'file'
       file.status = 'done'
       file.downloadURL = file.fileURL = file.imgURL = shopDetail.imgUrl
@@ -116,8 +118,8 @@ export default class ShopForm extends React.Component {
   }
 
   //格式化店铺类型选择列表
-  formatTypeList = typeList => {
-    return typeList.map(type => {
+  formatTypeList = shopTypeList => {
+    return shopTypeList.map(type => {
       return {
         label: type.title,
         value: type.id,
@@ -169,7 +171,7 @@ export default class ShopForm extends React.Component {
 
   render () {
     const {isMapModalShow, mapInfo} = this.state
-    const {__loading, shopDetail, type, typeList, merchantList} = this.props
+    const {__loading, shopDetail, type, shopTypeList, merchantList} = this.props
     const init = this.field.init
     const uploadConfig = {
       action: `${DOMAIN}/admin/file/upload`,
@@ -205,10 +207,10 @@ export default class ShopForm extends React.Component {
               initValue: shopDetail ? shopDetail.title : '',
             })}/>
           </FormItem>
-          <FormItem label="店铺分类：" {...formItemLayout}>
-            <Select style={styles.input} dataSource={this.formatTypeList(typeList)}
-                    placeholder="请选择店铺分类" {...init('shopType', {
-              rules: [{required: true, message: '请选择店铺分类'}],
+          <FormItem label="店铺二级分类：" {...formItemLayout}>
+            <Select style={styles.input} dataSource={this.formatTypeList(shopTypeList)}
+                    placeholder="请选择店铺二级分类" {...init('shopType', {
+              rules: [{required: true, message: '请选择店铺二级分类'}],
               initValue: shopDetail ? shopDetail.title : '',
             })}/>
           </FormItem>
@@ -219,7 +221,7 @@ export default class ShopForm extends React.Component {
               initValue: shopDetail ? shopDetail.title : '',
             })}/>
           </FormItem>
-          <FormItem label="菜品分类名称：" {...formItemLayout}>
+          <FormItem label="菜品类型名称：" {...formItemLayout} extra={mealTypeTips}>
             <Input placeholder="请输入店铺名称" {...init('mealType', {
               initValue: shopDetail ? shopDetail.title : '',
             })}/>

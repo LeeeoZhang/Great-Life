@@ -15,7 +15,7 @@ const Toast = Feedback.toast
     url:`${DOMAIN}/admin/merchant/lists`,
     params:{
       page:1,
-      size:10,
+      size:1000,
     },
     responseFormatter:(responseHandler,res,originResponse)=>{
       const formatResponse = {

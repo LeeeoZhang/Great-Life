@@ -60,14 +60,26 @@ const TableDisplay = Loadable({
 
 const routerConfig = [
   {
+    path: '/table',
+    layout: HeaderAsideFooterLayout,
+    component: BasicTable,
+    children: [
+      {
+        path: 'basic-table',
+        layout: HeaderAsideFooterLayout,
+        component: BasicTable,
+      },
+      {
+        path: 'table-display',
+        layout: HeaderAsideFooterLayout,
+        component: TableDisplay,
+      },
+    ],
+  },
+  {
     path: '/login',
     layout: BlankLayout,
     component: Login,
-  },
-  {
-    path: '/',
-    layout: HeaderAsideFooterLayout,
-    component: BlankComponent,
   },
   {
     path: '/account',
@@ -107,21 +119,9 @@ const routerConfig = [
     ],
   },
   {
-    path: '/table',
+    path: '/',
     layout: HeaderAsideFooterLayout,
-    component: BasicTable,
-    children: [
-      {
-        path: 'basic-table',
-        layout: HeaderAsideFooterLayout,
-        component: BasicTable,
-      },
-      {
-        path: 'table-display',
-        layout: HeaderAsideFooterLayout,
-        component: TableDisplay,
-      },
-    ],
+    component: BlankComponent,
   },
   {
     path: '/list',

@@ -46,6 +46,7 @@ export default class MapModal extends React.Component {
   afterModalClose = () => {
     this.map = null
     this.result = null
+    this.marker = null
     this.setState({
       areaStr: '',
       areaId: '',
@@ -60,16 +61,21 @@ export default class MapModal extends React.Component {
         console.log(result)
         this.result = result
         this.map.setCenter(result.detail.location)
-        const marker = new qq.maps.Marker({
-          map: this.map,
-          position: result.detail.location,
-          animation: qq.maps.MarkerAnimation.BOUNCE,
-        })
+        if(!this.marker) {
+          this.marker = new qq.maps.Marker({
+            map: this.map,
+            position: result.detail.location,
+            animation: qq.maps.MarkerAnimation.BOUNCE,
+          })
+        } else {
+          this.marker.setPosition(result.detail.location)
+        }
       }
     })
     geocoder.getLocation(areaStr + address)
   }
 
+  //每次选择选择地区和输入详细地址时，都重置result，需用户重新定位
   //格式化选择地区的value格式
   formatAreaSelectValue = (value, data, extra) => {
     let areaStr = ''
@@ -82,6 +88,7 @@ export default class MapModal extends React.Component {
 
   //输入详细地址
   inputAddress = value => {
+    this.result = null
     this.setState({address: value})
   }
 

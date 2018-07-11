@@ -38,9 +38,10 @@ export default class ShopTypeListManage extends React.Component {
     }
   })
 
-  submitType = () => {
+  submitInfo = () => {
+    const {onSubmitInfo} = this.props
     this.field.validate((error, values) => {
-      error || console.log(values)
+      error || onSubmitInfo(this.formatSubmitInfo(values),this.clearForm)
     })
   }
 
@@ -61,11 +62,19 @@ export default class ShopTypeListManage extends React.Component {
   }
 
   onEdit = data => {
-    console.log(data)
+    this.props.editShopType(data)
   }
 
   onDel = id => {
-    console.log(id)
+    this.props.delShopType(id)
+  }
+
+
+  formatSubmitInfo = (values) => {
+    return {
+      title:values.secondShopTypeName,
+      type:values.firstShopTypeValue,
+    }
   }
 
 
@@ -75,21 +84,21 @@ export default class ShopTypeListManage extends React.Component {
     const init = this.field.init
     return (
       <Fragment>
-        <IceTitle text="添加店铺类目" decoration/>
+        <IceTitle text="添加店铺二级类目" decoration/>
         <Form direction="ver" field={this.field} size="large">
-          <FormItem label="输入类目名称：" {...formItemLayout}>
-            <Input size="large" placeholder="填写店铺类目名称" {...init('shopTypeName',{
+          <FormItem label="输入二级类目名称：" {...formItemLayout}>
+            <Input size="large" placeholder="填写店铺二级类目名称" {...init('secondShopTypeName',{
               rules: [{
                 required: true,
                 message: '请填写店铺类目名称'
               }]
             })}/>
           </FormItem>
-          <FormItem label="选择具体类目：" {...formItemLayout}>
-            <Select placeholder="选择具体类目" style={styles.input} {...init('shopTypeValue',{
+          <FormItem label="选择所属一级类目：" {...formItemLayout}>
+            <Select placeholder="选择所属一级类目" style={styles.input} {...init('firstShopTypeValue',{
               rules: [{
                 required: true,
-                message: '请选择具体类目'
+                message: '选择所属一级类目'
               }]
             })}>
               <Option value="1">美食类</Option>
@@ -99,15 +108,15 @@ export default class ShopTypeListManage extends React.Component {
             </Select>
           </FormItem>
           <FormItem label=" " {...formItemLayout}>
-            <Button style={styles.buttonSpace} type="primary" size="large" onClick={this.submitType}>提交</Button>
+            <Button style={styles.buttonSpace} type="primary" size="large" onClick={this.submitInfo}>提交</Button>
           </FormItem>
         </Form>
         <IceTitle text="店铺类型列表" decoration/>
         <Table isLoading={__loading} dataSource={shopTypeList} style={styles.accountList}>
-          <Table.Column title="类型名称" dataIndex="title" cell={(value, index, record) => {
+          <Table.Column title="二级类目名称" dataIndex="title" cell={(value, index, record) => {
             return (<Input value={value} onChange={(value) => this.onEditShopTypeName(value, index)}/>)
           }}/>
-          <Table.Column title="具体类目" dataIndex="type" cell={(value, index, record) => {
+          <Table.Column title="所属一级类目" dataIndex="type" cell={(value, index, record) => {
             return (
               <Select placeholder="选择具体类目" style={styles.input} value={value} onChange={value=>this.onEditShopType(value,index)}>
                 <Option value="1">美食类</Option>
@@ -146,6 +155,6 @@ const styles = {
     textAlign: 'right',
   },
   buttonSpace: {
-    margin: '0 3px',
+    margin: '3px',
   }
 }

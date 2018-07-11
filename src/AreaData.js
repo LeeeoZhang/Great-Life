@@ -1,5 +1,227 @@
 const AreaData = [{
   "children": [{
+    "value": "2003",
+    "label": "长沙",
+    "children": [
+      { "value": "2008", "label": "宁乡县" },
+      { "value": "2004", "label": "长沙市" },
+      { "value": "2005", "label": "浏阳市" },
+      { "value": "2006", "label": "长沙县" },
+      { "value": "2007", "label": "望城县" },
+      { "value": "4425", "label": "芙蓉区" },
+      { "value": "4790", "label": "开福区" },
+      { "value": "4791", "label": "天心区" },
+      { "value": "4792", "label": "雨花区" },
+      { "value": "4793", "label": "岳麓区" },
+      { "value": "430182", "label": "其它区" }
+    ]
+  }, {
+    "value": "2009",
+    "label": "株洲",
+    "children": [
+      { "value": "2010", "label": "株洲市" },
+      { "value": "2011", "label": "醴陵市" },
+      { "value": "2012", "label": "株洲县" },
+      { "value": "2013", "label": "炎陵县" },
+      { "value": "2014", "label": "茶陵县" },
+      { "value": "2015", "label": "攸县" },
+      { "value": "4429", "label": "天元区" },
+      { "value": "4816", "label": "荷塘区" },
+      { "value": "4817", "label": "芦淞区" },
+      { "value": "4818", "label": "石峰区" },
+      { "value": "430282", "label": "其它区" }
+    ]
+  }, {
+    "value": "2016",
+    "label": "湘潭",
+    "children": [
+      { "value": "2017", "label": "湘潭市" },
+      { "value": "2018", "label": "湘乡市" },
+      { "value": "2019", "label": "韶山市" },
+      { "value": "2020", "label": "湘潭县" },
+      { "value": "4806", "label": "雨湖区" },
+      { "value": "4807", "label": "岳塘区" },
+      { "value": "430383", "label": "其它区" }
+    ]
+  }, {
+    "value": "2021",
+    "label": "衡阳",
+    "children": [
+      { "value": "2022", "label": "衡阳市" },
+      { "value": "2023", "label": "耒阳市" },
+      { "value": "2024", "label": "常宁市" },
+      { "value": "2025", "label": "衡阳县" },
+      { "value": "2026", "label": "衡东县" },
+      { "value": "2027", "label": "衡山县" },
+      { "value": "2028", "label": "衡南县" },
+      { "value": "2029", "label": "祁东县" },
+      { "value": "4797", "label": "南岳区" },
+      { "value": "4798", "label": "石鼓区" },
+      { "value": "4799", "label": "雁峰区" },
+      { "value": "4800", "label": "蒸湘区" },
+      { "value": "4801", "label": "珠晖区" },
+      { "value": "430483", "label": "其它区" }
+    ]
+  }, {
+    "value": "2030",
+    "label": "邵阳",
+    "children": [
+      { "value": "2031", "label": "邵阳市" },
+      { "value": "2032", "label": "武冈市" },
+      { "value": "2033", "label": "邵东县" },
+      { "value": "2034", "label": "洞口县" },
+      { "value": "2035", "label": "新邵县" },
+      { "value": "2036", "label": "绥宁县" },
+      { "value": "2037", "label": "新宁县" },
+      { "value": "2038", "label": "邵阳县" },
+      { "value": "2039", "label": "隆回县" },
+      { "value": "2040", "label": "城步苗族自治县" },
+      { "value": "4427", "label": "北塔区" },
+      { "value": "4804", "label": "大祥区" },
+      { "value": "4805", "label": "双清区" },
+      { "value": "430582", "label": "其它区" }
+    ]
+  }, {
+    "value": "2041",
+    "label": "岳阳",
+    "children": [
+      { "value": "2044", "label": "汨罗市" },
+      { "value": "2042", "label": "岳阳市" },
+      { "value": "2043", "label": "临湘市" },
+      { "value": "2045", "label": "岳阳县" },
+      { "value": "2046", "label": "湘阴县" },
+      { "value": "2047", "label": "平江县" },
+      { "value": "2048", "label": "华容县" },
+      { "value": "4428", "label": "君山区" },
+      { "value": "4812", "label": "岳阳楼区" },
+      { "value": "4813", "label": "云溪区" },
+      { "value": "430683", "label": "其它区" }
+    ]
+  }, {
+    "value": "2049",
+    "label": "常德",
+    "children": [
+      { "value": "2056", "label": "安乡县" },
+      { "value": "2050", "label": "常德市" },
+      { "value": "2051", "label": "津市市" },
+      { "value": "2052", "label": "澧县" },
+      { "value": "2053", "label": "临澧县" },
+      { "value": "2054", "label": "桃源县" },
+      { "value": "2055", "label": "汉寿县" },
+      { "value": "2057", "label": "石门县" },
+      { "value": "4794", "label": "鼎城区" },
+      { "value": "4795", "label": "武陵区" },
+      { "value": "430782", "label": "其它区" }
+    ]
+  }, {
+    "value": "2058",
+    "label": "张家界",
+    "children": [
+      { "value": "2059", "label": "张家界市" },
+      { "value": "2060", "label": "慈利县" },
+      { "value": "2061", "label": "桑植县" },
+      { "value": "4814", "label": "武陵源区" },
+      { "value": "4815", "label": "永定区" },
+      { "value": "430823", "label": "其它区" }
+    ]
+  }, {
+    "value": "2062",
+    "label": "益阳",
+    "children": [
+      { "value": "2063", "label": "益阳市" },
+      { "value": "2064", "label": "沅江市" },
+      { "value": "2065", "label": "桃江县" },
+      { "value": "2066", "label": "南县" },
+      { "value": "2067", "label": "安化县" },
+      { "value": "4808", "label": "赫山区" },
+      { "value": "4809", "label": "资阳区" },
+      { "value": "430982", "label": "其它区" }
+    ]
+  }, {
+    "value": "2068",
+    "label": "郴州",
+    "children": [
+      { "value": "2069", "label": "郴州市" },
+      { "value": "2070", "label": "资兴市" },
+      { "value": "2071", "label": "宜章县" },
+      { "value": "2072", "label": "汝城县" },
+      { "value": "2073", "label": "安仁县" },
+      { "value": "2074", "label": "嘉禾县" },
+      { "value": "2075", "label": "临武县" },
+      { "value": "2076", "label": "桂东县" },
+      { "value": "2077", "label": "永兴县" },
+      { "value": "2078", "label": "桂阳县" },
+      { "value": "4426", "label": "苏仙区" },
+      { "value": "4796", "label": "北湖区" },
+      { "value": "431082", "label": "其它区" }
+    ]
+  }, {
+    "value": "2079",
+    "label": "永州",
+    "children": [
+      { "value": "2080", "label": "永州市" },
+      { "value": "2081", "label": "祁阳县" },
+      { "value": "2082", "label": "蓝山县" },
+      { "value": "2083", "label": "宁远县" },
+      { "value": "2084", "label": "新田县" },
+      { "value": "2085", "label": "东安县" },
+      { "value": "2086", "label": "江永县" },
+      { "value": "2087", "label": "道县" },
+      { "value": "2088", "label": "双牌县" },
+      { "value": "2089", "label": "江华瑶族自治县" },
+      { "value": "4810", "label": "冷水滩区" },
+      { "value": "4811", "label": "零陵区" },
+      { "value": "431130", "label": "其它区" }
+    ]
+  }, {
+    "value": "2090",
+    "label": "怀化",
+    "children": [
+      { "value": "2091", "label": "怀化市" },
+      { "value": "2092", "label": "洪江市" },
+      { "value": "2093", "label": "会同县" },
+      { "value": "2094", "label": "沅陵县" },
+      { "value": "2095", "label": "辰溪县" },
+      { "value": "2096", "label": "溆浦县" },
+      { "value": "2097", "label": "中方县" },
+      { "value": "2098", "label": "新晃侗族自治县" },
+      { "value": "2099", "label": "芷江侗族自治县" },
+      { "value": "2100", "label": "通道侗族自治县" },
+      { "value": "2101", "label": "靖州苗族侗族自治县" },
+      { "value": "2102", "label": "麻阳苗族自治县" },
+      { "value": "4802", "label": "鹤城区" },
+      { "value": "431282", "label": "其它区" }
+    ]
+  }, {
+    "value": "2103",
+    "label": "娄底",
+    "children": [
+      { "value": "2104", "label": "娄底市" },
+      { "value": "2105", "label": "冷水江市" },
+      { "value": "2106", "label": "涟源市" },
+      { "value": "2107", "label": "新化县" },
+      { "value": "2108", "label": "双峰县" },
+      { "value": "4803", "label": "娄星区" },
+      { "value": "431383", "label": "其它区" }
+    ]
+  }, {
+    "value": "2109",
+    "label": "湘西土家族苗族自治州",
+    "children": [
+      { "value": "2110", "label": "吉首市" },
+      { "value": "2111", "label": "古丈县" },
+      { "value": "2112", "label": "龙山县" },
+      { "value": "2113", "label": "永顺县" },
+      { "value": "2114", "label": "凤凰县" },
+      { "value": "2115", "label": "泸溪县" },
+      { "value": "2116", "label": "保靖县" },
+      { "value": "2117", "label": "花垣县" }
+    ]
+  }],
+  "value": "2002",
+  "label": "湖南"
+}, {
+  "children": [{
     "value": "2974",
     "label": "西安",
     "children": [
@@ -4490,228 +4712,6 @@ const AreaData = [{
   }],
   "value": "1816",
   "label": "黑龙江"
-}, {
-  "children": [{
-    "value": "2003",
-    "label": "长沙",
-    "children": [
-      { "value": "2008", "label": "宁乡县" },
-      { "value": "2004", "label": "长沙市" },
-      { "value": "2005", "label": "浏阳市" },
-      { "value": "2006", "label": "长沙县" },
-      { "value": "2007", "label": "望城县" },
-      { "value": "4425", "label": "芙蓉区" },
-      { "value": "4790", "label": "开福区" },
-      { "value": "4791", "label": "天心区" },
-      { "value": "4792", "label": "雨花区" },
-      { "value": "4793", "label": "岳麓区" },
-      { "value": "430182", "label": "其它区" }
-    ]
-  }, {
-    "value": "2009",
-    "label": "株洲",
-    "children": [
-      { "value": "2010", "label": "株洲市" },
-      { "value": "2011", "label": "醴陵市" },
-      { "value": "2012", "label": "株洲县" },
-      { "value": "2013", "label": "炎陵县" },
-      { "value": "2014", "label": "茶陵县" },
-      { "value": "2015", "label": "攸县" },
-      { "value": "4429", "label": "天元区" },
-      { "value": "4816", "label": "荷塘区" },
-      { "value": "4817", "label": "芦淞区" },
-      { "value": "4818", "label": "石峰区" },
-      { "value": "430282", "label": "其它区" }
-    ]
-  }, {
-    "value": "2016",
-    "label": "湘潭",
-    "children": [
-      { "value": "2017", "label": "湘潭市" },
-      { "value": "2018", "label": "湘乡市" },
-      { "value": "2019", "label": "韶山市" },
-      { "value": "2020", "label": "湘潭县" },
-      { "value": "4806", "label": "雨湖区" },
-      { "value": "4807", "label": "岳塘区" },
-      { "value": "430383", "label": "其它区" }
-    ]
-  }, {
-    "value": "2021",
-    "label": "衡阳",
-    "children": [
-      { "value": "2022", "label": "衡阳市" },
-      { "value": "2023", "label": "耒阳市" },
-      { "value": "2024", "label": "常宁市" },
-      { "value": "2025", "label": "衡阳县" },
-      { "value": "2026", "label": "衡东县" },
-      { "value": "2027", "label": "衡山县" },
-      { "value": "2028", "label": "衡南县" },
-      { "value": "2029", "label": "祁东县" },
-      { "value": "4797", "label": "南岳区" },
-      { "value": "4798", "label": "石鼓区" },
-      { "value": "4799", "label": "雁峰区" },
-      { "value": "4800", "label": "蒸湘区" },
-      { "value": "4801", "label": "珠晖区" },
-      { "value": "430483", "label": "其它区" }
-    ]
-  }, {
-    "value": "2030",
-    "label": "邵阳",
-    "children": [
-      { "value": "2031", "label": "邵阳市" },
-      { "value": "2032", "label": "武冈市" },
-      { "value": "2033", "label": "邵东县" },
-      { "value": "2034", "label": "洞口县" },
-      { "value": "2035", "label": "新邵县" },
-      { "value": "2036", "label": "绥宁县" },
-      { "value": "2037", "label": "新宁县" },
-      { "value": "2038", "label": "邵阳县" },
-      { "value": "2039", "label": "隆回县" },
-      { "value": "2040", "label": "城步苗族自治县" },
-      { "value": "4427", "label": "北塔区" },
-      { "value": "4804", "label": "大祥区" },
-      { "value": "4805", "label": "双清区" },
-      { "value": "430582", "label": "其它区" }
-    ]
-  }, {
-    "value": "2041",
-    "label": "岳阳",
-    "children": [
-      { "value": "2044", "label": "汨罗市" },
-      { "value": "2042", "label": "岳阳市" },
-      { "value": "2043", "label": "临湘市" },
-      { "value": "2045", "label": "岳阳县" },
-      { "value": "2046", "label": "湘阴县" },
-      { "value": "2047", "label": "平江县" },
-      { "value": "2048", "label": "华容县" },
-      { "value": "4428", "label": "君山区" },
-      { "value": "4812", "label": "岳阳楼区" },
-      { "value": "4813", "label": "云溪区" },
-      { "value": "430683", "label": "其它区" }
-    ]
-  }, {
-    "value": "2049",
-    "label": "常德",
-    "children": [
-      { "value": "2056", "label": "安乡县" },
-      { "value": "2050", "label": "常德市" },
-      { "value": "2051", "label": "津市市" },
-      { "value": "2052", "label": "澧县" },
-      { "value": "2053", "label": "临澧县" },
-      { "value": "2054", "label": "桃源县" },
-      { "value": "2055", "label": "汉寿县" },
-      { "value": "2057", "label": "石门县" },
-      { "value": "4794", "label": "鼎城区" },
-      { "value": "4795", "label": "武陵区" },
-      { "value": "430782", "label": "其它区" }
-    ]
-  }, {
-    "value": "2058",
-    "label": "张家界",
-    "children": [
-      { "value": "2059", "label": "张家界市" },
-      { "value": "2060", "label": "慈利县" },
-      { "value": "2061", "label": "桑植县" },
-      { "value": "4814", "label": "武陵源区" },
-      { "value": "4815", "label": "永定区" },
-      { "value": "430823", "label": "其它区" }
-    ]
-  }, {
-    "value": "2062",
-    "label": "益阳",
-    "children": [
-      { "value": "2063", "label": "益阳市" },
-      { "value": "2064", "label": "沅江市" },
-      { "value": "2065", "label": "桃江县" },
-      { "value": "2066", "label": "南县" },
-      { "value": "2067", "label": "安化县" },
-      { "value": "4808", "label": "赫山区" },
-      { "value": "4809", "label": "资阳区" },
-      { "value": "430982", "label": "其它区" }
-    ]
-  }, {
-    "value": "2068",
-    "label": "郴州",
-    "children": [
-      { "value": "2069", "label": "郴州市" },
-      { "value": "2070", "label": "资兴市" },
-      { "value": "2071", "label": "宜章县" },
-      { "value": "2072", "label": "汝城县" },
-      { "value": "2073", "label": "安仁县" },
-      { "value": "2074", "label": "嘉禾县" },
-      { "value": "2075", "label": "临武县" },
-      { "value": "2076", "label": "桂东县" },
-      { "value": "2077", "label": "永兴县" },
-      { "value": "2078", "label": "桂阳县" },
-      { "value": "4426", "label": "苏仙区" },
-      { "value": "4796", "label": "北湖区" },
-      { "value": "431082", "label": "其它区" }
-    ]
-  }, {
-    "value": "2079",
-    "label": "永州",
-    "children": [
-      { "value": "2080", "label": "永州市" },
-      { "value": "2081", "label": "祁阳县" },
-      { "value": "2082", "label": "蓝山县" },
-      { "value": "2083", "label": "宁远县" },
-      { "value": "2084", "label": "新田县" },
-      { "value": "2085", "label": "东安县" },
-      { "value": "2086", "label": "江永县" },
-      { "value": "2087", "label": "道县" },
-      { "value": "2088", "label": "双牌县" },
-      { "value": "2089", "label": "江华瑶族自治县" },
-      { "value": "4810", "label": "冷水滩区" },
-      { "value": "4811", "label": "零陵区" },
-      { "value": "431130", "label": "其它区" }
-    ]
-  }, {
-    "value": "2090",
-    "label": "怀化",
-    "children": [
-      { "value": "2091", "label": "怀化市" },
-      { "value": "2092", "label": "洪江市" },
-      { "value": "2093", "label": "会同县" },
-      { "value": "2094", "label": "沅陵县" },
-      { "value": "2095", "label": "辰溪县" },
-      { "value": "2096", "label": "溆浦县" },
-      { "value": "2097", "label": "中方县" },
-      { "value": "2098", "label": "新晃侗族自治县" },
-      { "value": "2099", "label": "芷江侗族自治县" },
-      { "value": "2100", "label": "通道侗族自治县" },
-      { "value": "2101", "label": "靖州苗族侗族自治县" },
-      { "value": "2102", "label": "麻阳苗族自治县" },
-      { "value": "4802", "label": "鹤城区" },
-      { "value": "431282", "label": "其它区" }
-    ]
-  }, {
-    "value": "2103",
-    "label": "娄底",
-    "children": [
-      { "value": "2104", "label": "娄底市" },
-      { "value": "2105", "label": "冷水江市" },
-      { "value": "2106", "label": "涟源市" },
-      { "value": "2107", "label": "新化县" },
-      { "value": "2108", "label": "双峰县" },
-      { "value": "4803", "label": "娄星区" },
-      { "value": "431383", "label": "其它区" }
-    ]
-  }, {
-    "value": "2109",
-    "label": "湘西土家族苗族自治州",
-    "children": [
-      { "value": "2110", "label": "吉首市" },
-      { "value": "2111", "label": "古丈县" },
-      { "value": "2112", "label": "龙山县" },
-      { "value": "2113", "label": "永顺县" },
-      { "value": "2114", "label": "凤凰县" },
-      { "value": "2115", "label": "泸溪县" },
-      { "value": "2116", "label": "保靖县" },
-      { "value": "2117", "label": "花垣县" }
-    ]
-  }],
-  "value": "2002",
-  "label": "湖南"
 }, {
   "children": [{
     "value": "2119",

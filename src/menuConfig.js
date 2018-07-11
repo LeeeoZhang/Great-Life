@@ -2,7 +2,6 @@
 // headerMenuConfig：头部导航配置
 // asideMenuConfig：侧边导航配置
 
-
 const headerMenuConfig = [];
 
 const asideMenuConfig = [
@@ -20,12 +19,17 @@ const asideMenuConfig = [
   {
     name: '商家管理',
     path: '/merchant',
-    icon: 'shop',
+    icon: 'fans',
   },
   {
     name: '店铺管理',
     path: '/shop',
     icon: 'shop',
+  },
+  {
+    name: '商品管理',
+    path: '/goods',
+    icon: 'item',
   },
   {
     name: '图表页',
