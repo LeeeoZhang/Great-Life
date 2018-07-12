@@ -1,81 +1,72 @@
 // 以下文件格式为描述路由的协议格式
 // 你可以调整 routerConfig 里的内容
 // 变量名 routerConfig 为 iceworks 检测关键字，请不要修改名称
-import Loadable from 'react-loadable'
-import Charts from './pages/Charts'
-import Portlets from './pages/Portlets'
-import Terms from './pages/Terms'
-import Result from './pages/Result'
-import Fail from './pages/Fail'
-import ServerError from './pages/ServerError'
-import Forbidden from './pages/Forbidden'
-import Empty from './pages/Empty'
-import List from './pages/List'
-import CardList from './pages/CardList'
-import NotFound from './pages/NotFound'
-import LoadingIndicator from '@/components/LoadingIndicator'
+import Loadable from 'react-loadable';
+import LoadingIndicator from '@/components/LoadingIndicator';
 
 //代码分割
 const HeaderAsideFooterLayout = Loadable({
   loader: () => import('./layouts/HeaderAsideFooterLayout'),
   loading: LoadingIndicator,
-})
+});
 const BlankLayout = Loadable({
   loader: () => import('./layouts/BlankLayout'),
   loading: LoadingIndicator,
-})
+});
 const Login = Loadable({
   loader: () => import('./pages/Login'),
   loading: LoadingIndicator,
-})
+});
 const BlankComponent = Loadable({
   loader: () => import('@/components/BlankComponent'),
   loading: LoadingIndicator,
-})
+});
 const Account = Loadable({
   loader: () => import('./pages/Account'),
   loading: LoadingIndicator,
-})
+});
 const Article = Loadable({
   loader: () => import('./pages/Article'),
   loading: LoadingIndicator,
-})
+});
 const Merchant = Loadable({
   loader: () => import('./pages/Merchant'),
   loading: LoadingIndicator,
-})
+});
 const Shop = Loadable({
   loader: () => import('./pages/Shop'),
   loading: LoadingIndicator,
-})
-
-const BasicTable = Loadable({
-  loader: () => import('./pages/BasicTable'),
+});
+const Goods = Loadable({
+  loader: () => import('./pages/Goods'),
   loading: LoadingIndicator,
-})
-const TableDisplay = Loadable({
-  loader: () => import('./pages/TableDisplay'),
+});
+const Result = Loadable({
+  loader: () => import('./pages/Result'),
   loading: LoadingIndicator,
-})
+});
+const Fail = Loadable({
+  loader: () => import('./pages/Fail'),
+  loading: LoadingIndicator,
+});
+const ServerError = Loadable({
+  loader: () => import('./pages/ServerError'),
+  loading: LoadingIndicator,
+});
+const Forbidden = Loadable({
+  loader: () => import('./pages/Forbidden'),
+  loading: LoadingIndicator,
+});
+const Empty = Loadable({
+  loader: () => import('./pages/Empty'),
+  loading: LoadingIndicator,
+});
+const NotFound = Loadable({
+  loader: () => import('./pages/NotFound'),
+  loading: LoadingIndicator,
+});
 
 const routerConfig = [
-  {
-    path: '/table',
-    layout: HeaderAsideFooterLayout,
-    component: BasicTable,
-    children: [
-      {
-        path: 'basic-table',
-        layout: HeaderAsideFooterLayout,
-        component: BasicTable,
-      },
-      {
-        path: 'table-display',
-        layout: HeaderAsideFooterLayout,
-        component: TableDisplay,
-      },
-    ],
-  },
   {
     path: '/login',
     layout: BlankLayout,
@@ -102,43 +93,14 @@ const routerConfig = [
     component: Shop,
   },
   {
-    path: '/portlets',
+    path: '/goods',
     layout: HeaderAsideFooterLayout,
-    component: Portlets,
-    children: [
-      {
-        path: 'base',
-        layout: HeaderAsideFooterLayout,
-        component: Portlets,
-      },
-      {
-        path: 'terms',
-        layout: HeaderAsideFooterLayout,
-        component: Terms,
-      },
-    ],
+    component: Goods,
   },
   {
     path: '/',
     layout: HeaderAsideFooterLayout,
     component: BlankComponent,
-  },
-  {
-    path: '/list',
-    layout: HeaderAsideFooterLayout,
-    component: List,
-    children: [
-      {
-        path: 'article-list',
-        layout: HeaderAsideFooterLayout,
-        component: List,
-      },
-      {
-        path: 'card-list',
-        layout: HeaderAsideFooterLayout,
-        component: CardList,
-      },
-    ],
   },
   {
     path: '/exception',
@@ -185,22 +147,10 @@ const routerConfig = [
     ],
   },
   {
-    path: '/chart',
-    layout: HeaderAsideFooterLayout,
-    component: Charts,
-    children: [
-      {
-        path: 'chart-list',
-        layout: HeaderAsideFooterLayout,
-        component: Charts,
-      },
-    ],
-  },
-  {
     path: '*',
     layout: HeaderAsideFooterLayout,
     component: NotFound,
   },
-]
+];
 
-export default routerConfig
+export default routerConfig;

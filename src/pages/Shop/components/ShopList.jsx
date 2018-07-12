@@ -2,14 +2,6 @@ import React, {Fragment} from 'react'
 import {Button, Pagination, Table,Select,Input,Icon,Form,Field} from '@icedesign/base'
 
 const FormItem = Form.Item
-const formItemLayout = {
-  labelCol: {
-    fixedSpan: 8
-  },
-  wrapperCol: {
-    span: 10
-  }
-}
 
 export default class ShopList extends React.Component {
 
@@ -17,12 +9,12 @@ export default class ShopList extends React.Component {
 
   constructor (props) {
     super(props)
-    this.state = {
-      current: 1,
-      size:10,
-      searchTitle:'',
-      searchType:'',
-    }
+    this.state = {}
+  }
+
+  componentDidMount(){
+    const {getShopList} = this.props
+    getShopList()
   }
 
   field = new Field(this, {
@@ -30,10 +22,7 @@ export default class ShopList extends React.Component {
   })
 
   onPaginationChange = (current, event) => {
-    const {getShopList} = this.props
-    const {size,searchTitle,searchType} = this.state
-    this.setState({current})
-    getShopList(current,size,searchTitle,searchType)
+    this.props.paging(current)
   }
 
   //格式化店铺类型选择列表
@@ -46,48 +35,72 @@ export default class ShopList extends React.Component {
     })
   }
 
+  onEdit = id => {
+    this.props.getShopDetailAndGoEdit(id)
+  }
+
+  onDel = id => {
+    this.props.delShop(id)
+  }
+
   onSearch = () => {
-    const {getShopList} = this.props
-    const {searchTitle,searchType} = this.field.getValues()
-    this.setState({current:1,searchTitle,searchType})
-    //getShopList(1,10,searchTitle,searchType)
+    const {searchTitle,searchSecondType} = this.field.getValues()
+    this.props.searching(searchTitle,searchSecondType)
   }
 
   onClear = () => {
-    const {getShopList} = this.props
     this.field.reset()
-    this.setState({current:1,searchTitle:'',searchType:''})
-    //getShopList()
+    this.props.resetSearch()
   }
-
-
-
 
   render () {
     const init = this.field.init
-    const {current,size} = this.state
-    const {shopTypeList,count} = this.props
+    const {size} = this.state
+    const {shopTypeList,count,shopList,__loading,current} = this.props
     return (
       <Fragment>
         <Form direction="hoz" field={this.field} size="medium">
           <FormItem>
-            <Select style={styles.input} placeholder="选择店铺所属二级类型" dataSource={this.formatTypeList(shopTypeList)} {...init('searchType')}/>
+            <Select
+              style={styles.input}
+              placeholder="选择店铺所属二级类型"
+              dataSource={this.formatTypeList(shopTypeList)}
+              {...init('searchSecondType')}
+            />
           </FormItem>
           <FormItem>
-            <Input style={styles.input} placeholder="搜索关键字" {...init('searchTitle')}/>
+            <Input style={styles.input} placeholder="搜索店铺名称" {...init('searchTitle')}/>
           </FormItem>
           <FormItem>
             <Button style={styles.buttonSpace} type="primary" onClick={this.onSearch}><Icon type="search"/>搜索</Button>
             <Button style={styles.buttonSpace} onClick={this.onClear}><Icon type="refresh"/>清空</Button>
           </FormItem>
         </Form>
-        <Table>
+        <Table dataSource={shopList} isloading={__loading}>
           <Table.Column title="店铺名称" dataIndex="shopTitle"/>
-          <Table.Column title="店铺分类" dataIndex="shopType"/>
-          <Table.Column title="店铺轮播图" dataIndex="fileId"/>
-          <Table.Column title="店铺名称" dataIndex="shopTitle"/>
-          <Table.Column title="店铺名称" dataIndex="shopTitle"/>
-          <Table.Column title="店铺名称" dataIndex="shopTitle"/>
+          <Table.Column title="店铺分类" dataIndex="shopTypeTitle"/>
+          <Table.Column title="店铺轮播图" dataIndex="fileInfo" cell={(value,index,record)=>{
+            return (
+              <div style={styles.carouselImgWrap}>
+                {value.map(file=>(<img style={styles.carouselImg} src={file.compressHttpUrl} key={file.id}/>))}
+              </div>
+            )
+          }}/>
+          <Table.Column title="店铺联系电话" dataIndex="shopTel"/>
+          <Table.Column title="店铺详细地址" dataIndex="mapInfo" cell={(value,index,record)=>{
+            return (<div>{value.areaStr+value.address}</div>)
+          }}/>
+          <Table.Column title="关联商家" dataIndex="connectMerchantTitle"/>
+          <Table.Column title="营业时间" dataIndex="businessHours"/>
+          <Table.Column title="创建时间" dataIndex="ctime"/>
+          <Table.Column align="center" title="操作" cell={(value,index,record)=> {
+            return (
+              <Fragment>
+                <Button style={styles.buttonSpace} size="small" type="primary" onClick={()=>this.onEdit(record.id)}>编辑</Button>
+                <Button style={styles.buttonSpace} size="small" shape="warning" onClick={()=>this.onDel(record.id)}>删除</Button>
+              </Fragment>
+            )
+          }}/>
         </Table>
         <div style={styles.paginationWrap}>
           <Pagination onChange={this.onPaginationChange}
@@ -116,7 +129,15 @@ const styles = {
     marginBottom:'16px',
   },
   buttonSpace: {
-    margin:'0 3px'
+    margin:'3px'
+  },
+  carouselImgWrap:{
+    display:'flex',
+    flexWrap:'wrap',
+    alignItems:'center'
+  },
+  carouselImg:{
+    width:'50px'
   }
 }
 
