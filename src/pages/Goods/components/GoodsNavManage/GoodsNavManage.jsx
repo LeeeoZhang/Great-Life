@@ -13,18 +13,18 @@ export default class GoodsNavManage extends React.Component {
   }
 
 
-  onSubmitInfo = (data,clear) => {
-    this.props.onSubmitInfo(data,clear)
-  }
-
   render(){
-    const {__loading,goodsNavList} = this.props
+    const {__loading,goodsNavList,onSubmitInfo,editGoodsNav,delGoodsNav} = this.props
     return (
       <Fragment>
         <IceTitle decoration text="添加商品导航"/>
-         <GoodsNavForm __loading={__loading} onSubmitInfo={this.onSubmitInfo}/>
+         <GoodsNavForm __loading={__loading} onSubmitInfo={onSubmitInfo}/>
         <IceTitle decoration text="商品导航列表"/>
-        <GoodsNavList __loading={__loading} goodsNavList={goodsNavList}/>
+        <GoodsNavList __loading={__loading}
+                      goodsNavList={goodsNavList}
+                      editGoodsNav={editGoodsNav}
+                      delGoodsNav={delGoodsNav}
+        />
       </Fragment>
     )
   }

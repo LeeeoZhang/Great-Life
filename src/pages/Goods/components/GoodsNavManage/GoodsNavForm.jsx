@@ -26,7 +26,7 @@ export default class GoodsNavForm extends React.Component {
 
   onAddNav = () => {
     this.field.validate((error,values)=>{
-      error || this.props.submitInfo(values,this.clearForm)
+      error || this.props.onSubmitInfo(values,this.clearForm)
     })
   }
 

@@ -26,6 +26,16 @@ export default class GoodsNavList extends React.Component {
     this.setState({goodsNavList:newGoodsNavList})
   }
 
+  onEdit = data => {
+    const {editGoodsNav} = this.props
+    editGoodsNav(data)
+  }
+
+  onDel = id => {
+    const {delGoodsNav} = this.props
+    delGoodsNav(id)
+  }
+
 
   render () {
     const {goodsNavList} = this.state
@@ -39,8 +49,8 @@ export default class GoodsNavList extends React.Component {
         <Table.Column align="center" title="操作" cell={(value,index,record)=>{
           return (
             <Fragment>
-              <Button disabled={record.isDefault === 1} style={styles.buttonSpace} type="primary">更新</Button>
-              <Button disabled={record.isDefault === 1} style={styles.buttonSpace} shape="warning">删除</Button>
+              <Button disabled={record.isDefault === 1} style={styles.buttonSpace} type="primary" onClick={()=>this.onEdit(record)}>更新</Button>
+              <Button disabled={record.isDefault === 1} style={styles.buttonSpace} shape="warning" onClick={()=>this.onDel(record.id)}>删除</Button>
             </Fragment>
           )
         }}/>
