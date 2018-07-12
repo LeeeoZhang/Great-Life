@@ -4,6 +4,7 @@ import {Tab, Feedback} from "@icedesign/base"
 import IceContainer from '@icedesign/container'
 import GoodsNavManage from './components/GoodsNavManage/GoodsNavManage'
 import GoodsList from './components/GoodsList/GoodsList'
+import GoodsForm from './components/GoodsForm/GoodsForm'
 import DOMAIN from '@/domain'
 import {delGoodsNav,addGoodsNav,editGoodsNav} from '@/service'
 
@@ -88,6 +89,9 @@ export default class Goods extends React.Component {
     return (
       <IceContainer>
         <Tab>
+          <TabPane key="goodsForm" tab="添加商品">
+            <GoodsForm goodsNavList={goodsNavList.lists} __loading={__loading}/>
+          </TabPane>
           <TabPane key="goodsList" tab="商品列表">
             <GoodsList __loading={__loading} goodsList={goodsList.lists}/>
           </TabPane>
@@ -100,9 +104,6 @@ export default class Goods extends React.Component {
               editGoodsNav={this.editGoodsNav}
               delGoodsNav={this.delGoodsNav}
             />
-          </TabPane>
-          <TabPane key="goodsForm" tab="添加商品">
-
           </TabPane>
         </Tab>
       </IceContainer>

@@ -28,7 +28,6 @@ const styles = {
   input: {
     width: '100%'
   },
-
 }
 const shopKeyWordTips = (
   <div style={styles.tipsContent}>用$隔开，作为搜索时的关键字</div>
