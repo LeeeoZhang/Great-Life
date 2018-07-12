@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {Form, Input, Button, Field, Upload} from '@icedesign/base'
+import {Form, Input, Button, Field} from '@icedesign/base'
 import DOMAIN from '@/domain'
 import './StepForm.scss'
 
@@ -12,7 +12,6 @@ const formItemLayout = {
     span: 10
   }
 }
-const {ImageUpload} = Upload
 
 export default class Step2Form extends React.Component {
 
@@ -20,7 +19,10 @@ export default class Step2Form extends React.Component {
 
   constructor (props) {
     super(props)
-    this.state = {}
+    this.state = {
+      styleFormCount:[],
+      styleList : [],
+    }
   }
 
   field = new Field(this, {

@@ -22,11 +22,11 @@ export default class GoodsForm extends React.Component {
   }
 
   nextStep = () => {
-    this.state.step < 3 && this.setState({step: this.state.step + 1})
+    this.setState({step: this.state.step + 1})
   }
 
   preStep = ()=> {
-    this.state.step > 0 && this.setState({step: this.state.step - 1})
+    this.setState({step: this.state.step - 1})
   }
 
   renderForm = step => {
