@@ -13,11 +13,7 @@ export default class GoodsForm extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      step1Data: {},
-      step2Data: {},
-      step3Data: {},
-      step4Data: {},
-      step: 0,
+      step: 1,
     }
   }
 
@@ -30,12 +26,26 @@ export default class GoodsForm extends React.Component {
   }
 
   renderForm = step => {
-    const {goodsNavList,__loading} = this.props
+    const {step1Data,step2Data,step3Data,step4Data} = this.props
+    const {goodsNavList,shopIdList,__loading,postStep1Data} = this.props
     switch (step) {
       case 0:
-        return (<Step1Form goodsNavList={goodsNavList} __loading={__loading} nextStep={this.nextStep}/>)
+        return (<Step1Form
+          step1Data={step1Data}
+          shopIdList={shopIdList}
+          goodsNavList={goodsNavList}
+          __loading={__loading}
+          nextStep={this.nextStep}
+          postStep1Data={postStep1Data}
+        />)
       case 1:
-        return (<Step2Form  __loading={__loading} nextStep={this.nextStep} preStep={this.preStep}/>)
+        return (<Step2Form
+          step1Data={step1Data}
+          step2Data={step2Data}
+          __loading={__loading}
+          nextStep={this.nextStep}
+          preStep={this.preStep}
+        />)
       case 2:
         break
       case 3:

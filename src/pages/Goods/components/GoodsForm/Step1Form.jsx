@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {Form, Input, Button, Field, Select,Upload} from '@icedesign/base'
+import {Form, Input, Button, Field, Select, Upload} from '@icedesign/base'
 import DOMAIN from '@/domain'
 import './StepForm.scss'
 
@@ -13,7 +13,7 @@ const formItemLayout = {
     span: 10
   }
 }
-const styles ={
+const styles = {
   buttonSpace: {
     margin: '0 3px'
   },
@@ -24,8 +24,8 @@ const styles ={
   input: {
     width: '100%'
   },
-  nextFormItem:{
-    justifyContent:'flex-end'
+  nextFormItem: {
+    justifyContent: 'flex-end'
   }
 }
 const shopKeyWordTips = (
@@ -59,8 +59,18 @@ export default class Step1Form extends React.Component {
   formatGoodsNavList = goodsNavList => {
     return goodsNavList.map(nav => {
       return {
-        label: '',
-        value: '',
+        label: nav.title,
+        value: String(nav.id),
+      }
+    })
+  }
+
+  //格式化店铺ID选择列表
+  formatShopIdList = shopIdList => {
+    return shopIdList.map(shopId => {
+      return {
+        label: shopId.title,
+        value: String(shopId.id),
       }
     })
   }
@@ -89,13 +99,24 @@ export default class Step1Form extends React.Component {
 
   }
 
-  nextStep = ()=> {
+  nextStep = () => {
     this.props.nextStep()
+    // this.field.validate((error,values)=>{
+    //   if(!error) {
+    //     console.log(values)
+    //     this.props.nextStep()
+    //   }
+    // })
+  }
+
+  //格式化提交的数据
+  formatSubmitData = values => {
+
   }
 
   render () {
     const init = this.field.init
-    const {goodsNavList, step1Data, __loading} = this.props
+    const {goodsNavList, step1Data, __loading, shopIdList} = this.props
     const uploadConfig = {
       action: `${DOMAIN}/admin/file/upload`,
       accept: 'image/png, image/jpg, image/jpeg',
@@ -109,45 +130,46 @@ export default class Step1Form extends React.Component {
           <Select style={styles.input} dataSource={this.formatGoodsNavList(goodsNavList)}
                   placeholder="请选择商品所在导航" {...init('goodsNavId', {
             rules: [{required: true, message: '请选择商品所在导航'}],
-            initValue: step1Data ? String(step1Data.goodsNavId) : '',
+            initValue: Object.keys(step1Data).length > 0 ? String(step1Data.goodsNavId) : '',
           })}/>
         </FormItem>
         <FormItem label="商品销售方式：" {...formItemLayout}>
           <Select style={styles.input} dataSource={goodsSaleMethod}
                   placeholder="请选择商品销售方式" {...init('goodsSaleMethod', {
             rules: [{required: true, message: '请选择商品销售方式'}],
-            initValue: step1Data ? String(step1Data.goodsSaleMethod) : '',
+            initValue: Object.keys(step1Data).length > 0  ? String(step1Data.goodsSaleMethod) : '',
           })}/>
         </FormItem>
         <FormItem label="商品类型：" {...formItemLayout}>
           <Select style={styles.input} dataSource={goodsType}
                   placeholder="请选择商品类型" {...init('goodsType', {
             rules: [{required: true, message: '请选择商品类型'}],
-            initValue: step1Data ? String(step1Data.goodsType) : '',
+            initValue: Object.keys(step1Data).length > 0  ? String(step1Data.goodsType) : '',
           })}/>
         </FormItem>
         <FormItem label="店铺ID：" {...formItemLayout}>
-          <Input placeholder="请输入店铺ID" {...init('shopId', {
+          <Select style={styles.input} dataSource={this.formatShopIdList(shopIdList)}
+                  placeholder="请输入店铺ID" {...init('shopId', {
             rules: [{required: true, message: '请输入店铺ID'}],
-            initValue: step1Data ? step1Data.shopId : '',
+            initValue: Object.keys(step1Data).length > 0  ? String(step1Data.shopId) : '',
           })}/>
         </FormItem>
         <FormItem label="商品名称：" {...formItemLayout}>
           <Input placeholder="请输入商品名称" {...init('goodsTitle', {
             rules: [{required: true, message: '请输入商品名称'}],
-            initValue: step1Data ? step1Data.goodsTitle : '',
+            initValue: Object.keys(step1Data).length > 0  ? step1Data.goodsTitle : '',
           })}/>
         </FormItem>
         <FormItem label="商品关键字：" {...formItemLayout} extra={shopKeyWordTips}>
           <Input placeholder="请输入商品关键字" {...init('goodsKeyword', {
             rules: [{required: true, message: '请输入商品关键字'}],
-            initValue: step1Data ? step1Data.goodsKeyword : '',
+            initValue: Object.keys(step1Data).length > 0  ? step1Data.goodsKeyword : '',
           })}/>
         </FormItem>
         <FormItem label="商品描述：" {...formItemLayout}>
           <Input maxLength={32} hasLimitHint multiple placeholder="请输入商品描述" {...init('goodsDesc', {
             rules: [{required: true, message: '请输入商品描述'}],
-            initValue: step1Data ? step1Data.goodsDesc : '',
+            initValue: Object.keys(step1Data).length > 0  ? step1Data.goodsDesc : '',
           })}/>
         </FormItem>
         <FormItem label="选择商品轮播图片：" {...formItemLayout}>
@@ -159,7 +181,7 @@ export default class Step1Form extends React.Component {
           })}/>
         </FormItem>
         <FormItem  {...formItemLayout} style={styles.nextFormItem}>
-          <Button  onClick={this.nextStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading}>
+          <Button onClick={this.nextStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading}>
             下一步
           </Button>
         </FormItem>

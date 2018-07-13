@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
-import {Form, Input, Button, Field} from '@icedesign/base'
+import {Form, Input, Button, Field,Select} from '@icedesign/base'
 import DOMAIN from '@/domain'
+import StyleForm from './StyleForm'
 import './StepForm.scss'
 
 const FormItem = Form.Item
@@ -12,6 +13,41 @@ const formItemLayout = {
     span: 10
   }
 }
+const styles = {
+  buttonSpace: {
+    margin: '0 3px'
+  },
+  tipsContent: {
+    margin: '5px 0',
+    fontSize: '12px',
+  },
+  input: {
+    width: '100%'
+  },
+  nextFormItem: {
+    justifyContent: 'flex-end'
+  }
+}
+const GoodsPurchaseTips = (
+  <div style={styles.tipsContent}>填0代表不限量</div>
+)
+const GoodsGroupNum = [
+  {label:'2人',value:'2'},
+  {label:'3人',value:'3'},
+  {label:'4人',value:'4'},
+  {label:'5人',value:'5'},
+  {label:'6人',value:'6'},
+  {label:'7人',value:'7'},
+  {label:'8人',value:'8'},
+]
+const goodsGroupWaitTime = [
+  {label:'1小时',value:'1'},
+  {label:'2小时',value:'2'},
+  {label:'4小时',value:'4'},
+  {label:'8小时',value:'8'},
+  {label:'12小时',value:'12'},
+  {label:'24小时',value:'24'},
+]
 
 export default class Step2Form extends React.Component {
 
@@ -20,8 +56,10 @@ export default class Step2Form extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      styleFormCount:[],
-      styleList : [],
+      count:props.step2Data.goodsStyle ? props.step2Data.goodsStyle.length : 0,
+      styleList: props.step2Data.goodsStyle ?
+        this.formatGoodsStyle(props.step2Data.goodsStyle) :
+        [],
     }
   }
 
@@ -49,72 +87,109 @@ export default class Step2Form extends React.Component {
   }
 
 
-  createInitFileList = step1Data => {
-
+  formatGoodsStyle = goodsStyle => {
+    return goodsStyle.map((goodsStyleData,index)=>{
+      return {
+        ...goodsStyleData,
+        indexId:index+1,
+      }
+    })
   }
 
-  nextStep = ()=> {
-    this.props.nextStep()
+  addNewStyle = () => {
+    const newStyleList = [...this.state.styleList, {indexId:this.state.count + 1}]
+    this.setState({styleList: newStyleList,count:this.state.count + 1})
   }
 
-  preStep = ()=> {
+  delStyle = index => {
+    const newStyleList = [...this.state.styleList]
+    newStyleList.splice(index,1)
+    this.setState({styleList:newStyleList})
+  }
+
+  nextStep = () => {
+    this.field.validate((error,values)=>{
+      console.log(values)
+    })
+    //this.props.nextStep()
+  }
+
+  preStep = () => {
     this.props.preStep()
   }
 
   render () {
     const init = this.field.init
     const {step2Data, step1Data, __loading} = this.props
-    const uploadConfig = {
-      action: `${DOMAIN}/admin/file/upload`,
-      accept: 'image/png, image/jpg, image/jpeg',
-      listType: "picture-card",
-      withCredentials: true,
-      formatter: this.formatUploadResponse,
-    }
+    const {styleList} = this.state
     return (
       <Form Form direction="ver" field={this.field} size="large">
-        <FormItem label="商品价格单位：" {...formItemLayout}>
-          <Input placeholder="请输入商品价格单位" {...init('goodsUnit', {
-            rules: [{required: true, message: '请输入商品价格单位'}],
+        <FormItem label="商品单位：" {...formItemLayout}>
+          <Input placeholder="请输入商品单位" {...init('goodsUnit', {
+            rules: [{required: true, message: '请输入商品单位'}],
             initValue: step2Data ? step2Data.goodsUnit : '',
           })}/>
         </FormItem>
-        <FormItem label="商品限购数量：" {...formItemLayout}>
+        <FormItem label="商品限购数量：" {...formItemLayout} extra={GoodsPurchaseTips}>
           <Input placeholder="请输入商品限购数量" {...init('goodsPurchase', {
+            rules: [{required: true, message: '请输入商品价格单位'}],
             initValue: step2Data ? step2Data.goodsPurchase : '',
           })}/>
         </FormItem>
-        <FormItem label=" "  {...formItemLayout}>
-          <Button style={styles.buttonSpace} size="large" loading={__loading}>
+        {
+          step1Data.goodsSaleMethod === 2 ? (
+            <Fragment>
+              <FormItem label="成团人数：" {...formItemLayout}>
+                <Select style={styles.input} dataSource={GoodsGroupNum}
+                        placeholder="请选择成团人数" {...init('goodsGroupNum', {
+                  rules: [{required: true, message: '请选择成团人数'}],
+                  initValue: step2Data ? step2Data.goodsUnit : '',
+                })}/>
+              </FormItem>
+              <FormItem label="拼团持续时间：" {...formItemLayout}>
+                <Select style={styles.input} dataSource={goodsGroupWaitTime}
+                        placeholder="请选择拼团持续时间" {...init('goodsGroupWaitTime', {
+                  rules: [{required: true, message: '请选择拼团持续时间'}],
+                  initValue: step2Data ? step2Data.goodsUnit : '',
+                })}/>
+              </FormItem>
+              <FormItem label="拼团价格：" {...formItemLayout}>
+                <Input placeholder="请输入拼团价格" {...init('goodsGroupPrice', {
+                  rules: [{required: true, message: '请输入拼团价格'}],
+                  initValue: step2Data ? step2Data.goodsUnit : '',
+                })}/>
+              </FormItem>
+            </Fragment>
+          ):null
+        }
+        {
+          styleList.map((styleData,index) => (
+            <StyleForm
+              __loading={__loading}
+              key={styleData.indexId}
+              index={index}
+              styleData={styleData}
+              delStyle={this.delStyle}
+              init={init}
+              field={this.field}
+            />
+          ))
+        }
+        <FormItem label=" " {...formItemLayout}>
+          <Button onClick={this.addNewStyle} style={styles.buttonSpace} size="large" loading={__loading}>
             新增款式
           </Button>
         </FormItem>
         <FormItem  {...formItemLayout} style={styles.nextFormItem}>
-          <Button  onClick={this.preStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading}>
+          <Button onClick={this.preStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading}>
             上一步
           </Button>
-          <Button  onClick={this.nextStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading}>
+          <Button onClick={this.nextStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading}>
             下一步
           </Button>
         </FormItem>
       </Form>
     )
 
-  }
-}
-
-const styles = {
-  buttonSpace: {
-    margin: '0 3px'
-  },
-  tipsContent: {
-    margin: '5px 0',
-    fontSize: '12px',
-  },
-  input: {
-    width: '100%'
-  },
-  nextFormItem:{
-    justifyContent:'flex-end'
   }
 }
