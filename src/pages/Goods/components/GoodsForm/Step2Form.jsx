@@ -149,6 +149,7 @@ export default class Step2Form extends React.Component {
       formatGoodsStyle.salePrice = values[`styleSalePrice${indexId}`] * 100
       formatGoodsStyle.marketPrice = values[`styleMarketPrice${indexId}`] * 100
       formatGoodsStyle.stock = values[`styleStock${indexId}`]
+      formatGoodsStyle.compressHttpUrl = values[`styleImage${indexId}`][0].response ?  values[`styleImage${indexId}`][0].response.imgURL : values[`styleImage${indexId}`][0].imgURL
       goodsStyle.push(formatGoodsStyle)
     })
     return goodsStyle
