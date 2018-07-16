@@ -63,7 +63,7 @@ export default class ArticleForm extends React.Component {
     }).catch(() => false)
     if (res) {
       param.success({
-        url: res.data.httpUrl,
+        url: res.data.compressHttpUrl,
         id: res.data.id,
       })
     }

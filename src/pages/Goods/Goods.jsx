@@ -6,7 +6,7 @@ import GoodsNavManage from './components/GoodsNavManage/GoodsNavManage'
 import GoodsList from './components/GoodsList/GoodsList'
 import GoodsForm from './components/GoodsForm/GoodsForm'
 import DOMAIN from '@/domain'
-import {delGoodsNav, addGoodsNav, editGoodsNav} from '@/service'
+import {delGoodsNav, addGoodsNav, editGoodsNav, addGoods, editGoods,getGoodsDetail} from '@/service'
 
 const TabPane = Tab.TabPane
 const Toast = Feedback.toast
@@ -26,7 +26,7 @@ const Toast = Feedback.toast
     },
   },
   shopIdList: {
-    url:`${DOMAIN}/admin/shop/simpleLists`,
+    url: `${DOMAIN}/admin/shop/simpleLists`,
     responseFormatter: (responseHandler, res, originResponse) => {
       const formatResponse = {
         status: originResponse.code === 200 ? 'SUCCESS' : 'ERROR',
@@ -39,6 +39,7 @@ const Toast = Feedback.toast
     },
   },
   goodsList: {
+    url: `${DOMAIN}/admin/goods/lists`,
     responseFormatter: (responseHandler, res, originResponse) => {
       const formatResponse = {
         status: originResponse.code === 200 ? 'SUCCESS' : 'ERROR',
@@ -50,6 +51,20 @@ const Toast = Feedback.toast
       lists: [],
     },
   },
+  postStep1Data: {
+    url: `${DOMAIN}/admin/goods/add`,
+    method: 'post',
+    responseFormatter: (responseHandler, res, originResponse) => {
+      const formatResponse = {
+        status: originResponse.code === 200 ? 'SUCCESS' : 'ERROR',
+        data: res
+      }
+      responseHandler(formatResponse, originResponse)
+    },
+    defaultBindingData: {
+      id: null,
+    },
+  },
 })
 export default class Goods extends React.Component {
 
@@ -58,37 +73,20 @@ export default class Goods extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      isEdit:false,
+      step: 0,
       step1Data: {},
-      step2Data: {
-        goodsStyle:[
-          {
-            "id": 1,
-            "salePrice": 200,
-            "marketPrice": 2000,
-            "title": "情侣餐",
-            "stock": 100,
-            "fileId": 35,
-            "compressHttpUrl": "http://jccs.topsunep.com/uploads/compress/20180711/e2f6ee763e242eb647833d20d9830ae2.jpg"
-          },
-          {
-            "id": 2,
-            "salePrice": 400,
-            "marketPrice": 4000,
-            "title": "三人餐餐",
-            "stock": 100,
-            "fileId": 34,
-            "compressHttpUrl": "http://jccs.topsunep.com/uploads/compress/20180711/771b13decb0177759ac62249f5985104.png"
-          }
-        ],
-      },
+      step2Data: {},
       step3Data: {},
       step4Data: {},
+      stepFormId: '',
     }
   }
 
   componentDidMount () {
     this.getGoodsNavList()
     this.getShopIdList()
+    this.getGoodsList()
   }
 
   //添加商品导航
@@ -119,9 +117,53 @@ export default class Goods extends React.Component {
     }
   }
 
-  //发送第一步数据，记录返回的id
+  //新增时发送第一步数据，记录返回的id
   postStep1Data = async data => {
-    console.log(data)
+    const res = await addGoods({data}).catch(() => false)
+    if (res) {
+      this.setState({stepFormId: res.data.id})
+      this.nextStep()
+    }
+  }
+
+  //新增时发送其他步骤数据/修改时也通过这个函数发送数据
+  postOtherStepData = async (data, step) => {
+    const {stepFormId} = this.state
+    data.id = stepFormId
+    data.step = step + 1
+    const editRes = await editGoods({data}).catch(() => false)
+    const detailRes =  await getGoodsDetail({params:{id:stepFormId,step:step+1}}).catch(()=>false)
+    if (editRes && detailRes) {
+      this.setState({
+        [`step${step+1}Data`]:{...detailRes.data},
+      },()=>{
+        if(step !== 3) {
+          this.nextStep()
+        } else {
+          window.location.replace('#/result/success')
+        }
+      })
+    }
+  }
+
+  //记录每一步数据
+  onReportData = (data, step) => {
+    const {isEdit} = this.state
+    if(!isEdit)
+    switch (step) {
+      case 0:
+        this.setState({step1Data: {...data}})
+        this.postStep1Data(data)
+        break
+      case 1:
+      case 2:
+      case 3:
+        this.setState({[`step${step + 1}Data`]: {...data}})
+        this.postOtherStepData(data, step)
+        break
+    } else {
+      this.postOtherStepData(data, step)
+    }
   }
 
   //获取店铺导航栏列表
@@ -134,39 +176,107 @@ export default class Goods extends React.Component {
     this.props.updateBindingData('shopIdList')
   }
 
+  //获取商品列表
+  getGoodsList = () => {
+    this.props.updateBindingData('goodsList')
+  }
+
+  //获取商品详情并跳转到修改
+  getGoodsDetailAndGoEdit = async id => {
+    this.setState({stepFormId:id})
+    const res = await getGoodsDetail({params:{id}}).catch(()=>false)
+    if(res) {
+      this.setState({
+        step1Data:{...res.data.firstStep},
+        step2Data:{...res.data.secondStep},
+        step3Data:{...res.data.thirdStep},
+        step4Data:{...res.data.fourStep},
+        isEdit:true,
+      })
+    }
+  }
+
+  backFromEdit = () => {
+    this.setState({
+      isEdit:false,
+      step: 0,
+      step1Data: {},
+      step2Data: {},
+      step3Data: {},
+      step4Data: {},
+      stepFormId: '',
+    })
+    this.getGoodsList()
+  }
+
+  nextStep = () => {
+    this.setState({step: this.state.step + 1})
+  }
+
+  preStep = () => {
+    this.setState({step: this.state.step - 1})
+  }
+
   render () {
-    const {step1Data,step2Data,step3Data,step4Data} = this.state
+    const {step1Data, step2Data, step3Data, step4Data, step, isEdit} = this.state
     const __loading = this.props.bindingData.__loading
     const {goodsNavList, goodsList, shopIdList} = this.props.bindingData
     return (
       <IceContainer>
-        <Tab>
-          <TabPane key="goodsForm" tab="添加商品">
-            <GoodsForm
-              goodsNavList={goodsNavList.lists}
-              shopIdList={shopIdList.lists}
-              __loading={__loading}
-              postStep1Data={this.postStep1Data}
-              step1Data={step1Data}
-              step2Data={step2Data}
-              step3Data={step3Data}
-              step4Data={step4Data}
-            />
-          </TabPane>
-          <TabPane key="goodsList" tab="商品列表">
-            <GoodsList __loading={__loading} goodsList={goodsList.lists}/>
-          </TabPane>
-          <TabPane key="goodsNav" tab="商品导航栏管理">
-            <GoodsNavManage
-              onSubmitInfo={this.addGoodsNav}
-              __loading={__loading}
-              goodsNavList={goodsNavList.lists}
-              getGoodsNavList={this.getGoodsNavList}
-              editGoodsNav={this.editGoodsNav}
-              delGoodsNav={this.delGoodsNav}
-            />
-          </TabPane>
-        </Tab>
+        {isEdit ?
+          (<GoodsForm
+            type="edit"
+            goodsNavList={goodsNavList.lists}
+            shopIdList={shopIdList.lists}
+            __loading={__loading}
+            postStep1Data={this.postStep1Data}
+            step={step}
+            step1Data={step1Data}
+            step2Data={step2Data}
+            step3Data={step3Data}
+            step4Data={step4Data}
+            nextStep={this.nextStep}
+            preStep={this.preStep}
+            onReportData={this.onReportData}
+            backFromEdit={this.backFromEdit}
+          />) :
+          (<Tab>
+            <TabPane key="goodsList" tab="商品列表">
+              <GoodsList
+                __loading={__loading}
+                goodsList={goodsList.lists}
+                getGoodsDetailAndGoEdit={this.getGoodsDetailAndGoEdit}
+              />
+            </TabPane>
+            <TabPane key="goodsForm" tab="添加商品">
+              <GoodsForm
+                type="add"
+                goodsNavList={goodsNavList.lists}
+                shopIdList={shopIdList.lists}
+                __loading={__loading}
+                postStep1Data={this.postStep1Data}
+                step={step}
+                step1Data={step1Data}
+                step2Data={step2Data}
+                step3Data={step3Data}
+                step4Data={step4Data}
+                nextStep={this.nextStep}
+                preStep={this.preStep}
+                onReportData={this.onReportData}
+              />
+            </TabPane>
+            <TabPane key="goodsNav" tab="商品导航栏管理">
+              <GoodsNavManage
+                onSubmitInfo={this.addGoodsNav}
+                __loading={__loading}
+                goodsNavList={goodsNavList.lists}
+                getGoodsNavList={this.getGoodsNavList}
+                editGoodsNav={this.editGoodsNav}
+                delGoodsNav={this.delGoodsNav}
+              />
+            </TabPane>
+        </Tab>)
+        }
       </IceContainer>
     )
   }

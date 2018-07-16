@@ -1,25 +1,23 @@
-import React, { Component } from 'react';
-import IceContainer from '@icedesign/container';
-import { Button, Step } from '@icedesign/base';
+import React, {Component} from 'react'
+import IceContainer from '@icedesign/container'
+import {Button, Step} from '@icedesign/base'
 
 export default class SuccessDetail extends Component {
-  static displayName = 'SuccessDetail';
+  static displayName = 'SuccessDetail'
 
-  static propTypes = {};
+  static propTypes = {}
 
-  static defaultProps = {};
+  static defaultProps = {}
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: ['填写信息', '申请审核', '开通账号', '完成'], // 步骤条信息
-      current: 1, // 当前步骤
-      type: 'dot', // 步骤的类型，可选值: 'circle', 'arrow', 'dot'
-    };
+  constructor (props) {
+    super(props)
   }
 
-  render() {
-    const { value, current, type } = this.state;
+  backToGoodsPage = ()=>{
+    window.location.replace('#/goods')
+  }
+
+  render () {
     return (
       <div className="success-detail" style={styles.successDetail}>
         <IceContainer style={styles.container}>
@@ -33,26 +31,14 @@ export default class SuccessDetail extends Component {
               提交成功
             </h3>
           </div>
-          <p className="summary" style={styles.summary}>
-            本文字区域可以展示简单的说明
-          </p>
-          <p className="descrpiton" style={styles.descrpiton}>
-            如果有跟多细节需要展示，可以补充在下面这里，一些相关的介绍和描述
-          </p>
-          <Step current={current} type={type} style={styles.nextStep}>
-            {value.map((item, index) => {
-              return <Step.Item key={index} title={item} />;
-            })}
-          </Step>
           <div className="buttons" style={styles.buttons}>
-            <Button type="normal" style={styles.btn}>
-              返回首页
+            <Button onClick={this.backToGoodsPage} type="primary" style={styles.btn}>
+              返回商品管理页面
             </Button>
-            <Button type="primary">查看更多</Button>
           </div>
         </IceContainer>
       </div>
-    );
+    )
   }
 }
 
@@ -62,6 +48,9 @@ const styles = {
   },
   btn: {
     marginRight: '6px',
+  },
+  buttons:{
+    margin:'50px 0',
   },
   successDetail: {
     textAlign: 'center',
@@ -74,7 +63,8 @@ const styles = {
     height: '40px',
   },
   title: {
-    margin: 0,
+    fontSize:'25px',
+    margin: 10,
     fontWeight: 'bold',
   },
   summary: {
@@ -85,4 +75,4 @@ const styles = {
   nextStep: {
     margin: '80px 0',
   },
-};
+}

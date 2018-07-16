@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {Form, Input, Button, Field, Select, Upload} from '@icedesign/base'
+import {Form, Input, Button, Field, Select, Upload, Checkbox} from '@icedesign/base'
 import DOMAIN from '@/domain'
 import './StepForm.scss'
 
@@ -10,7 +10,7 @@ const formItemLayout = {
     fixedSpan: 8
   },
   wrapperCol: {
-    span: 10
+    span: 10,
   }
 }
 const styles = {
@@ -26,8 +26,13 @@ const styles = {
   },
   nextFormItem: {
     justifyContent: 'flex-end'
+  },
+  checkBoxFormItem: {
+    display: 'flex',
+    alignItems: 'center',
   }
 }
+const {Group: CheckboxGroup} = Checkbox
 const shopKeyWordTips = (
   <div style={styles.tipsContent}>用$隔开，作为搜索时的关键字</div>
 )
@@ -39,6 +44,10 @@ const goodsSaleMethod = [
 const goodsType = [
   {label: '核销商品', value: '1'},
   {label: '物流商品', value: '2'},
+]
+const goodsSafeguardIds = [
+  {label: '正品保证', value: '1'},
+  {label: '免预约', value: '2'},
 ]
 
 export default class Step1Form extends React.Component {
@@ -96,27 +105,55 @@ export default class Step1Form extends React.Component {
 
 
   createInitFileList = step1Data => {
-
+    const initFileList = []
+    if (step1Data.fileInfo) {
+      for (let i = 0; i < step1Data.fileInfo.length; i++) {
+        const file = {}
+        file.name = file.fileName = 'file'
+        file.status = 'done'
+        file.downloadURL = file.fileURL = file.imgURL = step1Data.fileInfo[i].compressHttpUrl
+        file.id = step1Data.fileInfo[i].id
+        initFileList.push(file)
+      }
+    }
+    return initFileList
   }
 
   nextStep = () => {
-    this.props.nextStep()
-    // this.field.validate((error,values)=>{
-    //   if(!error) {
-    //     console.log(values)
-    //     this.props.nextStep()
-    //   }
-    // })
+    const {onReportData} = this.props
+    this.field.validate((error, values) => {
+      if (!error) {
+        onReportData(this.formatReportData(values), 0)
+      }
+    })
   }
 
   //格式化提交的数据
-  formatSubmitData = values => {
+  formatReportData = values => {
+    return {
+      ...values,
+      step: 1,
+      fileIds: values.goodsCarousel.map(file => {
+        return file.response ? file.response.id : file.id
+      }),
+      fileInfo: values.goodsCarousel.map(file => {
+        return {
+          id: file.response ? file.response.id : file.id,
+          compressHttpUrl: file.response ? file.response.imgURL : file.imgURL
+        }
+      }),
+      goodsCarousel: null,
 
+    }
+  }
+
+  backFromEdit = ()=> {
+    this.props.backFromEdit()
   }
 
   render () {
     const init = this.field.init
-    const {goodsNavList, step1Data, __loading, shopIdList} = this.props
+    const {goodsNavList, step1Data, __loading, shopIdList,type} = this.props
     const uploadConfig = {
       action: `${DOMAIN}/admin/file/upload`,
       accept: 'image/png, image/jpg, image/jpeg',
@@ -137,39 +174,39 @@ export default class Step1Form extends React.Component {
           <Select style={styles.input} dataSource={goodsSaleMethod}
                   placeholder="请选择商品销售方式" {...init('goodsSaleMethod', {
             rules: [{required: true, message: '请选择商品销售方式'}],
-            initValue: Object.keys(step1Data).length > 0  ? String(step1Data.goodsSaleMethod) : '',
+            initValue: Object.keys(step1Data).length > 0 ? String(step1Data.goodsSaleMethod) : '',
           })}/>
         </FormItem>
         <FormItem label="商品类型：" {...formItemLayout}>
           <Select style={styles.input} dataSource={goodsType}
                   placeholder="请选择商品类型" {...init('goodsType', {
             rules: [{required: true, message: '请选择商品类型'}],
-            initValue: Object.keys(step1Data).length > 0  ? String(step1Data.goodsType) : '',
+            initValue: Object.keys(step1Data).length > 0 ? String(step1Data.goodsType) : '',
           })}/>
         </FormItem>
         <FormItem label="店铺ID：" {...formItemLayout}>
           <Select style={styles.input} dataSource={this.formatShopIdList(shopIdList)}
                   placeholder="请输入店铺ID" {...init('shopId', {
             rules: [{required: true, message: '请输入店铺ID'}],
-            initValue: Object.keys(step1Data).length > 0  ? String(step1Data.shopId) : '',
+            initValue: Object.keys(step1Data).length > 0 ? String(step1Data.shopId) : '',
           })}/>
         </FormItem>
         <FormItem label="商品名称：" {...formItemLayout}>
           <Input placeholder="请输入商品名称" {...init('goodsTitle', {
             rules: [{required: true, message: '请输入商品名称'}],
-            initValue: Object.keys(step1Data).length > 0  ? step1Data.goodsTitle : '',
+            initValue: Object.keys(step1Data).length > 0 ? step1Data.goodsTitle : '',
           })}/>
         </FormItem>
         <FormItem label="商品关键字：" {...formItemLayout} extra={shopKeyWordTips}>
-          <Input placeholder="请输入商品关键字" {...init('goodsKeyword', {
+          <Input placeholder="请输入商品关键字" {...init('goodsKeywords', {
             rules: [{required: true, message: '请输入商品关键字'}],
-            initValue: Object.keys(step1Data).length > 0  ? step1Data.goodsKeyword : '',
+            initValue: Object.keys(step1Data).length > 0 ? step1Data.goodsKeywords : '',
           })}/>
         </FormItem>
         <FormItem label="商品描述：" {...formItemLayout}>
           <Input maxLength={32} hasLimitHint multiple placeholder="请输入商品描述" {...init('goodsDesc', {
             rules: [{required: true, message: '请输入商品描述'}],
-            initValue: Object.keys(step1Data).length > 0  ? step1Data.goodsDesc : '',
+            initValue: Object.keys(step1Data).length > 0 ? step1Data.goodsDesc : '',
           })}/>
         </FormItem>
         <FormItem label="选择商品轮播图片：" {...formItemLayout}>
@@ -180,10 +217,17 @@ export default class Step1Form extends React.Component {
             getValueFromEvent: this.formatUploadValue
           })}/>
         </FormItem>
+        <FormItem label="商品保障信息：" {...formItemLayout} style={styles.checkBoxFormItem}>
+          <CheckboxGroup dataSource={goodsSafeguardIds} placeholder="请选择商品保障信息" {...init('goodsSafeguardIds', {
+            rules: [{required: true, message: '请选择商品保障信息'}],
+            initValue: Object.keys(step1Data).length > 0 ? step1Data.goodsSafeguardIds : [],
+          })}/>
+        </FormItem>
         <FormItem  {...formItemLayout} style={styles.nextFormItem}>
           <Button onClick={this.nextStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading}>
             下一步
           </Button>
+          {type === 'edit' && (<Button onClick={this.backFromEdit} style={styles.buttonSpace} size="large">返回</Button>)}
         </FormItem>
       </Form>
     )

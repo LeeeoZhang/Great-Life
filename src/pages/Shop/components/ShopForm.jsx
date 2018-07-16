@@ -52,7 +52,7 @@ export default class ShopForm extends React.Component {
     super(props)
     this.state = {
       isMapModalShow: false,
-      mapInfo: props.shopDetail?  props.shopDetail.mapInfo : null,
+      mapInfo: props.shopDetail ? props.shopDetail.mapInfo : null,
     }
   }
 
@@ -113,7 +113,7 @@ export default class ShopForm extends React.Component {
   formatUploadInfo = values => {
     return {
       ...values,
-      fileId: values.shopCarousel.map(file=>{
+      fileId: values.shopCarousel.map(file => {
         return file.response ? file.response.id : file.id
       }),
       mapInfo: this.state.mapInfo

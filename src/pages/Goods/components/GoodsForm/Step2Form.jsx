@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {Form, Input, Button, Field,Select} from '@icedesign/base'
+import {Form, Input, Button, Field, Select} from '@icedesign/base'
 import DOMAIN from '@/domain'
 import StyleForm from './StyleForm'
 import './StepForm.scss'
@@ -32,21 +32,21 @@ const GoodsPurchaseTips = (
   <div style={styles.tipsContent}>填0代表不限量</div>
 )
 const GoodsGroupNum = [
-  {label:'2人',value:'2'},
-  {label:'3人',value:'3'},
-  {label:'4人',value:'4'},
-  {label:'5人',value:'5'},
-  {label:'6人',value:'6'},
-  {label:'7人',value:'7'},
-  {label:'8人',value:'8'},
+  {label: '2人', value: '2'},
+  {label: '3人', value: '3'},
+  {label: '4人', value: '4'},
+  {label: '5人', value: '5'},
+  {label: '6人', value: '6'},
+  {label: '7人', value: '7'},
+  {label: '8人', value: '8'},
 ]
 const goodsGroupWaitTime = [
-  {label:'1小时',value:'1'},
-  {label:'2小时',value:'2'},
-  {label:'4小时',value:'4'},
-  {label:'8小时',value:'8'},
-  {label:'12小时',value:'12'},
-  {label:'24小时',value:'24'},
+  {label: '1小时', value: '1'},
+  {label: '2小时', value: '2'},
+  {label: '4小时', value: '4'},
+  {label: '8小时', value: '8'},
+  {label: '12小时', value: '12'},
+  {label: '24小时', value: '24'},
 ]
 
 export default class Step2Form extends React.Component {
@@ -56,7 +56,7 @@ export default class Step2Form extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      count:props.step2Data.goodsStyle ? props.step2Data.goodsStyle.length : 0,
+      count: props.step2Data.goodsStyle ? props.step2Data.goodsStyle.length : 0,
       styleList: props.step2Data.goodsStyle ?
         this.formatGoodsStyle(props.step2Data.goodsStyle) :
         [],
@@ -88,39 +88,75 @@ export default class Step2Form extends React.Component {
 
 
   formatGoodsStyle = goodsStyle => {
-    return goodsStyle.map((goodsStyleData,index)=>{
+    return goodsStyle.map((goodsStyleData, index) => {
       return {
         ...goodsStyleData,
-        indexId:index+1,
+        indexId: index + 1,
       }
     })
   }
 
   addNewStyle = () => {
-    const newStyleList = [...this.state.styleList, {indexId:this.state.count + 1}]
-    this.setState({styleList: newStyleList,count:this.state.count + 1})
+    const newStyleList = [...this.state.styleList, {indexId: this.state.count + 1}]
+    this.setState({styleList: newStyleList, count: this.state.count + 1})
   }
 
   delStyle = index => {
     const newStyleList = [...this.state.styleList]
-    newStyleList.splice(index,1)
-    this.setState({styleList:newStyleList})
+    newStyleList.splice(index, 1)
+    this.setState({styleList: newStyleList})
   }
 
   nextStep = () => {
-    this.field.validate((error,values)=>{
-      console.log(values)
+    const {onReportData} = this.props
+    this.field.validate((error, values) => {
+      if (!error) {
+        onReportData(this.formatReportData(values), 1)
+      }
     })
-    //this.props.nextStep()
   }
 
   preStep = () => {
     this.props.preStep()
   }
 
+  //格式化提交的数据
+  formatReportData = values => {
+    return {
+      goodsUnit: values.goodsUnit,
+      goodsPurchase: values.goodsPurchase,
+      goodsGroupNum: values.goodsGroupNum,
+      goodsGroupWaitTime: values.goodsGroupWaitTime,
+      goodsGroupPrice: values.goodsGroupPrice,
+      goodsStyle: JSON.stringify(this.formatReportGoodsStyle(values))
+    }
+  }
+
+  backFromEdit = () => {
+    this.props.backFromEdit()
+  }
+
+  //格式化提交样式列表
+  formatReportGoodsStyle = values => {
+    const {styleList} = this.state
+    const goodsStyle = []
+    const indexIds = styleList.map(goodStyle => goodStyle.indexId)
+    indexIds.forEach((indexId, index) => {
+      const formatGoodsStyle = {}
+      formatGoodsStyle.id = styleList[index].id || 0
+      formatGoodsStyle.fileId = values[`styleImage${indexId}`][0].response ? values[`styleImage${indexId}`][0].response.id : values[`styleImage${indexId}`][0].fileId
+      formatGoodsStyle.title = values[`styleTitle${indexId}`]
+      formatGoodsStyle.salePrice = values[`styleSalePrice${indexId}`] * 100
+      formatGoodsStyle.marketPrice = values[`styleMarketPrice${indexId}`] * 100
+      formatGoodsStyle.stock = values[`styleStock${indexId}`]
+      goodsStyle.push(formatGoodsStyle)
+    })
+    return goodsStyle
+  }
+
   render () {
     const init = this.field.init
-    const {step2Data, step1Data, __loading} = this.props
+    const {step2Data, step1Data, __loading,type} = this.props
     const {styleList} = this.state
     return (
       <Form Form direction="ver" field={this.field} size="large">
@@ -160,10 +196,10 @@ export default class Step2Form extends React.Component {
                 })}/>
               </FormItem>
             </Fragment>
-          ):null
+          ) : null
         }
         {
-          styleList.map((styleData,index) => (
+          styleList.map((styleData, index) => (
             <StyleForm
               __loading={__loading}
               key={styleData.indexId}
@@ -187,6 +223,7 @@ export default class Step2Form extends React.Component {
           <Button onClick={this.nextStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading}>
             下一步
           </Button>
+          {type === 'edit' && (<Button onClick={this.backFromEdit} style={styles.buttonSpace} size="large">返回</Button>)}
         </FormItem>
       </Form>
     )

@@ -31,21 +31,6 @@ const asideMenuConfig = [
     path: '/goods',
     icon: 'item',
   },
-  {
-    name: '结果页',
-    path: '/result',
-    icon: 'result',
-    children: [
-      {
-        name: '成功',
-        path: '/result/success',
-      },
-      {
-        name: '失败',
-        path: '/result/fail',
-      },
-    ],
-  },
 ];
 
 export { headerMenuConfig, asideMenuConfig };

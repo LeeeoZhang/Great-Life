@@ -4,7 +4,6 @@ import DOMAIN from '@/domain'
 import './StepForm.scss'
 
 const FormItem = Form.Item
-const {ImageUpload} = Upload
 const formItemLayout = {
   labelCol: {
     fixedSpan: 8
@@ -13,11 +12,12 @@ const formItemLayout = {
     span: 10
   }
 }
+const {ImageUpload} = Upload
 const styles = {
-  formBackground:{
-    background:'#f7f7f7',
-    padding:'10px 0',
-    marginBottom:'20px',
+  formBackground: {
+    background: '#f7f7f7',
+    padding: '10px 0',
+    marginBottom: '20px',
   },
   buttonSpace: {
     margin: '0 3px'
@@ -67,18 +67,18 @@ export default class StyleForm extends React.Component {
     const initFileList = []
     const file = {}
     if (styleData && Object.keys(styleData).includes('compressHttpUrl')) {
-        file.name = file.fileName = 'file'
-        file.status = 'done'
-        file.downloadURL = file.fileURL = file.imgURL = styleData.compressHttpUrl
-        file.fileId = styleData.fileId
-        file.id = styleData.id
-        initFileList.push(file)
+      file.name = file.fileName = 'file'
+      file.status = 'done'
+      file.downloadURL = file.fileURL = file.imgURL = styleData.compressHttpUrl
+      file.fileId = styleData.fileId
+      file.id = styleData.id
+      initFileList.push(file)
     }
     return initFileList
   }
 
   delStyle = indexId => {
-    const {index,field} = this.props
+    const {index, field} = this.props
     field.remove(`styleImage${indexId}`)
     field.remove(`styleSalePrice${indexId}`)
     field.remove(`styleTitle${indexId}`)
@@ -89,11 +89,11 @@ export default class StyleForm extends React.Component {
 
 
   render () {
-    const {__loading,styleData,init} = this.props
+    const {__loading, styleData, init} = this.props
     const {indexId} = styleData
     const uploadConfig = {
       action: `${DOMAIN}/admin/file/upload`,
-      limit:1,
+      limit: 1,
       accept: 'image/png, image/jpg, image/jpeg',
       listType: "picture-card",
       withCredentials: true,
@@ -118,13 +118,13 @@ export default class StyleForm extends React.Component {
         <FormItem label="销售价格：" {...formItemLayout}>
           <Input placeholder="请输入销售价格" {...init(`styleSalePrice${indexId}`, {
             rules: [{required: true, message: '请输入销售价格'}],
-            initValue: styleData.salePrice ? styleData.salePrice : '',
+            initValue: styleData.salePrice ? styleData.salePrice/100 : '',
           })}/>
         </FormItem>
         <FormItem label="市场价格：" {...formItemLayout}>
           <Input placeholder="请输入市场价格" {...init(`styleMarketPrice${indexId}`, {
             rules: [{required: true, message: '请输入市场价格'}],
-            initValue: styleData.marketPrice ? styleData.marketPrice : '',
+            initValue: styleData.marketPrice ? styleData.marketPrice/100 : '',
           })}/>
         </FormItem>
         <FormItem label="库存量：" {...formItemLayout}>
@@ -134,8 +134,8 @@ export default class StyleForm extends React.Component {
           })}/>
         </FormItem>
         <FormItem label=" " {...formItemLayout}>
-          <Button shape="warning" onClick={()=>this.delStyle(indexId)} style={styles.buttonSpace}  loading={__loading}>
-           删除该款式
+          <Button shape="warning" onClick={() => this.delStyle(indexId)} style={styles.buttonSpace} loading={__loading}>
+            删除该款式
           </Button>
         </FormItem>
       </div>
