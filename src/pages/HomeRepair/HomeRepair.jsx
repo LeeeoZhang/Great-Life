@@ -1,14 +1,16 @@
 import React, {Fragment} from 'react'
-import {Feedback} from "@icedesign/base"
+import {Tab,Feedback} from "@icedesign/base"
 import DataBinder from '@icedesign/data-binder'
 import IceContainer from '@icedesign/container'
 import HomeList from './components/HomeList'
 import HomeForm from './components/HomeForm'
+import HomeBannerForm from './components/HomeBannerForm'
 import IceTitle from '@icedesign/title'
 import {addHomeContent, editHomeContent,delHomeContent} from '@/service'
 import DOMAIN from '@/domain'
 
 const Toast = Feedback.toast
+const TabPane = Tab.TabPane
 
 @DataBinder({
   homeList: {
@@ -100,6 +102,11 @@ export default class HomeRepair extends React.Component {
     }
   }
 
+  //添加首页轮播图
+  addHomeBanner = async (data,clear)=> {
+    console.log(data)
+  }
+
   setHomeDetailAndGoEdit = index => {
     const {homeList} = this.props.bindingData
     const homeDetail = {
@@ -139,22 +146,30 @@ export default class HomeRepair extends React.Component {
     const {isHomeContentEdit, homeDetail} = this.state
     return (
       <IceContainer>
-        {
-          isHomeContentEdit ?
-            <HomeForm backFromEdit={this.backFromEdit} homeDetail={homeDetail} __loading={__loading} type="edit"
-                      onSubmitInfo={this.editHomeContent}/> :
-            (
-              <Fragment>
-                <IceTitle text="装修" decoration/>
-                <HomeForm __loading={__loading} type="add" onSubmitInfo={this.addHomeContent}/>
-                <IceTitle text="首页装修列表" decoration/>
-                <HomeList setHomeDetailAndGoEdit={this.setHomeDetailAndGoEdit}
-                          delHomeContent={this.delHomeContent}
-                          __loading={__loading}
-                          homeList={homeList.lists}/>
-              </Fragment>
-            )
-        }
+        <Tab>
+          <TabPane key="homeBanner" tab="首页轮播图">
+            <IceTitle text="首页轮播图添加" decoration/>
+            <HomeBannerForm __loading={__loading} type="add" onSubmitInfo={this.addHomeBanner}/>
+          </TabPane>
+          <TabPane key="homeContent" tab="首页内容">
+            {
+              isHomeContentEdit ?
+                <HomeForm backFromEdit={this.backFromEdit} homeDetail={homeDetail} __loading={__loading} type="edit"
+                          onSubmitInfo={this.editHomeContent}/> :
+                (
+                  <Fragment>
+                    <IceTitle text="首页内容添加" decoration/>
+                    <HomeForm __loading={__loading} type="add" onSubmitInfo={this.addHomeContent}/>
+                    <IceTitle text="首页装修列表" decoration/>
+                    <HomeList setHomeDetailAndGoEdit={this.setHomeDetailAndGoEdit}
+                              delHomeContent={this.delHomeContent}
+                              __loading={__loading}
+                              homeList={homeList.lists}/>
+                  </Fragment>
+                )
+            }
+          </TabPane>
+        </Tab>
       </IceContainer>
     )
   }

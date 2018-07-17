@@ -26,6 +26,7 @@ export default class HomeForm extends React.Component {
 
   field = new Field(this,{
     onChange: (name, value) => {
+      console.log(name,value)
       this.field.setValue(name, value)
     }
   })
@@ -53,7 +54,7 @@ export default class HomeForm extends React.Component {
   }
 
   backFromEdit = ()=>{
-    this.props.backFromEdit(0)
+    this.props.backFromEdit()
   }
 
   clearForm = ()=>{
