@@ -31,6 +31,11 @@ const asideMenuConfig = [
     path: '/goods',
     icon: 'item',
   },
+  {
+    name: '首页装修管理',
+    path: '/homeRepair',
+    icon: 'repair',
+  },
 ];
 
 export { headerMenuConfig, asideMenuConfig };

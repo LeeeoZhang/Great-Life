@@ -65,6 +65,10 @@ const NotFound = Loadable({
   loader: () => import('./pages/NotFound'),
   loading: LoadingIndicator,
 });
+const HomeRepair = Loadable({
+  loader: () => import('./pages/HomeRepair'),
+  loading: LoadingIndicator,
+});
 
 const routerConfig = [
   {
@@ -101,6 +105,11 @@ const routerConfig = [
     path: '/',
     layout: HeaderAsideFooterLayout,
     component: BlankComponent,
+  },
+  {
+    path: 'homeRepair',
+    layout: HeaderAsideFooterLayout,
+    component: HomeRepair,
   },
   {
     path: '/exception',

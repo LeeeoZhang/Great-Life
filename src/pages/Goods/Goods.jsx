@@ -6,7 +6,9 @@ import GoodsNavManage from './components/GoodsNavManage/GoodsNavManage'
 import GoodsList from './components/GoodsList/GoodsList'
 import GoodsForm from './components/GoodsForm/GoodsForm'
 import DOMAIN from '@/domain'
-import {delGoodsNav, addGoodsNav, editGoodsNav, addGoods, editGoods,getGoodsDetail} from '@/service'
+import {
+  delGoodsNav, addGoodsNav, editGoodsNav, addGoods, editGoods, getGoodsDetail, delGoods,saleOutGoods
+} from '@/service'
 
 const TabPane = Tab.TabPane
 const Toast = Feedback.toast
@@ -73,7 +75,7 @@ export default class Goods extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      isEdit:false,
+      isEdit: false,
       step: 0,
       step1Data: {},
       step2Data: {},
@@ -131,38 +133,53 @@ export default class Goods extends React.Component {
     const {stepFormId} = this.state
     data.id = stepFormId
     data.step = step + 1
-    const editRes = await editGoods({data}).catch(() => false)
-    const detailRes =  await getGoodsDetail({params:{id:stepFormId,step:step+1}}).catch(()=>false)
-    if (editRes && detailRes) {
-      this.setState({
-        [`step${step+1}Data`]:{...detailRes.data},
-      },()=>{
-        if(step !== 3) {
-          this.nextStep()
-        } else {
-          window.location.replace('#/result/success')
-        }
-      })
+    //发送编辑请求
+    const res = await editGoods({data}).catch(() => false)
+    if (res) {
+      if (step !== 3) {
+        this.nextStep()
+      } else {
+        window.location.replace('#/result/success')
+      }
     }
   }
 
   //记录每一步数据
   onReportData = (data, step) => {
     const {isEdit} = this.state
-    if(!isEdit)
-    switch (step) {
-      case 0:
-        this.setState({step1Data: {...data}})
-        this.postStep1Data(data)
-        break
-      case 1:
-      case 2:
-      case 3:
-        this.setState({[`step${step + 1}Data`]: {...data}})
-        this.postOtherStepData(data, step)
-        break
+    if (!isEdit) {
+      switch (step) {
+        case 0:
+          this.setState({step1Data: {...data}})
+          this.postStep1Data(data)
+          break
+        case 1:
+        case 2:
+        case 3:
+          this.setState({[`step${step + 1}Data`]: {...data}})
+          this.postOtherStepData(data, step)
+          break
+      }
     } else {
       this.postOtherStepData(data, step)
+    }
+  }
+
+  //删除商品
+  delGoods = async id => {
+    const res = await delGoods({params: {id}}).catch(() => false)
+    if (res) {
+      Toast.success('删除成功')
+      this.getGoodsList()
+    }
+  }
+
+  //下架商品
+  saleOutGoods = async id=>{
+    const res = await saleOutGoods({params:{id}}).catch(()=>false)
+    if(res) {
+      Toast.success('下架成功')
+      this.getGoodsList()
     }
   }
 
@@ -183,22 +200,22 @@ export default class Goods extends React.Component {
 
   //获取商品详情并跳转到修改
   getGoodsDetailAndGoEdit = async id => {
-    this.setState({stepFormId:id})
-    const res = await getGoodsDetail({params:{id}}).catch(()=>false)
-    if(res) {
+    this.setState({stepFormId: id})
+    const res = await getGoodsDetail({params: {id}}).catch(() => false)
+    if (res) {
       this.setState({
-        step1Data:{...res.data.firstStep},
-        step2Data:{...res.data.secondStep},
-        step3Data:{...res.data.thirdStep},
-        step4Data:{...res.data.fourStep},
-        isEdit:true,
+        step1Data: {...res.data.firstStep},
+        step2Data: {...res.data.secondStep},
+        step3Data: {...res.data.thirdStep},
+        step4Data: {...res.data.fourStep},
+        isEdit: true,
       })
     }
   }
 
   backFromEdit = () => {
     this.setState({
-      isEdit:false,
+      isEdit: false,
       step: 0,
       step1Data: {},
       step2Data: {},
@@ -213,8 +230,17 @@ export default class Goods extends React.Component {
     this.setState({step: this.state.step + 1})
   }
 
-  preStep = () => {
-    this.setState({step: this.state.step - 1})
+  //返回上一步先获取上一步的数据
+  preStep = async () => {
+    //这个step是从0开始的
+    const {stepFormId, step} = this.state
+    const res = await getGoodsDetail({params: {id: stepFormId, step}}).catch(() => false)
+    if (res) {
+      this.setState({
+        [`step${step}Data`]: {...res.data},
+        step: step - 1
+      })
+    }
   }
 
   render () {
@@ -246,6 +272,8 @@ export default class Goods extends React.Component {
                 __loading={__loading}
                 goodsList={goodsList.lists}
                 getGoodsDetailAndGoEdit={this.getGoodsDetailAndGoEdit}
+                delGoods={this.delGoods}
+                saleOutGoods={this.saleOutGoods}
               />
             </TabPane>
             <TabPane key="goodsForm" tab="添加商品">
@@ -275,7 +303,7 @@ export default class Goods extends React.Component {
                 delGoodsNav={this.delGoodsNav}
               />
             </TabPane>
-        </Tab>)
+          </Tab>)
         }
       </IceContainer>
     )

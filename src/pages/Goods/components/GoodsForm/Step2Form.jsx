@@ -174,26 +174,26 @@ export default class Step2Form extends React.Component {
           })}/>
         </FormItem>
         {
-          step1Data.goodsSaleMethod === 2 ? (
+          Number(step1Data.goodsSaleMethod) === 2 ? (
             <Fragment>
               <FormItem label="成团人数：" {...formItemLayout}>
                 <Select style={styles.input} dataSource={GoodsGroupNum}
                         placeholder="请选择成团人数" {...init('goodsGroupNum', {
                   rules: [{required: true, message: '请选择成团人数'}],
-                  initValue: step2Data ? step2Data.goodsUnit : '',
+                  initValue: step2Data ? String(step2Data.goodsGroupNum) : '',
                 })}/>
               </FormItem>
               <FormItem label="拼团持续时间：" {...formItemLayout}>
                 <Select style={styles.input} dataSource={goodsGroupWaitTime}
                         placeholder="请选择拼团持续时间" {...init('goodsGroupWaitTime', {
                   rules: [{required: true, message: '请选择拼团持续时间'}],
-                  initValue: step2Data ? step2Data.goodsUnit : '',
+                  initValue: step2Data ? String(step2Data.goodsGroupWaitTime) : '',
                 })}/>
               </FormItem>
               <FormItem label="拼团价格：" {...formItemLayout}>
                 <Input placeholder="请输入拼团价格" {...init('goodsGroupPrice', {
                   rules: [{required: true, message: '请输入拼团价格'}],
-                  initValue: step2Data ? step2Data.goodsUnit : '',
+                  initValue: step2Data ? step2Data.goodsGroupPrice : '',
                 })}/>
               </FormItem>
             </Fragment>

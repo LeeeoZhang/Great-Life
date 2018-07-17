@@ -80,7 +80,7 @@ export default class Step4Form extends React.Component {
           })}/>
         </FormItem>
         {
-          step1Data.goodsSaleMethod === '3' ? (
+          Number(step1Data.goodsSaleMethod) === 3 ? (
             <FormItem label="秒杀开始时间：" {...formItemLayout}>
               <DatePicker showTime  {...init('goodsSeckillStartTime', {
                 rules: [{required: true, message: '请选择秒杀开始时间'}],
@@ -91,7 +91,7 @@ export default class Step4Form extends React.Component {
           ) : null
         }
         {
-          step1Data.goodsType === '1' ? (
+          Number(step1Data.goodsType) === 1 ? (
             <Fragment>
               <FormItem label="卡券开始时间：" {...formItemLayout}>
                 <DatePicker showTime  {...init('goodsCardStartTime', {

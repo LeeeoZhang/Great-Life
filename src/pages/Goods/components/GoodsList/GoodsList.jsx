@@ -26,6 +26,14 @@ export default class GoodsList extends React.Component {
     this.props.getGoodsDetailAndGoEdit(id)
   }
 
+  onDel = id => {
+    this.props.delGoods(id)
+  }
+
+  onSaleOut = id => {
+    this.props.saleOutGoods(id)
+  }
+
   onSearch = () => {
 
   }
@@ -95,7 +103,7 @@ export default class GoodsList extends React.Component {
               <div style={styles.goodsStyleWrap}>
                 <p style={{fontSize: '12px'}}>{`上架时间:${record.time.putawayTime}`}</p>
                 <p style={{fontSize: '12px'}}>{`下架时间:${record.time.soldOutTime}`}</p>
-                <p style={{fontSize: '12px'}}>{`秒杀开始时间:${record.time.goodsSeckillStartTime || '无'}`}</p>
+                <p style={{fontSize: '12px'}}>{`秒杀开始时间:${record.time.seckillStartTime || '无'}`}</p>
                 <p style={{fontSize: '12px'}}>{`卡券开始时间:${record.time.cardStartTime}`}</p>
                 <p style={{fontSize: '12px'}}>{`卡券结束时间:${record.time.cardEndTime}`}</p>
               </div>
@@ -104,9 +112,10 @@ export default class GoodsList extends React.Component {
           <Table.Column width={100} align="center" title="操作" cell={(value, index, record) => {
             return (
               <Fragment>
-                <Button onClick={()=>{this.onEdit(record.id)}} size="small" style={styles.buttonSpace} type="primary">修改</Button>
+                <Button disabled={Number(record.status) !== 0} onClick={()=>this.onEdit(record.id)} size="small" style={styles.buttonSpace} type="primary">修改</Button>
                 <Button size="small" style={styles.buttonSpace}>菊花码</Button>
-                <Button size="small" style={styles.buttonSpace} shape="warning">删除</Button>
+                <Button onClick={()=>this.onDel(record.id)}  size="small" style={styles.buttonSpace} shape="warning">删除</Button>
+                <Button onClick={()=>this.onSaleOut(record.id)} disabled={Number(record.status) !== 1} size="small" style={styles.buttonSpace} type="primary">下架</Button>
               </Fragment>
             )
           }}/>
