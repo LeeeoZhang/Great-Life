@@ -1,11 +1,12 @@
 import React, {Fragment} from 'react'
-import {Button, Input, Icon, Select, Form, Field,Upload} from '@icedesign/base'
+import {Button, Input, Icon, Select, Form, Field, Upload, Feedback} from '@icedesign/base'
 import DOMAIN from '@/domain'
-import { TwitterPicker } from 'react-color'
+import {TwitterPicker} from 'react-color'
 import './HomeBannerForm.scss'
 import {getSimpleGoodsList} from '@/service'
 
-const { Combobox } = Select
+const Toast = Feedback.toast
+const {Combobox} = Select
 const FormItem = Form.Item
 const {ImageUpload} = Upload
 const formItemLayout = {
@@ -17,9 +18,9 @@ const formItemLayout = {
   }
 }
 const JumpData = [
-  {label:'不跳转',value:'1'},
-  {label:'跳转到商品详情',value:'2'},
-  {label:'跳转到商品聚合页',value:'3'},
+  {label: '不跳转', value: '1'},
+  {label: '跳转到商品详情', value: '2'},
+  {label: '跳转到商品聚合页', value: '3'},
 ]
 
 export default class HomeBannerForm extends React.Component {
@@ -29,17 +30,23 @@ export default class HomeBannerForm extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      jumpType:null,
-      goodsData:[],
-      color:'',
+      jumpType: props.bannerDetail ? props.bannerDetail.jumpType : null,
+      goodsData: this.createInitGoodsData(props.bannerDetail),
+      color: this.createInitColor(props.bannerDetail),
     }
   }
 
   field = new Field(this, {
     onChange: (name, value) => {
       this.field.setValue(name, value)
-      if(name === 'jumpType') {
-        this.setState({jumpType:value})
+      if (name === 'jumpType') {
+        //每次切换类型都要重置需要验证的数据
+        //并且重置一下商品数据
+        this.resetField(value)
+        this.setState({
+          jumpType: value,
+          goodsData:this.createInitGoodsData(this.props.bannerDetail),
+        })
       }
     }
   })
@@ -64,62 +71,142 @@ export default class HomeBannerForm extends React.Component {
   }
 
   onInputComboBox = value => {
-    if(this.searchTimer) clearTimeout(this.searchTimer)
-    this.searchTimer = setTimeout( async () => {
-      const res = await getSimpleGoodsList({params:{title:value}}).catch(()=>false)
-      if(res) {
-        const formatData = res.data.lists.map(item=>{
+    const {jumpType} = this.state
+    if (this.searchTimer) clearTimeout(this.searchTimer)
+    this.searchTimer = setTimeout(async () => {
+      const res = await getSimpleGoodsList({params: {title: value}}).catch(() => false)
+      if (res) {
+        const formatData = res.data.lists.map(item => {
           return {
-            label:item.title,
-            value:String(item.id),
+            label: item.title,
+            value: String(item.id),
           }
         })
-        this.setState({goodsData:formatData})
+        this.setState({goodsData: formatData})
       }
-    },500)
-    this.field.setValue('jumpGoodsId', value)
+    }, 500)
+    if (jumpType === '2') {
+      this.field.setValue('jumpGoodsId', value)
+    }
   }
 
   submitInfo = () => {
     const {onSubmitInfo} = this.props
+    const {color,jumpType} = this.state
     this.field.validate((error, values) => {
-      error || onSubmitInfo(this.formatSubmitInfo(values), this.clearForm)
+      if (!error) {
+        if (Number(jumpType) === 3 && !color) {
+          Toast.error('请选择一种主题颜色')
+        } else {
+          onSubmitInfo(this.formatSubmitInfo(values), this.clearForm)
+        }
+      }
     })
   }
 
-  clearForm = ()=>{
-
+  clearForm = () => {
+    this.field.reset()
+    this.setState({
+      jumpType: null,
+      goodsData: [],
+      color: '',
+    })
   }
 
-  createInitFileList = bannerDetail => {
+  //创建修改时的初始图片
+  createInitFileList = detail => {
     const initFileList = []
     const file = {}
-    if (merchantDetail) {
+    if (detail) {
       file.name = file.fileName = 'file'
       file.status = 'done'
-      file.downloadURL = file.fileURL = file.imgURL = bannerDetail.imgUrl
-      file.id = bannerDetail.fileId
+      file.downloadURL = file.fileURL = file.imgURL = detail.compressHttpUrl
+      file.id = detail.fileId
       initFileList.push(file)
     }
     return initFileList
   }
 
-  onColorPickerChange = (color,event) => {
-    this.setState({color:color.hex})
-  }
-
-  formatSubmitInfo = values => {
-    return {
-      ...values,
-      bannerId:values.bannerImg[0].response ? values.bannerImg[0].response.id : values.bannerImg[0].id,
-      bannerImg:null,
+  //创建修改时的初始商品数据
+  createInitGoodsData = bannerDetail => {
+    if (bannerDetail) {
+      if (bannerDetail.jumpType === 2) {
+        return [
+          {label: bannerDetail.jumpInfo.goodsTitle, value: String(bannerDetail.jumpInfo.goodsId)}
+        ]
+      } else if (bannerDetail.jumpType === 3) {
+        return bannerDetail.aggregatePageInfo.goodsInfo.map(item=>{
+          return {
+            label:item.goodsInfo.title,
+            value:String(item.goodsBaseId),
+          }
+        })
+      } else {
+        return []
+      }
+    } else {
+      return []
     }
   }
 
+  //创建修改时的初始主题色
+  createInitColor = bannerDetail => {
+    if(bannerDetail) {
+      if(bannerDetail.jumpType === 3) {
+        return bannerDetail.aggregatePageInfo.themeColor
+      } else {
+        return ''
+      }
+    } else {
+      return ''
+    }
+  }
+
+  onColorPickerChange = (color, event) => {
+    this.setState({color: color.hex})
+  }
+
+  formatSubmitInfo = values => {
+    if (values.jumpType === '1' || values.jumpType === '2') {
+      return {
+        ...values,
+        bannerId: values.bannerImg[0].response ? values.bannerImg[0].response.id : values.bannerImg[0].id,
+        bannerImg: null,
+      }
+    } else {
+      return {
+        ...values,
+        bannerId: values.bannerImg[0].response ? values.bannerImg[0].response.id : values.bannerImg[0].id,
+        bannerImg: null,
+        aggregatePageFileId: values.aggregatePageImg[0].response ? values.aggregatePageImg[0].response.id : values.aggregatePageImg[0].id,
+        aggregatePageImg: null,
+        aggregatePageThemeColor: this.state.color,
+      }
+    }
+  }
+
+  resetField = jumpType => {
+    switch (jumpType) {
+      case '1':
+        this.field.remove(['jumpGoodsId', 'aggregatePageTitle', 'aggregatePageImg', 'goodsIds'])
+        break
+      case '2':
+        this.field.remove(['aggregatePageTitle', 'aggregatePageImg', 'goodsIds'])
+        break
+      case '3':
+        this.field.remove('jumpGoodsId')
+        break
+    }
+  }
+
+  backFromEdit = ()=>{
+    this.props.backFromEdit()
+  }
+
   render () {
-    const init =this.field.init
-    const {goodsData,jumpType,color} = this.state
-    const {__loading,type} = this.props
+    const init = this.field.init
+    const {goodsData, jumpType, color} = this.state
+    const {__loading, type,bannerDetail} = this.props
     const uploadConfig = {
       action: `${DOMAIN}/admin/file/upload`,
       limit: 1,
@@ -134,14 +221,14 @@ export default class HomeBannerForm extends React.Component {
           <ImageUpload className="uploader" {...uploadConfig} {...init('bannerImg', {
             rules: [{required: true, message: '请选择图片'}],
             valueName: 'fileList',
-            //initValue: this.createInitFileList(merchantDetail),
+            initValue:bannerDetail ?  this.createInitFileList(bannerDetail.bannerInfo) : [],
             getValueFromEvent: this.formatUploadValue
           })}/>
         </FormItem>
         <FormItem label="轮播图跳转：" {...formItemLayout}>
-          <Select dataSource={JumpData} style={styles.select} {...init('jumpType',{
+          <Select dataSource={JumpData} style={styles.select} {...init('jumpType', {
             rules: [{required: true, message: '请选择轮播图跳转详情'}],
-            //initValue: this.createInitFileList(merchantDetail),
+            initValue: bannerDetail ? String(bannerDetail.jumpType) : null,
           })}/>
         </FormItem>
         {
@@ -156,13 +243,13 @@ export default class HomeBannerForm extends React.Component {
                   filterLocal={false}
                   placeholder="选择需要跳转的商品"
                   dataSource={goodsData}
-                  {...init('jumpGoodsId',{
+                  {...init('jumpGoodsId', {
                     rules: [{required: true, message: '选择需要跳转的商品'}],
-                    //initValue: homeDetail ? homeDetail.goodsIds : null,
+                    initValue: bannerDetail && bannerDetail.jumpInfo ? String(bannerDetail.jumpInfo.goodsId) : null,
                   })}
                 />
               </FormItem>
-            ):null
+            ) : null
         }
         {
           Number(jumpType) === 3 ?
@@ -171,14 +258,14 @@ export default class HomeBannerForm extends React.Component {
                 <FormItem label="聚合页标题：" {...formItemLayout}>
                   <Input placeholder="请输入聚合页标题" {...init('aggregatePageTitle', {
                     rules: [{required: true, message: '请输入聚合页标题'}],
-                    //initValue: merchantDetail ? merchantDetail.address : '',
+                    initValue: bannerDetail && bannerDetail.aggregatePageInfo ? bannerDetail.aggregatePageInfo.title : '',
                   })}/>
                 </FormItem>
                 <FormItem label="聚合页头图：" {...formItemLayout}>
                   <ImageUpload className="uploader" {...uploadConfig} {...init('aggregatePageImg', {
                     rules: [{required: true, message: '请选择图片'}],
                     valueName: 'fileList',
-                    //initValue: this.createInitFileList(merchantDetail),
+                    initValue:bannerDetail && bannerDetail.aggregatePageInfo ? this.createInitFileList(bannerDetail.aggregatePageInfo.fileInfo) : [],
                     getValueFromEvent: this.formatUploadValue
                   })}/>
                 </FormItem>
@@ -194,14 +281,14 @@ export default class HomeBannerForm extends React.Component {
                     filterLocal={false}
                     placeholder="请选择聚合页展示商品"
                     dataSource={goodsData}
-                    {...init('goodsIds',{
+                    {...init('goodsIds', {
                       rules: [{required: true, message: '请选择聚合页展示商品'}],
-                      //initValue: homeDetail ? homeDetail.goodsIds : null,
+                      initValue: bannerDetail && bannerDetail.aggregatePageInfo ? bannerDetail.aggregatePageInfo.goodsInfo.map(item=>String(item.goodsBaseId)) : null,
                     })}
                   />
                 </FormItem>
               </div>
-            ):null
+            ) : null
         }
         <FormItem label=" "  {...formItemLayout}>
           <Button style={styles.buttonSpace} type="primary" size="large" loading={__loading} onClick={this.submitInfo}>
@@ -215,11 +302,11 @@ export default class HomeBannerForm extends React.Component {
 }
 
 const styles = {
-  comboBox:{
-    width:'100%',
+  comboBox: {
+    width: '100%',
   },
-  select:{
-    width:'100%',
+  select: {
+    width: '100%',
   },
   buttonSpace: {
     margin: '3px',
