@@ -64,6 +64,11 @@ export default class ArticleList extends React.Component {
         <Table isLoading={__loading} dataSource={articleList}>
           <Table.Column title="文章编号" dataIndex="id"/>
           <Table.Column title="文章标题" dataIndex="title"/>
+          <Table.Column title="文章封面" cell={(value,index,record)=>{
+            return (
+              <img src={record.fileInfo.compressHttpUrl} style={styles.tableImage}/>
+            )
+          }}/>
           <Table.Column title="作者" dataIndex="author"/>
           <Table.Column title="创建时间" dataIndex="ctime"/>
           <Table.Column align="center" title="操作" cell={(value, index, record) => (
@@ -113,5 +118,8 @@ const styles = {
   },
   searchInput : {
     marginBottom:'20px',
+  },
+  tableImage:{
+    width:'100px',
   }
 }

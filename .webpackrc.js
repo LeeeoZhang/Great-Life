@@ -1,9 +1,9 @@
 const path = require('path')
 
 module.exports = {
-  output:{
-    publicPath:'./',
-  },
+  // output:{
+  //   publicPath:'./',
+  // },
   resolve: {
     alias: {
       '@': path.resolve(__dirname,'src'),

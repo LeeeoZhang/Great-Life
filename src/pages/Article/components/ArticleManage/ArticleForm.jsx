@@ -8,6 +8,7 @@ import {Grid, Input, Button, Feedback, Select} from "@icedesign/base"
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/braft.css'
 import {uploadArticleIMG} from '@/service'
+import FormatImageUpload from './FormatImageUpload'
 
 const {Row, Col} = Grid
 const Toast = Feedback.toast
@@ -25,6 +26,7 @@ export default class ArticleForm extends React.Component {
         desc: props.articleDetail ? props.articleDetail.desc : '',
         navId: props.articleDetail ? String(props.articleDetail.type) : '',
         id: props.articleDetail ? props.articleDetail.id : '',
+        articleImage: this.createInitFileList(props.articleDetail),
       },
       articleHTML: props.articleDetail ? props.articleDetail.content : '',
     }
@@ -79,6 +81,20 @@ export default class ArticleForm extends React.Component {
     this.props.backFromEdit()
   }
 
+  createInitFileList = articleDetail => {
+    const initFileList = []
+    const file = {}
+    console.log(articleDetail)
+    if (articleDetail) {
+      file.name = file.fileName = 'file'
+      file.status = 'done'
+      file.downloadURL = file.fileURL = file.imgURL = articleDetail.fileInfo.compressHttpUrl
+      file.id = articleDetail.fileInfo.fileId
+      initFileList.push(file)
+    }
+    return initFileList
+  }
+
   clearForm = () => {
     this.editor.clear()
     this.setState({
@@ -87,6 +103,7 @@ export default class ArticleForm extends React.Component {
         author: '',
         desc: '',
         navId: '',
+        articleImage:[],
       },
       articleHTML: '',
     })
@@ -108,14 +125,17 @@ export default class ArticleForm extends React.Component {
 
   //格式化提交数据
   formatSubmitInfo = (values, articleHTML) => {
+    console.log(values)
     return {
       title: values.title,
       author: values.author,
       desc: values.desc,
       type: values.navId,
       content: articleHTML,
+      fileId:values.articleImage[0].response ? values.articleImage[0].response.id:values.articleImage[0].id
     }
   }
+
 
   render () {
     const {__loading, type, navList} = this.props
@@ -149,6 +169,20 @@ export default class ArticleForm extends React.Component {
                 <Input size="large" placeholder="填写文章作者" style={styles.input}/>
               </IceFormBinder>
               <IceFormError name="author"/>
+            </Col>
+          </Row>
+          <Row style={styles.formItem}>
+            <Col xxs="6" s="3" l="3" style={styles.formLabel}>文章封面：</Col>
+            <Col s="12" l="10">
+              <IceFormBinder name="articleImage" required message="请选择文章封面" valueFormatter={info=>{
+                  if (info.fileList && info.fileList.length > 0) {
+                    return info.fileList
+                  }
+                  return []
+              }}>
+                <FormatImageUpload/>
+              </IceFormBinder>
+              <IceFormError name="articleImage"/>
             </Col>
           </Row>
           <Row style={styles.formItem}>
