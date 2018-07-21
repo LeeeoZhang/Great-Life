@@ -65,7 +65,7 @@ export default class ArticleForm extends React.Component {
     }).catch(() => false)
     if (res) {
       param.success({
-        url: res.data.compressHttpUrl,
+        url: res.data.ext === 'gif' ? res.data.httpUrl : res.data.compressHttpUrl,
         id: res.data.id,
       })
     }
