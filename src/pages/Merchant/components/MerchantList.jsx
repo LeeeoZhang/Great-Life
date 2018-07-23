@@ -41,6 +41,9 @@ export default class MerchantList extends React.Component {
           <Table.Column title="商家图片" dataIndex="imgUrl" cell={(value, index, record) => {
             return (<img src={value} style={styles.imageDetail}/>)
           }}/>
+          <Table.Column title="商家Logo"  cell={(value, index, record) => {
+            return (<img src={record.logoInfo.compressHttpUrl} style={styles.imageDetail}/>)
+          }}/>
           <Table.Column align="center" title="操作" cell={(value, index, record) => {
             return (
               <Fragment>

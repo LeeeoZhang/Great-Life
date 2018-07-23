@@ -81,6 +81,19 @@ export default class MerchantForm extends React.Component {
     return initFileList
   }
 
+  createInitLogoFileList = merchantDetail => {
+    const initFileList = []
+    const file = {}
+    if (merchantDetail) {
+      file.name = file.fileName = 'file'
+      file.status = 'done'
+      file.downloadURL = file.fileURL = file.imgURL = merchantDetail.logoInfo.comperssHttpUrl
+      file.id = merchantDetail.logoInfo.logoId
+      initFileList.push(file)
+    }
+    return initFileList
+  }
+
   //格式化提交的数据
   formatUploadInfo = values => {
     const {areaStr} = this.state
@@ -90,6 +103,7 @@ export default class MerchantForm extends React.Component {
       areaId: values.merchantArea,
       fileId: values.merchantImg[0].response ? values.merchantImg[0].response.id : values.merchantImg[0].id,
       address: values.merchantAreaDetail,
+      logo:values.logoImg[0].response ? values.logoImg[0].response.id : values.logoImg[0].id,
     }
   }
 
@@ -125,7 +139,7 @@ export default class MerchantForm extends React.Component {
           <CascaderSelect hasClear style={styles.cascaderSelectWidth} dataSource={AreaData}
                           placeholder="请选择商家所在省市区/县" {...init('merchantArea', {
             rules: [{required: true, message: '请选择商家所在省市区'}],
-            initValue: merchantDetail ? String(merchantDetail.areaId) : '0',
+            initValue: merchantDetail ? String(merchantDetail.areaId) : null,
             getValueFromEvent: this.formatAreaSelectValue
           })}/>
         </FormItem>
@@ -140,6 +154,14 @@ export default class MerchantForm extends React.Component {
             rules: [{required: true, message: '请选择图片'}],
             valueName: 'fileList',
             initValue: this.createInitFileList(merchantDetail),
+            getValueFromEvent: this.formatUploadValue
+          })}/>
+        </FormItem>
+        <FormItem label="选择商家Logo：" {...formItemLayout}>
+          <ImageUpload className="uploader" {...uploadConfig} {...init('logoImg', {
+            rules: [{required: true, message: '请选择logo'}],
+            valueName: 'fileList',
+            initValue: this.createInitLogoFileList(merchantDetail),
             getValueFromEvent: this.formatUploadValue
           })}/>
         </FormItem>
