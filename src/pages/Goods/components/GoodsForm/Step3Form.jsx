@@ -16,8 +16,8 @@ export default class Step3Form extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      noteHTMLStr: '',
-      detailHTMLStr: '',
+      noteHTMLStr: props.step3Data.goodsBuyNotes || '',
+      detailHTMLStr: props.step3Data.goodsDetail || '',
     }
   }
 

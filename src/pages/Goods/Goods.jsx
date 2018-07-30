@@ -121,10 +121,15 @@ export default class Goods extends React.Component {
 
   //新增时发送第一步数据，记录返回的id
   postStep1Data = async data => {
-    const res = await addGoods({data}).catch(() => false)
-    if (res) {
-      this.setState({stepFormId: res.data.id})
-      this.nextStep()
+    const {stepFormId} = this.state
+    if(stepFormId) {
+      this.postOtherStepData(data,0)
+    } else {
+      const res = await addGoods({data}).catch(() => false)
+      if (res) {
+        this.setState({stepFormId: res.data.id})
+        this.nextStep()
+      }
     }
   }
 
