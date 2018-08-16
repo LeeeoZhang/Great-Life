@@ -3,6 +3,7 @@ import {Tab, Feedback} from "@icedesign/base"
 import IceContainer from '@icedesign/container'
 import LogisticsGoods from './LogisticsGoods/LogisticsGoods'
 import CardGoods from './CardGoods/CardGoods'
+import RefundFail from './RefundFail/RefundFail'
 
 const TabPane = Tab.TabPane
 const Toast = Feedback.toast
@@ -22,7 +23,7 @@ export default class Order extends React.Component {
             <LogisticsGoods/>
           </TabPane>
           <TabPane key="3" tab="退款失败">
-
+            <RefundFail/>
           </TabPane>
           <TabPane key="4" tab="拼团中">
 

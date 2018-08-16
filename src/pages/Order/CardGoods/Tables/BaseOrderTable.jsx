@@ -51,7 +51,6 @@ export default class BaseOrderTable extends React.Component {
 
   formatTimePicker = (data, dataStr) => dataStr
 
-
   onCheckOrderDetail = (id) => {
     this.props.getOrderDetail(id)
   }
@@ -82,7 +81,7 @@ export default class BaseOrderTable extends React.Component {
             />
           </FormItem>
           <FormItem>
-            <Input style={styles.input} placeholder="搜索店铺名称" {...init('searchTitle')}/>
+            <Input style={styles.input} placeholder="搜索商品名称" {...init('searchTitle')}/>
           </FormItem>
           <FormItem>
             <Button loading={__loading} style={styles.buttonSpace} type="primary" onClick={this.onSearch}><Icon
@@ -120,7 +119,7 @@ export default class BaseOrderTable extends React.Component {
             tabId === '1' ? (<Table.Column title="消费时间" dataIndex="payTime"/>) : null
           }
           {
-            tabId === '3' ? (<Table.Column title="退款时间" dataIndex="payTime"/>) : null
+            tabId === '3' ? (<Table.Column title="退款时间" dataIndex="refundTime"/>) : null
           }
           <Table.Column title="操作" align="center" cell={(value, index, record) => {
             return (
