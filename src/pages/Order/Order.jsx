@@ -2,6 +2,7 @@ import React, {Fragment} from 'react'
 import {Tab, Feedback} from "@icedesign/base"
 import IceContainer from '@icedesign/container'
 import LogisticsGoods from './LogisticsGoods/LogisticsGoods'
+import CardGoods from './CardGoods/CardGoods'
 
 const TabPane = Tab.TabPane
 const Toast = Feedback.toast
@@ -15,7 +16,7 @@ export default class Order extends React.Component {
       <IceContainer>
         <Tab>
           <TabPane key="1" tab="核销商品">
-
+            <CardGoods/>
           </TabPane>
           <TabPane key="2" tab="物流商品">
             <LogisticsGoods/>
