@@ -26,7 +26,8 @@ export default class ArticleForm extends React.Component {
         desc: props.articleDetail ? props.articleDetail.desc : '',
         navId: props.articleDetail ? String(props.articleDetail.type) : '',
         id: props.articleDetail ? props.articleDetail.id : '',
-        articleImage: this.createInitFileList(props.articleDetail),
+        articleImage: this.createArticleImageInitFileList(props.articleDetail),
+        bigArticleImage: this.createBigArticleImageInitFileList(props.articleDetail),
       },
       articleHTML: props.articleDetail ? props.articleDetail.content : '',
     }
@@ -81,7 +82,7 @@ export default class ArticleForm extends React.Component {
     this.props.backFromEdit()
   }
 
-  createInitFileList = articleDetail => {
+  createArticleImageInitFileList = articleDetail => {
     const initFileList = []
     const file = {}
     console.log(articleDetail)
@@ -90,6 +91,20 @@ export default class ArticleForm extends React.Component {
       file.status = 'done'
       file.downloadURL = file.fileURL = file.imgURL = articleDetail.fileInfo.compressHttpUrl
       file.id = articleDetail.fileInfo.fileId
+      initFileList.push(file)
+    }
+    return initFileList
+  }
+
+  createBigArticleImageInitFileList = articleDetail => {
+    const initFileList = []
+    const file = {}
+    console.log(articleDetail)
+    if (articleDetail) {
+      file.name = file.fileName = 'file'
+      file.status = 'done'
+      file.downloadURL = file.fileURL = file.imgURL = articleDetail.bigFileInfo.compressHttpUrl
+      file.id = articleDetail.bigFileInfo.fileId
       initFileList.push(file)
     }
     return initFileList
@@ -132,7 +147,8 @@ export default class ArticleForm extends React.Component {
       desc: values.desc,
       type: values.navId,
       content: articleHTML,
-      fileId:values.articleImage[0].response ? values.articleImage[0].response.id:values.articleImage[0].id
+      fileId:values.articleImage[0].response ? values.articleImage[0].response.id:values.articleImage[0].id,
+      bigFileId:values.bigArticleImage[0].response ? values.bigArticleImage[0].response.id:values.bigArticleImage[0].id,
     }
   }
 
@@ -172,7 +188,7 @@ export default class ArticleForm extends React.Component {
             </Col>
           </Row>
           <Row style={styles.formItem}>
-            <Col xxs="6" s="3" l="3" style={styles.formLabel}>文章封面：</Col>
+            <Col xxs="6" s="3" l="3" style={styles.formLabel}>文章封面(290*220)：</Col>
             <Col s="12" l="10">
               <IceFormBinder name="articleImage" required message="请选择文章封面" valueFormatter={info=>{
                   if (info.fileList && info.fileList.length > 0) {
@@ -183,6 +199,20 @@ export default class ArticleForm extends React.Component {
                 <FormatImageUpload/>
               </IceFormBinder>
               <IceFormError name="articleImage"/>
+            </Col>
+          </Row>
+          <Row style={styles.formItem}>
+            <Col xxs="6" s="3" l="3" style={styles.formLabel}>文章大图：</Col>
+            <Col s="12" l="10">
+              <IceFormBinder name="bigArticleImage" required message="请选择文章大图" valueFormatter={info=>{
+                if (info.fileList && info.fileList.length > 0) {
+                  return info.fileList
+                }
+                return []
+              }}>
+                <FormatImageUpload/>
+              </IceFormBinder>
+              <IceFormError name="bigArticleImage"/>
             </Col>
           </Row>
           <Row style={styles.formItem}>

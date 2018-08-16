@@ -69,6 +69,11 @@ export default class ArticleList extends React.Component {
               <img src={record.fileInfo.compressHttpUrl} style={styles.tableImage}/>
             )
           }}/>
+          <Table.Column title="文章大图" cell={(value,index,record)=>{
+            return (
+              <img src={record.bigFileInfo.compressHttpUrl} style={styles.tableImage}/>
+            )
+          }}/>
           <Table.Column title="作者" dataIndex="author"/>
           <Table.Column title="创建时间" dataIndex="ctime"/>
           <Table.Column align="center" title="操作" cell={(value, index, record) => (
