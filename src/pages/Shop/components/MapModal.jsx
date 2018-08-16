@@ -120,7 +120,7 @@ export default class MapModal extends React.Component {
         visible={isMapModalShow}
         onCancel={closeMapModal}
         onClose={closeMapModal}
-        title='选取店铺位置'
+        title="选取店铺位置"
         afterOpen={this.afterModalOpen}
         afterClose={this.afterModalClose}
         onOk={this.submitMapInfo}

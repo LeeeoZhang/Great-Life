@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
 import {Input, Button, Upload, Form, Field, Select, Feedback, Radio} from '@icedesign/base'
 import MapModal from './MapModal'
+import {getSimpleArticleList,getSimpleVerifyList} from '@/service'
 
 import './ShopForm.scss'
 import DOMAIN from '@/domain'
@@ -9,6 +10,7 @@ const FormItem = Form.Item
 const {ImageUpload} = Upload
 const Toast = Feedback.toast
 const {Group: RadioGroup} = Radio
+const { Combobox } = Select
 const formItemLayout = {
   labelCol: {
     fixedSpan: 8
@@ -28,15 +30,25 @@ const styles = {
   input: {
     width: '100%'
   },
+  comboBox:{
+    width:'100%',
+  },
+  verifyLabel:{
+    display:'flex',
+    alignItems:'center',
+  },
+  verifyAvatar:{
+    width:'20px',
+    height:'20px',
+    borderRadius:'50%',
+    marginRight:'5px',
+  }
 }
 const shopKeyWordTips = (
-  <div style={styles.tipsContent}>用$隔开，作为搜索时的关键字</div>
+  <div style={styles.tipsContent}>用$隔开，作为搜索时的关键字，同时也会在店铺搜索中作为标签展示</div>
 )
 const carouselTips = (
-  <div style={styles.tipsContent}>第一张轮播图将作为店铺列表的展示图片</div>
-)
-const mealTypeTips = (
-  <div style={styles.tipsContent}>菜系名称，如湘菜，粤菜。如不是美食类店铺，则可不填</div>
+  <div style={styles.tipsContent}>第一张轮播图将作为店铺列表的展示图片，建议大小：750*490(满足该比例即可)</div>
 )
 const recommendRadio = [
   {value: '0', label: '否'},
@@ -53,6 +65,8 @@ export default class ShopForm extends React.Component {
     this.state = {
       isMapModalShow: false,
       mapInfo: props.shopDetail ? props.shopDetail.mapInfo : null,
+      articleData:this.createInitArticleData(props.shopDetail),
+      verifyData:this.createInitVerifyData(props.shopDetail),
     }
   }
 
@@ -109,6 +123,88 @@ export default class ShopForm extends React.Component {
     return initFileList
   }
 
+  createInitLogoFileList = shopDetail => {
+    const initFileList = []
+    const file = {}
+    console.log(shopDetail)
+    if (shopDetail) {
+      file.name = file.fileName = 'file'
+      file.status = 'done'
+      file.downloadURL = file.fileURL = file.imgURL = shopDetail.logoInfo.compressHttpUrl
+      file.id = shopDetail.logoInfo.id
+      initFileList.push(file)
+    }
+    return initFileList
+  }
+
+  /***combobox相关**/
+  onArticleInputComboBox = value => {
+    if(this.searchTimer) clearTimeout(this.searchTimer)
+    this.searchTimer = setTimeout( async () => {
+      const res = await getSimpleArticleList({params:{title:value}}).catch(()=>false)
+      if(res) {
+        const formatData = res.data.lists.map(item=>{
+          return {
+            label:item.title,
+            value:String(item.id),
+          }
+        })
+        this.setState({articleData:formatData})
+      }
+    },500)
+    this.field.setValue('articleId', value)
+  }
+
+  onVerifyInputComboBox = value => {
+    if(this.searchTimer) clearTimeout(this.searchTimer)
+    this.searchTimer = setTimeout( async () => {
+      const res = await getSimpleVerifyList({params:{nickname:value}}).catch(()=>false)
+      if(res) {
+        const formatData = res.data.lists.map(item=>{
+          return {
+            label:(
+              <div style={styles.verifyLabel}>
+                <img style={styles.verifyAvatar} src={item.headimg}/>
+                <span>{item.nickname}</span>
+              </div>
+            ),
+            value:String(item.id),
+          }
+        })
+        this.setState({verifyData:formatData})
+      }
+    },500)
+  }
+
+  createInitArticleData = shopDetail => {
+    if(shopDetail) {
+      return [
+        {label:shopDetail.articleInfo.title,value:String(shopDetail.articleInfo.id)}
+      ]
+    } else {
+      return []
+    }
+  }
+
+  createInitVerifyData = shopDetail => {
+    if(shopDetail) {
+      return shopDetail.verifyUserInfo.map(item=>{
+        return {
+          label:(
+            <div style={styles.verifyLabel}>
+              <img style={styles.verifyAvatar} src={item.headimg}/>
+              <span>{item.nickname}</span>
+            </div>
+          ),
+          value:String(item.id),
+        }
+      })
+    } else {
+      return []
+    }
+  }
+  /****************/
+
   //格式化提交的表单信息
   formatUploadInfo = values => {
     return {
@@ -116,7 +212,8 @@ export default class ShopForm extends React.Component {
       fileId: values.shopCarousel.map(file => {
         return file.response ? file.response.id : file.id
       }),
-      mapInfo: this.state.mapInfo
+      logoId:values.logoImg[0].response ?  values.logoImg[0].response.id : values.logoImg[0].id,
+      mapInfo: this.state.mapInfo,
     }
   }
 
@@ -126,16 +223,6 @@ export default class ShopForm extends React.Component {
       return {
         label: type.title,
         value: type.id,
-      }
-    })
-  }
-
-  //格式化关联商家选择列表
-  formatMerchantList = merchantList => {
-    return merchantList.map(merchant => {
-      return {
-        label: merchant.title,
-        value: merchant.id,
       }
     })
   }
@@ -177,8 +264,8 @@ export default class ShopForm extends React.Component {
   }
 
   render () {
-    const {isMapModalShow, mapInfo} = this.state
-    const {__loading, shopDetail, type, shopTypeList, merchantList} = this.props
+    const {isMapModalShow, mapInfo,articleData,verifyData} = this.state
+    const {__loading, shopDetail, type, shopTypeList} = this.props
     const init = this.field.init
     const uploadConfig = {
       action: `${DOMAIN}/admin/file/upload`,
@@ -220,28 +307,19 @@ export default class ShopForm extends React.Component {
               initValue: shopDetail ? String(shopDetail.shopType) : '',
             })}/>
           </FormItem>
-          <FormItem label="选择关联商家：" {...formItemLayout}>
-            <Select style={styles.input} dataSource={this.formatMerchantList(merchantList)}
-                    placeholder="请选择关联商家" {...init('connectMerchant', {
-              rules: [{required: true, message: '请选择关联商家'}],
-              initValue: shopDetail ? String(shopDetail.connectMerchant) : '',
-            })}/>
-          </FormItem>
-          <FormItem label="菜品类型名称：" {...formItemLayout} extra={mealTypeTips}>
-            <Input placeholder="请输入店铺名称" {...init('mealType', {
-              initValue: shopDetail ? shopDetail.mealType : '',
-            })}/>
-          </FormItem>
-          <FormItem label="店铺名称扩展：" {...formItemLayout}>
-            <Input placeholder="请输入店铺名称" {...init('shopTitleExtend', {
-              initValue: shopDetail ? shopDetail.shopTitleExtend : '',
-            })}/>
-          </FormItem>
           <FormItem label="选择轮播图片：" {...formItemLayout} extra={carouselTips}>
             <ImageUpload className="uploader" {...uploadConfig} {...init('shopCarousel', {
               rules: [{required: true, message: '请选择图片'}],
               valueName: 'fileList',
               initValue: this.createInitFileList(shopDetail),
+              getValueFromEvent: this.formatUploadValue
+            })}/>
+          </FormItem>
+          <FormItem label="选择店铺Logo：" {...formItemLayout}>
+            <ImageUpload limit={1} className="uploader" {...uploadConfig} {...init('logoImg', {
+              rules: [{required: true, message: '请选择logo'}],
+              valueName: 'fileList',
+              initValue: this.createInitLogoFileList(shopDetail),
               getValueFromEvent: this.formatUploadValue
             })}/>
           </FormItem>
@@ -252,9 +330,42 @@ export default class ShopForm extends React.Component {
             })}/>
           </FormItem>
           <FormItem label="店铺主要描述：" {...formItemLayout}>
-            <Input maxLength={32} hasLimitHint multiple placeholder="请输入店铺主要描述" {...init('shopDesc', {
+            <Input maxLength={20} hasLimitHint multiple placeholder="请输入店铺主要描述" {...init('shopDesc', {
               rules: [{required: true, message: '请输入店铺主要描述'}],
               initValue: shopDetail ? shopDetail.shopDesc : '',
+            })}/>
+          </FormItem>
+          <FormItem label="选择关联文章：" {...formItemLayout}>
+            <Combobox
+              onInputUpdate={this.onArticleInputComboBox}
+              fillProps="label"
+              style={styles.comboBox}
+              filterLocal={false}
+              placeholder="请输入文章名称"
+              dataSource={articleData}
+              {...init('articleId',{
+                initValue: shopDetail ? shopDetail.articleInfo.id : null,
+              })}
+            />
+          </FormItem>
+          <FormItem label="选择核销员：" {...formItemLayout}>
+            <Combobox
+              onInputUpdate={this.onVerifyInputComboBox}
+              multiple
+              fillProps="label"
+              style={styles.comboBox}
+              filterLocal={false}
+              placeholder="请输入核销员昵称"
+              dataSource={verifyData}
+              {...init('verifyIds',{
+                initValue: shopDetail ? shopDetail.verifyUserInfo.map(info=>info.id) : null,
+              })}
+            />
+          </FormItem>
+          <FormItem label="店家微信ID：" {...formItemLayout}>
+            <Input placeholder="请输入店家微信ID" {...init('wxId', {
+              rules: [{required: true, message: '请输入店家微信ID'}],
+              initValue: shopDetail ? shopDetail.wxId : '',
             })}/>
           </FormItem>
           <FormItem label="联系电话：" {...formItemLayout}>

@@ -42,6 +42,11 @@ const Toast = Feedback.toast
   },
   goodsList: {
     url: `${DOMAIN}/admin/goods/lists`,
+    params: {
+      page: 1,
+      size: 10,
+      title: '',
+    },
     responseFormatter: (responseHandler, res, originResponse) => {
       const formatResponse = {
         status: originResponse.code === 200 ? 'SUCCESS' : 'ERROR',
@@ -51,6 +56,7 @@ const Toast = Feedback.toast
     },
     defaultBindingData: {
       lists: [],
+      count:0,
     },
   },
   postStep1Data: {
@@ -82,6 +88,9 @@ export default class Goods extends React.Component {
       step3Data: {},
       step4Data: {},
       stepFormId: '',
+      current:1,
+      size:10,
+      title:'',
     }
   }
 
@@ -200,7 +209,12 @@ export default class Goods extends React.Component {
 
   //获取商品列表
   getGoodsList = () => {
-    this.props.updateBindingData('goodsList')
+    const {current, size, title} = this.state
+    this.props.updateBindingData('goodsList',{
+      params:{
+        page:current,size,title,
+      }
+    })
   }
 
   //获取商品详情并跳转到修改
@@ -248,8 +262,36 @@ export default class Goods extends React.Component {
     }
   }
 
+  //翻页
+  onChangePage = current => {
+    this.setState({current},()=>{
+      this.getGoodsList()
+    })
+  }
+
+  //查询
+  searching = title=> {
+    this.setState({
+      title,
+      page:1,
+    },()=>{
+      this.getGoodsList()
+    })
+  }
+
+  //重置查询
+  resetSearch = ()=>{
+    this.setState({
+      current:1,
+      size:10,
+      title:'',
+    },()=>{
+      this.getGoodsList()
+    })
+  }
+
   render () {
-    const {step1Data, step2Data, step3Data, step4Data, step, isEdit} = this.state
+    const {step1Data, step2Data, step3Data, step4Data, step, isEdit,current} = this.state
     const __loading = this.props.bindingData.__loading
     const {goodsNavList, goodsList, shopIdList} = this.props.bindingData
     return (
@@ -276,9 +318,14 @@ export default class Goods extends React.Component {
               <GoodsList
                 __loading={__loading}
                 goodsList={goodsList.lists}
+                count={goodsList.count}
                 getGoodsDetailAndGoEdit={this.getGoodsDetailAndGoEdit}
                 delGoods={this.delGoods}
                 saleOutGoods={this.saleOutGoods}
+                current={current}
+                onChangePage={this.onChangePage}
+                resetSearch={this.resetSearch}
+                searching={this.searching}
               />
             </TabPane>
             <TabPane key="goodsForm" tab="添加商品">

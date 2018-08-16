@@ -16,11 +16,11 @@ const asideMenuConfig = [
     path: '/article',
     icon: 'content',
   },
-  {
-    name: '商家管理',
-    path: '/merchant',
-    icon: 'fans',
-  },
+  // {
+  //   name: '商家管理',
+  //   path: '/merchant',
+  //   icon: 'fans',
+  // },
   {
     name: '店铺管理',
     path: '/shop',
@@ -35,6 +35,11 @@ const asideMenuConfig = [
     name: '首页装修管理',
     path: '/homeRepair',
     icon: 'repair',
+  },
+  {
+    name: '订单管理',
+    path: '/order',
+    icon: 'ul-list',
   },
 ];
 

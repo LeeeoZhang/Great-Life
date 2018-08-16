@@ -19,7 +19,7 @@ export default class GoodsList extends React.Component {
   })
 
   onPaginationChange = (current) => {
-    console.log(current)
+    this.props.onChangePage(current)
   }
 
   onEdit = id => {
@@ -35,17 +35,19 @@ export default class GoodsList extends React.Component {
   }
 
   onSearch = () => {
-
+    this.props.searching(this.field.getValue('searchTitle'))
   }
 
   onClear = () => {
-
+    this.props.resetSearch()
+    this.field.reset()
   }
+
 
   render () {
     const init = this.field.init
     const {size} = this.state
-    const {__loading, goodsList} = this.props
+    const {__loading, goodsList,count,current} = this.props
     return (
       <Fragment>
         <Form direction="hoz" field={this.field} size="medium">
@@ -87,6 +89,18 @@ export default class GoodsList extends React.Component {
               </div>
             )
           }}/>
+          <Table.Column width={230} title="款式销售详情" cell={(value, index, record) => {
+            return (
+              <div style={styles.goodsStyleWrap}>
+                {record.goodsStyle.map((item, index) => (
+                  <div key={index}>
+                    <p style={{fontSize: '12px'}}>{`已支付:${item.orderInfo.already} 已关闭:${item.orderInfo.close} 已创建:${item.orderInfo.create}`}</p>
+                    <p style={{fontSize: '12px'}}>{`已过期:${item.orderInfo.expire} 已退款:${item.orderInfo.refund} 已核销:${item.orderInfo.verify}`}</p>
+                  </div>
+                ))}
+              </div>
+            )
+          }}/>
           <Table.Column width={230} title="款式价格" cell={(value, index, record) => {
             return (
               <div style={styles.goodsStyleWrap}>
@@ -112,7 +126,8 @@ export default class GoodsList extends React.Component {
           <Table.Column width={100} align="center" title="操作" cell={(value, index, record) => {
             return (
               <Fragment>
-                <Button disabled={Number(record.status) !== 0} onClick={()=>this.onEdit(record.id)} size="small" style={styles.buttonSpace} type="primary">修改</Button>
+                {/*disabled={Number(record.status) !== 0}*/}
+                <Button onClick={()=>this.onEdit(record.id)} size="small" style={styles.buttonSpace} type="primary">修改</Button>
                 <Button size="small" style={styles.buttonSpace}>菊花码</Button>
                 <Button onClick={()=>this.onDel(record.id)}  size="small" style={styles.buttonSpace} shape="warning">删除</Button>
                 <Button onClick={()=>this.onSaleOut(record.id)} disabled={Number(record.status) !== 1} size="small" style={styles.buttonSpace} type="primary">下架</Button>
@@ -124,8 +139,9 @@ export default class GoodsList extends React.Component {
           <Pagination onChange={this.onPaginationChange}
                       showJump={false}
                       shape="arrow-only"
-                      total={1000}
+                      total={count}
                       pageSize={size}
+                      current={current}
           />
         </div>
       </Fragment>

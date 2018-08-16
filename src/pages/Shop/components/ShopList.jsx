@@ -90,8 +90,21 @@ export default class ShopList extends React.Component {
           <Table.Column title="店铺详细地址" dataIndex="mapInfo" cell={(value,index,record)=>{
             return (<div>{value.areaStr+value.address}</div>)
           }}/>
-          <Table.Column title="关联商家" dataIndex="connectMerchantTitle"/>
+          <Table.Column title="店铺logo" align="center" dataIndex="connectMerchantTitle" cell={(value,index,record)=>{
+            return (<img style={styles.logo} src={record.logoInfo.compressHttpUrl}/>)
+          }}/>
           <Table.Column title="营业时间" dataIndex="businessHours"/>
+          <Table.Column title="关联文章" dataIndex="articleTitle"/>
+          <Table.Column title="核销员" cell={(value,index,record)=>{
+            return record.verifyUserInfo.map(info => {
+              return (
+                <div style={styles.verifyLabel}>
+                  <img style={styles.verifyAvatar} src={info.headimg}/>
+                  <span>{info.nickname}</span>
+                </div>
+              )
+            })
+          }}/>
           <Table.Column title="创建时间" dataIndex="ctime"/>
           <Table.Column align="center" title="操作" cell={(value,index,record)=> {
             return (
@@ -138,6 +151,23 @@ const styles = {
   },
   carouselImg:{
     width:'50px'
+  },
+  logo: {
+    width:'50px',
+    height:'50px',
+    borderRadius:'50%',
+  },
+  verifyLabel:{
+    display:'flex',
+    alignItems:'center',
+    fontSize:'12px',
+  },
+  verifyAvatar:{
+    width:'20px',
+    height:'20px',
+    borderRadius:'50%',
+    marginRight:'5px',
+    flexShrink:0,
   }
 }
 

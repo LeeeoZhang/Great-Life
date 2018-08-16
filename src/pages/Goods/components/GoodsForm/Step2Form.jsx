@@ -86,7 +86,6 @@ export default class Step2Form extends React.Component {
     }
   }
 
-
   formatGoodsStyle = goodsStyle => {
     return goodsStyle.map((goodsStyleData, index) => {
       return {
@@ -127,8 +126,8 @@ export default class Step2Form extends React.Component {
       goodsPurchase: values.goodsPurchase,
       goodsGroupNum: values.goodsGroupNum,
       goodsGroupWaitTime: values.goodsGroupWaitTime,
-      goodsGroupPrice: values.goodsGroupPrice,
-      goodsStyle: JSON.stringify(this.formatReportGoodsStyle(values))
+      goodsGroupPrice: values.goodsGroupPrice*100,
+      goodsStyle: JSON.stringify(this.formatReportGoodsStyle(values)),
     }
   }
 
@@ -193,7 +192,7 @@ export default class Step2Form extends React.Component {
               <FormItem label="拼团价格：" {...formItemLayout}>
                 <Input placeholder="请输入拼团价格" {...init('goodsGroupPrice', {
                   rules: [{required: true, message: '请输入拼团价格'}],
-                  initValue: step2Data ? step2Data.goodsGroupPrice : '',
+                  initValue: step2Data ? step2Data.goodsGroupPrice/100 : '',
                 })}/>
               </FormItem>
             </Fragment>

@@ -44,29 +44,6 @@ const Toast = Feedback.toast
       lists: [],
     },
   },
-  merchantList: {
-    url: `${DOMAIN}/admin/merchant/lists`,
-    params: {
-      page: 1,
-      size: 1000,
-    },
-    responseFormatter: (responseHandler, res, originResponse) => {
-      const formatResponse = {
-        status: originResponse.code === 200 ? 'SUCCESS' : 'ERROR',
-        data: res
-      }
-      responseHandler(formatResponse, originResponse)
-    },
-    defaultBindingData: {
-      lists: [
-        {title: '测试商家1', id: '1'},
-        {title: '测试商家2', id: '2'},
-        {title: '测试商家3', id: '3'},
-        {title: '测试商家4', id: '4'},
-        {title: '测试商家5', id: '5'},
-      ],
-    },
-  },
 })
 export default class Shop extends React.Component {
 
@@ -87,13 +64,13 @@ export default class Shop extends React.Component {
 
   componentDidMount () {
     this.getShopTypeList()
-    this.getMerchantList()
   }
 
   //添加店铺
   addShop = async (data, clear) => {
     data.mapInfo = JSON.stringify(data.mapInfo)
     data.shopCarousel = null
+    data.logoImg = null
     const res = await addShop({data}).catch(() => false)
     if (res) {
       Toast.success('添加成功')
@@ -204,10 +181,6 @@ export default class Shop extends React.Component {
     this.props.updateBindingData('shopTypeList')
   }
 
-  //获取商家列表
-  getMerchantList = () => {
-    this.props.updateBindingData('merchantList')
-  }
 
   //获取店铺列表
   getShopList = () => {
@@ -223,7 +196,7 @@ export default class Shop extends React.Component {
   render () {
     const {isEdit, shopDetail, current} = this.state
     const __loading = this.props.bindingData.__loading
-    const {merchantList, shopTypeList, shopList} = this.props.bindingData
+    const { shopTypeList, shopList} = this.props.bindingData
     return (
       <IceContainer>
         {isEdit ?
@@ -232,7 +205,6 @@ export default class Shop extends React.Component {
             __loading={__loading}
             backFromEdit={this.backFromEdit}
             shopTypeList={shopTypeList.lists}
-            merchantList={merchantList.lists}
             shopDetail={shopDetail}
             onSubmitInfo={this.editShop}
           /> :
@@ -258,7 +230,6 @@ export default class Shop extends React.Component {
                 type="add"
                 onSubmitInfo={this.addShop}
                 shopTypeList={shopTypeList.lists}
-                merchantList={merchantList.lists}
               />
             </TabPane>
             <TabPane key="shopType" tab="店铺分类">

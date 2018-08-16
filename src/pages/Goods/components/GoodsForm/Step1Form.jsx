@@ -36,6 +36,9 @@ const {Group: CheckboxGroup} = Checkbox
 const shopKeyWordTips = (
   <div style={styles.tipsContent}>用$隔开，作为搜索时的关键字</div>
 )
+const goodsCarouselTips = (
+  <div style={styles.tipsContent}>建议大小:750*490</div>
+)
 const goodsSaleMethod = [
   {label: '基本商品', value: '1'},
   {label: '拼团商品', value: '2'},
@@ -165,6 +168,7 @@ export default class Step1Form extends React.Component {
       <Form Form direction="ver" field={this.field} size="large">
         <FormItem label="选择商品所在导航：" {...formItemLayout}>
           <Select style={styles.input} dataSource={this.formatGoodsNavList(goodsNavList)}
+                  disabled={type === 'edit'}
                   placeholder="请选择商品所在导航" {...init('goodsNavId', {
             rules: [{required: true, message: '请选择商品所在导航'}],
             initValue: Object.keys(step1Data).length > 0 ? String(step1Data.goodsNavId) : '',
@@ -172,6 +176,7 @@ export default class Step1Form extends React.Component {
         </FormItem>
         <FormItem label="商品销售方式：" {...formItemLayout}>
           <Select style={styles.input} dataSource={goodsSaleMethod}
+                  disabled={type === 'edit'}
                   placeholder="请选择商品销售方式" {...init('goodsSaleMethod', {
             rules: [{required: true, message: '请选择商品销售方式'}],
             initValue: Object.keys(step1Data).length > 0 ? String(step1Data.goodsSaleMethod) : '',
@@ -179,6 +184,7 @@ export default class Step1Form extends React.Component {
         </FormItem>
         <FormItem label="商品类型：" {...formItemLayout}>
           <Select style={styles.input} dataSource={goodsType}
+                  disabled={type === 'edit'}
                   placeholder="请选择商品类型" {...init('goodsType', {
             rules: [{required: true, message: '请选择商品类型'}],
             initValue: Object.keys(step1Data).length > 0 ? String(step1Data.goodsType) : '',
@@ -186,6 +192,7 @@ export default class Step1Form extends React.Component {
         </FormItem>
         <FormItem label="店铺ID：" {...formItemLayout}>
           <Select style={styles.input} dataSource={this.formatShopIdList(shopIdList)}
+                  disabled={type === 'edit'}
                   placeholder="请输入店铺ID" {...init('shopId', {
             rules: [{required: true, message: '请输入店铺ID'}],
             initValue: Object.keys(step1Data).length > 0 ? String(step1Data.shopId) : '',
@@ -204,12 +211,12 @@ export default class Step1Form extends React.Component {
           })}/>
         </FormItem>
         <FormItem label="商品描述：" {...formItemLayout}>
-          <Input maxLength={32} hasLimitHint multiple placeholder="请输入商品描述" {...init('goodsDesc', {
+          <Input maxLength={20} hasLimitHint multiple placeholder="请输入商品描述" {...init('goodsDesc', {
             rules: [{required: true, message: '请输入商品描述'}],
             initValue: Object.keys(step1Data).length > 0 ? step1Data.goodsDesc : '',
           })}/>
         </FormItem>
-        <FormItem label="选择商品轮播图片：" {...formItemLayout}>
+        <FormItem label="选择商品轮播图片：" {...formItemLayout} extra={goodsCarouselTips}>
           <ImageUpload className="uploader" {...uploadConfig} {...init('goodsCarousel', {
             rules: [{required: true, message: '请选择图片'}],
             valueName: 'fileList',
