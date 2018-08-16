@@ -1,6 +1,6 @@
 import React from 'react'
 import Panel from '@icedesign/panel'
-import {Grid, Input, Button,Select} from '@icedesign/base'
+import {Grid, Input, Button, Select} from '@icedesign/base'
 import {
   FormBinderWrapper as IceFormBinderWrapper,
   FormBinder as IceFormBinder,
@@ -30,12 +30,12 @@ const styles = {
   },
 }
 const expressStatusOptions = [
-  {label:'未发货',value:'0'},
-  {label:'已发货',value:'1'},
+  {label: '未发货', value: '0'},
+  {label: '已发货', value: '1'},
 ]
 const expressCompanyOptions = [
-  {label:'暂无',value:'0'},
-  {label:'韵达快递',value:'1'},
+  {label: '暂无', value: '0'},
+  {label: '韵达快递', value: '1'},
 ]
 
 export default class AddressInfoPanel extends React.Component {
@@ -82,6 +82,18 @@ export default class AddressInfoPanel extends React.Component {
     }
   }
 
+  onUpdateAddressInfo = () => {
+    this.refs.addressForm.validateAll((error, value) => {
+      error || this.props.updateAddressInfo(value)
+    })
+  }
+
+  onUpdateExpressInfo = () => {
+    this.refs.expressForm.validateAll((error, value) => {
+      error || this.props.updateExpressInfo(value)
+    })
+  }
+
   render () {
     const {addressInfo, expressInfo} = this.state
     return (
@@ -119,7 +131,7 @@ export default class AddressInfoPanel extends React.Component {
                 </Row>
                 <Row style={styles.formItem}>
                   <Col offset="6">
-                    <Button type="primary" size="large">更新</Button>
+                    <Button type="primary" size="large" onClick={this.onUpdateAddressInfo}>更新</Button>
                   </Col>
                 </Row>
               </Col>
@@ -152,7 +164,7 @@ export default class AddressInfoPanel extends React.Component {
                 </Row>
                 <Row style={styles.formItem}>
                   <Col offset="6">
-                    <Button type="primary" size="large">更新(短信通知)</Button>
+                    <Button type="primary" size="large" onClick={this.onUpdateExpressInfo}>更新(短信通知)</Button>
                   </Col>
                 </Row>
               </Col>

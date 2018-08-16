@@ -4,6 +4,7 @@ import IceContainer from '@icedesign/container'
 import LogisticsGoods from './LogisticsGoods/LogisticsGoods'
 import CardGoods from './CardGoods/CardGoods'
 import RefundFail from './RefundFail/RefundFail'
+import Grouping from './Grouping/Grouping'
 
 const TabPane = Tab.TabPane
 const Toast = Feedback.toast
@@ -26,7 +27,7 @@ export default class Order extends React.Component {
             <RefundFail/>
           </TabPane>
           <TabPane key="4" tab="拼团中">
-
+            <Grouping/>
           </TabPane>
         </Tab>
       </IceContainer>

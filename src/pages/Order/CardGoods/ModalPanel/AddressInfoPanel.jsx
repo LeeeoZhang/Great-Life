@@ -59,6 +59,13 @@ export default class AddressInfoPanel extends React.Component {
     }
   }
 
+  onUpdateAddressInfo = () => {
+    this.refs.addressForm.validateAll((error, value) => {
+      error || this.props.updateAddressInfo(value)
+    })
+  }
+
+
 
   render () {
     const {addressInfo} = this.state
@@ -97,7 +104,7 @@ export default class AddressInfoPanel extends React.Component {
                 </Row>
                 <Row style={styles.formItem}>
                   <Col offset="6">
-                    <Button type="primary" size="large">更新</Button>
+                    <Button type="primary" size="large" onClick={this.onUpdateAddressInfo}>更新</Button>
                   </Col>
                 </Row>
               </Col>

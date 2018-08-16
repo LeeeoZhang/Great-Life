@@ -2,7 +2,7 @@ import React, {Fragment} from 'react'
 import DataBinder from '@icedesign/data-binder'
 import {Tab, Feedback, Dialog} from "@icedesign/base"
 import DOMAIN from '@/domain'
-import {getOrderDetail} from "@/service"
+import {getOrderDetail,updateOrderBaseInfo} from "@/service"
 
 import BaseOrderTable from './Tables/BaseOrderTable'
 import BaseInfoPanel from './ModalPanel/BaseInfoPanel'
@@ -11,6 +11,7 @@ import AddressInfoPanel from './ModalPanel/AddressInfoPanel'
 import RefundPanel from './ModalPanel/RefundPanel'
 
 const TabPane = Tab.TabPane
+const Toast = Feedback.toast
 const TabList = [
   {tab: '全部进账', key: '-1'},
   {tab: '待消费', key: '0'},
@@ -71,6 +72,7 @@ export default class CardGoods extends React.Component {
       startTime: '',
       endTime: '',
       timeType: '',
+      orderId:'',
     }
   }
 
@@ -136,6 +138,7 @@ export default class CardGoods extends React.Component {
 
   //获取订单详情
   getOrderDetail = id => {
+    this.setState({orderId:id})
     this.props.updateBindingData('orderDetail', {
       params:{id},
       success:()=>{
@@ -156,6 +159,16 @@ export default class CardGoods extends React.Component {
     }, () => {
       this.getOrderRecord()
     })
+  }
+
+  updateAddressInfo = async data => {
+    const {orderId} = this.state
+    data.orderBaseId = orderId
+    const res = await updateOrderBaseInfo({data}).catch(()=>false)
+    if(res) {
+      Toast.success('更新成功')
+      this.getOrderDetail(orderId)
+    }
   }
 
   render () {
@@ -198,7 +211,10 @@ export default class CardGoods extends React.Component {
             <BaseInfoPanel baseInfo={baseInfo} tabId={tabId}/>
             <GoodsInfoPanel goodsInfo={goodsInfo}/>
             {
-              tabId === '3' || tabId === '2' ? null : (<AddressInfoPanel additionalInfo={additionalInfo}/>)
+              tabId === '3' || tabId === '2' ? null : (<AddressInfoPanel
+                                                          additionalInfo={additionalInfo}
+                                                          updateAddressInfo={this.updateAddressInfo}
+                                                      />)
             }
             <RefundPanel tabId={tabId}/>
           </div>

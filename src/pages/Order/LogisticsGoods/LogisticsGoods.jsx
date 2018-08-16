@@ -2,7 +2,7 @@ import React, {Fragment} from 'react'
 import DataBinder from '@icedesign/data-binder'
 import {Tab, Feedback, Dialog} from "@icedesign/base"
 import DOMAIN from '@/domain'
-import {getOrderDetail} from "@/service"
+import {getOrderDetail,updateOrderBaseInfo,updateOrderExpressInfo} from "@/service"
 
 import BaseOrderTable from './Tables/BaseOrderTable'
 import BaseInfoPanel from './ModalPanel/BaseInfoPanel'
@@ -11,6 +11,7 @@ import AddressInfoPanel from './ModalPanel/AddressInfoPanel'
 import RefundPanel from './ModalPanel/RefundPanel'
 
 const TabPane = Tab.TabPane
+const Toast = Feedback.toast
 const TabList = [
   {tab: '全部进账', key: '-1'},
   {tab: '待发货', key: '0'},
@@ -70,7 +71,8 @@ export default class LogisticsGoods extends React.Component {
       startTime: '',
       endTime: '',
       timeType: '',
-      isDetailModalShow: false
+      isDetailModalShow: false,
+      orderId:'',
     }
   }
 
@@ -150,12 +152,33 @@ export default class LogisticsGoods extends React.Component {
 
   //获取订单详情
   getOrderDetail = id => {
+    this.setState({orderId:id})
     this.props.updateBindingData('orderDetail', {
       params:{id},
       success:()=>{
         this.openDetailModal()
       }
     })
+  }
+
+  updateAddressInfo = async data => {
+    const {orderId} = this.state
+    data.orderBaseId = orderId
+    const res = await updateOrderBaseInfo({data}).catch(()=>false)
+    if(res) {
+      Toast.success('更新成功')
+      this.getOrderDetail(orderId)
+    }
+  }
+
+  updateExpressInfo = async data => {
+    const {orderId} = this.state
+    data.orderBaseId = orderId
+    const res = await updateOrderExpressInfo({data}).catch(()=>false)
+    if(res) {
+      Toast.success('更新成功')
+      this.getOrderDetail(orderId)
+    }
   }
 
   render () {
@@ -197,7 +220,11 @@ export default class LogisticsGoods extends React.Component {
             <BaseInfoPanel baseInfo={baseInfo} tabId={tabId}/>
             <GoodsInfoPanel goodsInfo={goodsInfo}/>
             {
-              tabId === '3' ? null : (<AddressInfoPanel additionalInfo={additionalInfo}/>)
+              tabId === '3' ? null : (<AddressInfoPanel
+                                        updateAddressInfo={this.updateAddressInfo}
+                                        updateExpressInfo={this.updateExpressInfo}
+                                        additionalInfo={additionalInfo}
+                                      />)
             }
             <RefundPanel tabId={tabId}/>
           </div>

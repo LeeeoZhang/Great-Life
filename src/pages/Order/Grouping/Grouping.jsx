@@ -20,8 +20,8 @@ const FormItem = Form.Item
 const {RangePicker} = DatePicker
 
 @DataBinder({
-  refundFailList: {
-    url: `${DOMAIN}/admin/order/refundLists`,
+  groupingList: {
+    url: `${DOMAIN}/admin/order/groupingLists`,
     responseFormatter: (responseHandler, res, originResponse) => {
       const formatResponse = {
         status: originResponse.code === 200 ? 'SUCCESS' : 'ERROR',
@@ -35,9 +35,9 @@ const {RangePicker} = DatePicker
     },
   },
 })
-export default class RefundFail extends React.Component {
+export default class Grouping extends React.Component {
 
-  static displayName = 'RefundFail'
+  static displayName = 'Grouping'
 
   constructor (props) {
     super(props)
@@ -51,7 +51,7 @@ export default class RefundFail extends React.Component {
   }
 
   componentDidMount () {
-    this.getRefundFailOrderRecord()
+    this.getGroupingOrderRecord()
   }
 
   field = new Field(this, {
@@ -60,7 +60,7 @@ export default class RefundFail extends React.Component {
 
   onPaginationChange = current => {
     this.setState({current}, () => {
-      this.getRefundFailOrderRecord()
+      this.getGroupingOrderRecord()
     })
   }
 
@@ -72,7 +72,7 @@ export default class RefundFail extends React.Component {
       startTime: searchValues.time ? searchValues.time[0] : '',
       endTime: searchValues.time ? searchValues.time[1] : '',
     }, () => {
-      this.getRefundFailOrderRecord()
+      this.getGroupingOrderRecord()
     })
   }
 
@@ -84,14 +84,14 @@ export default class RefundFail extends React.Component {
       startTime: '',
       endTime: '',
     }, () => {
-      this.getRefundFailOrderRecord()
+      this.getGroupingOrderRecord()
     })
   }
 
   //获取退款失败订单列表
-  getRefundFailOrderRecord = () => {
+  getGroupingOrderRecord = () => {
     const {current, title, startTime, endTime, size} = this.state
-    this.props.updateBindingData('refundFailList', {
+    this.props.updateBindingData('groupingList', {
       params: {
         page: current,
         size,
@@ -107,7 +107,7 @@ export default class RefundFail extends React.Component {
   render () {
     const init = this.field.init
     const __loading = this.props.bindingData.__loading
-    const {refundFailList} = this.props.bindingData
+    const {groupingList} = this.props.bindingData
     const {size, current} = this.state
     return (
       <Fragment>
@@ -131,27 +131,23 @@ export default class RefundFail extends React.Component {
             <Button loading={__loading} style={styles.buttonSpace}><Icon type="download"/>导出订单</Button>
           </FormItem>
         </Form>
-        <Table dataSource={refundFailList.lists} isLoading={__loading}>
-          <Table.Column title="交易单号" dataIndex="orderNum"/>
-          <Table.Column title="商品信息" width={300} cell={(value, index, record) => {
-            return (
-              <div style={styles.goodsInfo}>
-                <img src={record.fileInfo.compressHttpUrl} style={{width: 100, marginRight: 10}}/>
-                <span>{record.goodsTitle}</span>
-              </div>
-            )
+        <Table dataSource={groupingList.lists} isLoading={__loading}>
+          <Table.Column title="团长" cell={(value, index, record)=>{
+            return (<span>{record.userInfo.nickname}</span>)
           }}/>
+          <Table.Column title="过期时间" dataIndex="expireTime"/>
+          <Table.Column title="成团人数" align="center" cell={(value,index,record)=>{
+            return (<span>{record.needNum + record.alreadyNum}</span>)
+          }}/>
+          <Table.Column title="已参团人数" align="center" dataIndex="alreadyNum"/>
+          <Table.Column title="商品名称" dataIndex="goodsTitle"/>
           <Table.Column title="款式" dataIndex="goodsStyleTitle"/>
-          <Table.Column title="用户昵称" dataIndex="nickname"/>
-          <Table.Column title="订单数量" align="center" dataIndex="orderQuantity"/>
-          <Table.Column title="订单单价" align="center" dataIndex="orderSalePrice"/>
-          <Table.Column title="支付金额" align="center" dataIndex="payPrice"/>
         </Table>
         <div style={styles.paginationWrap}>
           <Pagination onChange={this.onPaginationChange}
                       showJump={false}
                       shape="arrow-only"
-                      total={refundFailList.count}
+                      total={groupingList.count}
                       pageSize={size}
                       current={current}
           />
