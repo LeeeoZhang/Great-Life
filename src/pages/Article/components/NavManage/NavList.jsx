@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import {Table, Button, Input} from '@icedesign/base'
+import DeleteBalloon from '@/components/DeleteBalloon'
 
 
 export default class NavList extends React.Component {
@@ -36,6 +37,9 @@ export default class NavList extends React.Component {
   render () {
     const {__loading} = this.props
     const {navList} = this.state
+    const deleteButton = (
+      <Button shape="warning" style={styles.actionButton}>删除</Button>
+    )
     return (
       <Fragment>
         <Table dataSource={navList} loading={__loading}>
@@ -47,7 +51,10 @@ export default class NavList extends React.Component {
             return (
               <Fragment>
                 <Button type="primary" style={styles.actionButton} onClick={() => this.onEditNav(index)}>修改</Button>
-                <Button shape="warning" style={styles.actionButton} onClick={() => this.onDelNav(record.id)}>删除</Button>
+                <DeleteBalloon
+                  trigger={deleteButton}
+                  confirmDelete={() => this.onDelNav(record.id)}
+                />
               </Fragment>
             )
           }}/>

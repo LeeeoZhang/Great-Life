@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import { Table, Button,Input,Radio ,Balloon} from '@icedesign/base'
+import DeleteBalloon from '@/components/DeleteBalloon'
 
 const RadioGroup = Radio.Group
 const statusList = [
@@ -49,6 +50,9 @@ export default class AccountList extends React.Component {
   render () {
     const {__loading} = this.props
     const {accountList} = this.state
+    const deleteButton = (
+      <Button shape="warning" loading={__loading} style={styles.actionButton}>删除</Button>
+    )
     return (
       <Table dataSource={accountList} isLoading={__loading} style={styles.accountList}>
         <Table.Column title="账号" dataIndex="username" cell={(value,index,record)=>{
@@ -64,7 +68,10 @@ export default class AccountList extends React.Component {
           return (
             <Fragment>
               <Button type="primary" loading={__loading} onClick={()=> this.onUpdate(index)} style={styles.actionButton}>更新</Button>
-              <Button shape="warning" loading={__loading} onClick={()=> this.onDel(record.id)} style={styles.actionButton}>删除</Button>
+              <DeleteBalloon
+                trigger={deleteButton}
+                confirmDelete={()=> this.onDel(record.id)}
+              />
             </Fragment>
           )
         }}/>

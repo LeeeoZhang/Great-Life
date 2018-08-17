@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import { Button, Table,  Icon} from '@icedesign/base'
+import DeleteBalloon from '@/components/DeleteBalloon'
 
 export default class HomeList extends React.Component {
 
@@ -19,6 +20,9 @@ export default class HomeList extends React.Component {
 
   render () {
     const {homeList,__loading} = this.props
+    const deleteButton = (
+      <Button style={styles.buttonSpace} shape="warning">删除</Button>
+    )
     return (
       <Table dataSource={homeList} isLoading={__loading}>
         <Table.Column title="主标题" dataIndex="title"/>
@@ -43,7 +47,10 @@ export default class HomeList extends React.Component {
           return (
             <Fragment>
               <Button onClick={()=>this.onEdit(index)} style={styles.buttonSpace} type="primary">修改</Button>
-              <Button onClick={()=>this.onDel(record.id)} style={styles.buttonSpace} shape="warning">删除</Button>
+              <DeleteBalloon
+                trigger={deleteButton}
+                confirmDelete={()=>this.onDel(record.id)}
+              />
             </Fragment>
           )
         }}/>

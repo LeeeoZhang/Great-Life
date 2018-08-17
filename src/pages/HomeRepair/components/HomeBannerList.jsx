@@ -1,5 +1,6 @@
 import React, {Fragment, Component} from 'react'
 import {Button, Table, Icon} from '@icedesign/base'
+import DeleteBalloon from '@/components/DeleteBalloon'
 
 const jumpType = {
   1: '不跳转',
@@ -25,6 +26,9 @@ export default class HomeBannerList extends Component {
 
   render () {
     const {homeBannerList, __loading} = this.props
+    const deleteButton = (
+      <Button style={styles.buttonSpace} shape="warning">删除</Button>
+    )
     return (
       <Table dataSource={homeBannerList} isLoading={__loading}>
         <Table.Column align="center" title="轮播图编号" dataIndex="id"/>
@@ -39,7 +43,10 @@ export default class HomeBannerList extends Component {
           return (
             <Fragment>
               <Button onClick={()=>this.onEdit(record.id,index)} style={styles.buttonSpace} type="primary">修改</Button>
-              <Button onClick={() => this.onDel(record.id)} style={styles.buttonSpace} shape="warning">删除</Button>
+              <DeleteBalloon
+                trigger={deleteButton}
+                confirmDelete={() => this.onDel(record.id)}
+              />
             </Fragment>
           )
         }}/>

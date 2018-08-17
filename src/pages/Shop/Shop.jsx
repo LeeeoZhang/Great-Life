@@ -83,6 +83,7 @@ export default class Shop extends React.Component {
   editShop = async data => {
     data.mapInfo = JSON.stringify(data.mapInfo)
     data.shopCarousel = null
+    data.logoImg = null
     data.id = this.state.editId
     const res = await editShop({data}).catch(() => false)
     if (res) {
@@ -181,7 +182,6 @@ export default class Shop extends React.Component {
     this.props.updateBindingData('shopTypeList')
   }
 
-
   //获取店铺列表
   getShopList = () => {
     const {current, size, title, secondType} = this.state
@@ -191,7 +191,6 @@ export default class Shop extends React.Component {
       }
     })
   }
-
 
   render () {
     const {isEdit, shopDetail, current} = this.state

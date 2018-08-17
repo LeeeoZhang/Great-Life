@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import {Input, Button, Table, Pagination, Form, Field, Icon} from '@icedesign/base'
+import DeleteBalloon from '@/components/DeleteBalloon'
 
 const FormItem = Form.Item
 
@@ -48,6 +49,9 @@ export default class GoodsList extends React.Component {
     const init = this.field.init
     const {size} = this.state
     const {__loading, goodsList,count,current} = this.props
+    const deleteButton = (
+      <Button size="small" style={styles.buttonSpace} shape="warning">删除</Button>
+    )
     return (
       <Fragment>
         <Form direction="hoz" field={this.field} size="medium">
@@ -60,8 +64,8 @@ export default class GoodsList extends React.Component {
           </FormItem>
         </Form>
         <Table dataSource={goodsList} isLoading={__loading}>
-          <Table.Column width={90} align="center" title="商品编号" dataIndex="id"/>
-          <Table.Column width={300} title="商品基本信息" cell={(value, index, record) => {
+          <Table.Column width={50} align="center" title="编号" dataIndex="id"/>
+          <Table.Column width={200} title="商品基本信息" cell={(value, index, record) => {
             return (
               <div style={styles.goodsInfoWrap}>
                 <img src={record.goodsInfo.fileInfo.compressHttpUrl} style={styles.tableImage}/>
@@ -69,16 +73,21 @@ export default class GoodsList extends React.Component {
               </div>
             )
           }}/>
-          <Table.Column align="center" width={90} title="团购价格" cell={(value, index, record) => {
+          <Table.Column align="center" width={50} title="团购价格" cell={(value, index, record) => {
             return (<div>{record.goodsPrice.groupPrice/100}</div>)
           }}/>
-          <Table.Column  width={150} title="销售方式" cell={(value, index, record) => {
-            return (<div>{record.goodsMode.saleMethodName}({record.goodsMode.typeName})</div>)
+          <Table.Column  width={80} title="销售方式" cell={(value, index, record) => {
+            return (
+              <div>
+                <div>{record.goodsMode.saleMethodName}</div>
+                <div>({record.goodsMode.typeName})</div>
+              </div>
+            )
           }}/>
-          <Table.Column align="center" width={90} title="商品状态" cell={(value, index, record) => {
+          <Table.Column align="center" width={50} title="状态" cell={(value, index, record) => {
             return (<div>{record.goodsStatus.name}</div>)
           }}/>
-          <Table.Column width={150} title="款式" cell={(value, index, record) => {
+          <Table.Column align="center" width={100} title="款式" cell={(value, index, record) => {
             return (
               <div style={styles.goodsStyleWrap}>
                 {record.goodsStyle.map((item, index) => (
@@ -89,7 +98,7 @@ export default class GoodsList extends React.Component {
               </div>
             )
           }}/>
-          <Table.Column width={230} title="款式销售详情" cell={(value, index, record) => {
+          <Table.Column width={180} title="款式销售详情" cell={(value, index, record) => {
             return (
               <div style={styles.goodsStyleWrap}>
                 {record.goodsStyle.map((item, index) => (
@@ -101,7 +110,7 @@ export default class GoodsList extends React.Component {
               </div>
             )
           }}/>
-          <Table.Column width={230} title="款式价格" cell={(value, index, record) => {
+          <Table.Column width={180} title="款式价格" cell={(value, index, record) => {
             return (
               <div style={styles.goodsStyleWrap}>
                 {record.goodsStyle.map((item, index) => (
@@ -112,7 +121,7 @@ export default class GoodsList extends React.Component {
               </div>
             )
           }}/>
-          <Table.Column width={230} title="商品时间" dataIndex="goodsTime" cell={(value, index, record) => {
+          <Table.Column width={170} title="商品时间" dataIndex="goodsTime" cell={(value, index, record) => {
             return (
               <div style={styles.goodsStyleWrap}>
                 <p style={{fontSize: '12px'}}>{`上架时间:${record.time.putawayTime}`}</p>
@@ -129,8 +138,11 @@ export default class GoodsList extends React.Component {
                 {/*disabled={Number(record.status) !== 0}*/}
                 <Button onClick={()=>this.onEdit(record.id)} size="small" style={styles.buttonSpace} type="primary">修改</Button>
                 <Button size="small" style={styles.buttonSpace}>菊花码</Button>
-                <Button onClick={()=>this.onDel(record.id)}  size="small" style={styles.buttonSpace} shape="warning">删除</Button>
                 <Button onClick={()=>this.onSaleOut(record.id)} disabled={Number(record.status) !== 1} size="small" style={styles.buttonSpace} type="primary">下架</Button>
+                <DeleteBalloon
+                  trigger={deleteButton}
+                  confirmDelete={()=>this.onDel(record.id)}
+                />
               </Fragment>
             )
           }}/>

@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import { Input, Button,Table} from '@icedesign/base'
+import DeleteBalloon from '@/components/DeleteBalloon'
 
 
 export default class GoodsNavList extends React.Component {
@@ -40,6 +41,9 @@ export default class GoodsNavList extends React.Component {
   render () {
     const {goodsNavList} = this.state
     const {__loading} = this.props
+    const DeleteButton = props => (
+      <Button disabled={props.record.isDefault === 1} style={styles.buttonSpace} shape="warning">删除</Button>
+    )
     return (
       <Table dataSource={goodsNavList} isLoading={__loading}>
         <Table.Column title="导航名称" dataIndex="title" cell={(value,index,record)=>{
@@ -50,7 +54,10 @@ export default class GoodsNavList extends React.Component {
           return (
             <Fragment>
               <Button disabled={record.isDefault === 1} style={styles.buttonSpace} type="primary" onClick={()=>this.onEdit(record)}>更新</Button>
-              <Button disabled={record.isDefault === 1} style={styles.buttonSpace} shape="warning" onClick={()=>this.onDel(record.id)}>删除</Button>
+              <DeleteBalloon
+                trigger={<DeleteButton record={record}/>}
+                confirmDelete={()=>this.onDel(record.id)}
+              />
             </Fragment>
           )
         }}/>

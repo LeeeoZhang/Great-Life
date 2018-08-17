@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import {Button, Table, Pagination,Balloon,Search,Grid} from "@icedesign/base"
+import DeleteBalloon from '@/components/DeleteBalloon'
 
 //详情弹窗，展示小程序路径和菊花码
 const PopDetail = props => (
@@ -54,6 +55,9 @@ export default class ArticleList extends React.Component {
   render () {
     const {__loading, articleList, count} = this.props
     const {size,current} = this.state
+    const deleteButton = (
+      <Button size="small" shape="warning" style={styles.actionBtn}>删除</Button>
+    )
     return (
       <Fragment>
         <Row style={styles.searchInput}>
@@ -76,7 +80,7 @@ export default class ArticleList extends React.Component {
           }}/>
           <Table.Column title="作者" dataIndex="author"/>
           <Table.Column title="创建时间" dataIndex="ctime"/>
-          <Table.Column align="center" title="操作" cell={(value, index, record) => (
+          <Table.Column width={100} align="center" title="操作" cell={(value, index, record) => (
             <Fragment>
               <Button size="small" onClick={()=>this.onUpdate(record.id)} type="primary" style={styles.actionBtn}>修改</Button>
               <Balloon
@@ -88,7 +92,10 @@ export default class ArticleList extends React.Component {
               >
                 <PopDetail articleDetail={record}/>
               </Balloon>
-              <Button size="small" onClick={()=>this.onDel(record.id)} shape="warning" style={styles.actionBtn}>删除</Button>
+              <DeleteBalloon
+                trigger={deleteButton}
+                confirmDelete={()=>this.onDel(record.id)}
+              />
             </Fragment>
           )}/>
         </Table>

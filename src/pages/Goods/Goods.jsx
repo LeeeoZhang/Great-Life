@@ -7,7 +7,14 @@ import GoodsList from './components/GoodsList/GoodsList'
 import GoodsForm from './components/GoodsForm/GoodsForm'
 import DOMAIN from '@/domain'
 import {
-  delGoodsNav, addGoodsNav, editGoodsNav, addGoods, editGoods, getGoodsDetail, delGoods,saleOutGoods
+  delGoodsNav,
+  addGoodsNav,
+  editGoodsNav,
+  addGoods,
+  editGoods,
+  getGoodsDetail,
+  delGoods,
+  saleOutGoods,
 } from '@/service'
 
 const TabPane = Tab.TabPane

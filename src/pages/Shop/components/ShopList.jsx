@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import {Button, Pagination, Table,Select,Input,Icon,Form,Field} from '@icedesign/base'
+import DeleteBalloon from '@/components/DeleteBalloon'
 
 const FormItem = Form.Item
 
@@ -57,6 +58,9 @@ export default class ShopList extends React.Component {
     const init = this.field.init
     const {size} = this.state
     const {shopTypeList,count,shopList,__loading,current} = this.props
+    const deleteButton = (
+      <Button style={styles.buttonSpace} size="small" shape="warning">删除</Button>
+    )
     return (
       <Fragment>
         <Form direction="hoz" field={this.field} size="medium">
@@ -105,12 +109,25 @@ export default class ShopList extends React.Component {
               )
             })
           }}/>
+          <Table.Column title="管理员" cell={(value,index,record)=>{
+            return record.managerUserInfo.map(info => {
+              return (
+                <div style={styles.verifyLabel}>
+                  <img style={styles.verifyAvatar} src={info.headimg}/>
+                  <span>{info.nickname}</span>
+                </div>
+              )
+            })
+          }}/>
           <Table.Column title="创建时间" dataIndex="ctime"/>
           <Table.Column align="center" title="操作" cell={(value,index,record)=> {
             return (
               <Fragment>
                 <Button style={styles.buttonSpace} size="small" type="primary" onClick={()=>this.onEdit(record.id)}>编辑</Button>
-                <Button style={styles.buttonSpace} size="small" shape="warning" onClick={()=>this.onDel(record.id)}>删除</Button>
+                <DeleteBalloon
+                  trigger={deleteButton}
+                  confirmDelete={()=>this.onDel(record.id)}
+                />
               </Fragment>
             )
           }}/>

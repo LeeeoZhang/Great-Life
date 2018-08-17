@@ -1,8 +1,8 @@
 import React, {Fragment} from 'react'
 import IceTitle from '@icedesign/title'
-import {Button, Pagination, Table, Input, Feedback, Select,Form,Field} from '@icedesign/base'
+import {Button, Pagination, Table, Input, Select,Form,Field} from '@icedesign/base'
+import DeleteBalloon from '@/components/DeleteBalloon'
 
-const Toast = Feedback.toast
 const {Option} = Select
 const FormItem = Form.Item
 const formItemLayout = {
@@ -24,7 +24,6 @@ export default class ShopTypeListManage extends React.Component {
       shopTypeList: [...props.shopTypeList],
     }
   }
-
 
   componentWillReceiveProps(nextProps){
     this.setState({
@@ -82,6 +81,9 @@ export default class ShopTypeListManage extends React.Component {
     const {__loading} = this.props
     const {shopTypeList} = this.state
     const init = this.field.init
+    const deleteButton = (
+      <Button shape="warning" style={styles.buttonSpace}>删除</Button>
+    )
     return (
       <Fragment>
         <IceTitle text="添加店铺二级类目" decoration/>
@@ -131,7 +133,10 @@ export default class ShopTypeListManage extends React.Component {
             return (
               <Fragment>
                 <Button type="primary" style={styles.buttonSpace} onClick={() => this.onEdit(record)}>更新</Button>
-                <Button shape="warning" style={styles.buttonSpace} onClick={() => this.onDel(record.id)}>删除</Button>
+                <DeleteBalloon
+                  trigger={deleteButton}
+                  confirmDelete={() => this.onDel(record.id)}
+                />
               </Fragment>
             )
           }}/>

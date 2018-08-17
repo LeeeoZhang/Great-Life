@@ -67,6 +67,7 @@ export default class ShopForm extends React.Component {
       mapInfo: props.shopDetail ? props.shopDetail.mapInfo : null,
       articleData:this.createInitArticleData(props.shopDetail),
       verifyData:this.createInitVerifyData(props.shopDetail),
+      managerData:this.createInitManagerData(props.shopDetail),
     }
   }
 
@@ -176,6 +177,27 @@ export default class ShopForm extends React.Component {
     },500)
   }
 
+  onManagerInputComboBox = value => {
+    if(this.searchTimer) clearTimeout(this.searchTimer)
+    this.searchTimer = setTimeout( async () => {
+      const res = await getSimpleVerifyList({params:{nickname:value}}).catch(()=>false)
+      if(res) {
+        const formatData = res.data.lists.map(item=>{
+          return {
+            label:(
+              <div style={styles.verifyLabel}>
+                <img style={styles.verifyAvatar} src={item.headimg}/>
+                <span>{item.nickname}</span>
+              </div>
+            ),
+            value:String(item.id),
+          }
+        })
+        this.setState({managerData:formatData})
+      }
+    },500)
+  }
+
   createInitArticleData = shopDetail => {
     if(shopDetail) {
       return [
@@ -189,6 +211,24 @@ export default class ShopForm extends React.Component {
   createInitVerifyData = shopDetail => {
     if(shopDetail) {
       return shopDetail.verifyUserInfo.map(item=>{
+        return {
+          label:(
+            <div style={styles.verifyLabel}>
+              <img style={styles.verifyAvatar} src={item.headimg}/>
+              <span>{item.nickname}</span>
+            </div>
+          ),
+          value:String(item.id),
+        }
+      })
+    } else {
+      return []
+    }
+  }
+
+  createInitManagerData =  shopDetail => {
+    if(shopDetail) {
+      return shopDetail.managerUserInfo.map(item=>{
         return {
           label:(
             <div style={styles.verifyLabel}>
@@ -264,7 +304,7 @@ export default class ShopForm extends React.Component {
   }
 
   render () {
-    const {isMapModalShow, mapInfo,articleData,verifyData} = this.state
+    const {isMapModalShow, mapInfo,articleData,verifyData,managerData} = this.state
     const {__loading, shopDetail, type, shopTypeList} = this.props
     const init = this.field.init
     const uploadConfig = {
@@ -359,6 +399,20 @@ export default class ShopForm extends React.Component {
               dataSource={verifyData}
               {...init('verifyIds',{
                 initValue: shopDetail ? shopDetail.verifyUserInfo.map(info=>info.id) : null,
+              })}
+            />
+          </FormItem>
+          <FormItem label="选择管理员：" {...formItemLayout}>
+            <Combobox
+              onInputUpdate={this.onManagerInputComboBox}
+              multiple
+              fillProps="label"
+              style={styles.comboBox}
+              filterLocal={false}
+              placeholder="请输入管理员昵称"
+              dataSource={managerData}
+              {...init('managerIds',{
+                initValue: shopDetail ? shopDetail.managerUserInfo.map(info=>info.id) : null,
               })}
             />
           </FormItem>
