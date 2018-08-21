@@ -236,6 +236,7 @@ export default class Goods extends React.Component {
   backFromEdit = () => {
     this.setState({
       isEdit: false,
+      isStock: false,
       step: 0,
       step1Data: {},
       step2Data: {},
