@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {Input, Button, Table, Pagination, Form, Field, Icon} from '@icedesign/base'
+import {Input, Button, Table, Pagination, Form, Field, Icon,Select} from '@icedesign/base'
 import DeleteBalloon from '@/components/DeleteBalloon'
 
 const FormItem = Form.Item
@@ -36,14 +36,13 @@ export default class GoodsList extends React.Component {
   }
 
   onSearch = () => {
-    this.props.searching(this.field.getValue('searchTitle'))
+    this.props.searching(this.field.getValues())
   }
 
   onClear = () => {
     this.props.resetSearch()
     this.field.reset()
   }
-
 
   render () {
     const init = this.field.init
@@ -55,6 +54,17 @@ export default class GoodsList extends React.Component {
     return (
       <Fragment>
         <Form direction="hoz" field={this.field} size="medium">
+          <FormItem>
+            <Select
+              style={styles.timeTypeSelect}
+              placeholder="商品状态"
+              {...init('status')}
+            >
+              <Select.Option value="1">上架</Select.Option>
+              <Select.Option value="2">下架</Select.Option>
+              <Select.Option value="3">待上架</Select.Option>
+            </Select>
+          </FormItem>
           <FormItem>
             <Input style={styles.input} placeholder="搜索商品名称" {...init('searchTitle')}/>
           </FormItem>
@@ -137,7 +147,7 @@ export default class GoodsList extends React.Component {
               <Fragment>
                 {/*disabled={Number(record.status) !== 0}*/}
                 <Button onClick={()=>this.onEdit(record.id)} size="small" style={styles.buttonSpace} type="primary">修改</Button>
-                <Button size="small" style={styles.buttonSpace}>菊花码</Button>
+                <Button size="small" style={styles.buttonSpace}>二维码</Button>
                 <Button onClick={()=>this.onSaleOut(record.id)} disabled={Number(record.status) !== 1} size="small" style={styles.buttonSpace} type="primary">下架</Button>
                 <DeleteBalloon
                   trigger={deleteButton}

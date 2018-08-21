@@ -33,6 +33,9 @@ const styles = {
     justifyContent: 'flex-end'
   }
 }
+const styleImageTips = (
+  <div style={styles.tipsContent}>建议大小:750*490</div>
+)
 
 export default class StyleForm extends React.Component {
 
@@ -101,7 +104,7 @@ export default class StyleForm extends React.Component {
     }
     return (
       <div style={styles.formBackground}>
-        <FormItem label="选择款式图片：" {...formItemLayout}>
+        <FormItem label="选择款式图片：" {...formItemLayout} extra={styleImageTips}>
           <ImageUpload className="uploader" {...uploadConfig} {...init(`styleImage${indexId}`, {
             rules: [{required: true, message: '请选择图片'}],
             valueName: 'fileList',

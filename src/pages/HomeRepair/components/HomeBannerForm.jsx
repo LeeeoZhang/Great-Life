@@ -20,8 +20,26 @@ const formItemLayout = {
 const JumpData = [
   {label: '不跳转', value: '1'},
   {label: '跳转到商品详情', value: '2'},
-  {label: '跳转到商品聚合页', value: '3'},
+  {label: '跳转到商品聚合页', value: '3',disabled:true},
 ]
+const styles = {
+  comboBox: {
+    width: '100%',
+  },
+  select: {
+    width: '100%',
+  },
+  buttonSpace: {
+    margin: '3px',
+  },
+  tipsContent:{
+    fontSize:'12px',
+  },
+}
+
+const carouselImageTips = (
+  <div style={styles.tipsContent}>建议大小:750*490</div>
+)
 
 export default class HomeBannerForm extends React.Component {
 
@@ -217,7 +235,7 @@ export default class HomeBannerForm extends React.Component {
     }
     return (
       <Form direction="ver" field={this.field} size="large">
-        <FormItem label="选择轮播图片：" {...formItemLayout}>
+        <FormItem label="选择轮播图片：" {...formItemLayout} extra={carouselImageTips}>
           <ImageUpload className="uploader" {...uploadConfig} {...init('bannerImg', {
             rules: [{required: true, message: '请选择图片'}],
             valueName: 'fileList',
@@ -299,16 +317,4 @@ export default class HomeBannerForm extends React.Component {
       </Form>
     )
   }
-}
-
-const styles = {
-  comboBox: {
-    width: '100%',
-  },
-  select: {
-    width: '100%',
-  },
-  buttonSpace: {
-    margin: '3px',
-  },
 }

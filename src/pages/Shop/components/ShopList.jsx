@@ -83,10 +83,10 @@ export default class ShopList extends React.Component {
         <Table dataSource={shopList} isloading={__loading}>
           <Table.Column title="店铺名称" dataIndex="shopTitle"/>
           <Table.Column title="店铺分类" dataIndex="shopTypeTitle"/>
-          <Table.Column title="店铺轮播图" dataIndex="fileInfo" cell={(value,index,record)=>{
+          <Table.Column title="店铺轮播图" dataIndex="fileInfo" cell={value=>{
             return (
               <div style={styles.carouselImgWrap}>
-                {value.map(file=>(<img style={styles.carouselImg} src={file.compressHttpUrl} key={file.id}/>))}
+                {(<img style={styles.carouselImg} src={value.compressHttpUrl} key={value.id}/>)}
               </div>
             )
           }}/>

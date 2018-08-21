@@ -23,10 +23,10 @@ const BaseInfoPanel = props => {
     1:(<Col span="12">
       <Row>
         <Col span="6">
-          发货时间:
+          消费时间:
         </Col>
         <Col span="18">
-          {baseInfo.nickname}
+          {baseInfo.verifyTime}
         </Col>
       </Row>
     </Col>),
@@ -36,7 +36,7 @@ const BaseInfoPanel = props => {
           退款时间:
         </Col>
         <Col span="18">
-          {baseInfo.nickname}
+          {baseInfo.refundSuccessTime}
         </Col>
       </Row>
     </Col>),

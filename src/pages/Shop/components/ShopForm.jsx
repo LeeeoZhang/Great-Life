@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 import {Input, Button, Upload, Form, Field, Select, Feedback, Radio} from '@icedesign/base'
 import MapModal from './MapModal'
-import {getSimpleArticleList,getSimpleVerifyList} from '@/service'
+import {getSimpleArticleList, getSimpleVerifyList} from '@/service'
 
 import './ShopForm.scss'
 import DOMAIN from '@/domain'
@@ -10,7 +10,7 @@ const FormItem = Form.Item
 const {ImageUpload} = Upload
 const Toast = Feedback.toast
 const {Group: RadioGroup} = Radio
-const { Combobox } = Select
+const {Combobox} = Select
 const formItemLayout = {
   labelCol: {
     fixedSpan: 8
@@ -30,18 +30,18 @@ const styles = {
   input: {
     width: '100%'
   },
-  comboBox:{
-    width:'100%',
+  comboBox: {
+    width: '100%',
   },
-  verifyLabel:{
-    display:'flex',
-    alignItems:'center',
+  verifyLabel: {
+    display: 'flex',
+    alignItems: 'center',
   },
-  verifyAvatar:{
-    width:'20px',
-    height:'20px',
-    borderRadius:'50%',
-    marginRight:'5px',
+  verifyAvatar: {
+    width: '20px',
+    height: '20px',
+    borderRadius: '50%',
+    marginRight: '5px',
   }
 }
 const shopKeyWordTips = (
@@ -65,9 +65,9 @@ export default class ShopForm extends React.Component {
     this.state = {
       isMapModalShow: false,
       mapInfo: props.shopDetail ? props.shopDetail.mapInfo : null,
-      articleData:this.createInitArticleData(props.shopDetail),
-      verifyData:this.createInitVerifyData(props.shopDetail),
-      managerData:this.createInitManagerData(props.shopDetail),
+      articleData: this.createInitArticleData(props.shopDetail),
+      verifyData: this.createInitVerifyData(props.shopDetail),
+      managerData: this.createInitManagerData(props.shopDetail),
     }
   }
 
@@ -111,15 +111,13 @@ export default class ShopForm extends React.Component {
   //初始化一个图片列表
   createInitFileList = shopDetail => {
     const initFileList = []
+    const file = {}
     if (shopDetail) {
-      for (let i = 0; i < shopDetail.fileInfo.length; i++) {
-        const file = {}
-        file.name = file.fileName = 'file'
-        file.status = 'done'
-        file.downloadURL = file.fileURL = file.imgURL = shopDetail.fileInfo[i].compressHttpUrl
-        file.id = shopDetail.fileInfo[i].id
-        initFileList.push(file)
-      }
+      file.name = file.fileName = 'file'
+      file.status = 'done'
+      file.downloadURL = file.fileURL = file.imgURL = shopDetail.fileInfo.compressHttpUrl
+      file.id = shopDetail.fileInfo.id
+      initFileList.push(file)
     }
     return initFileList
   }
@@ -127,7 +125,6 @@ export default class ShopForm extends React.Component {
   createInitLogoFileList = shopDetail => {
     const initFileList = []
     const file = {}
-    console.log(shopDetail)
     if (shopDetail) {
       file.name = file.fileName = 'file'
       file.status = 'done'
@@ -140,68 +137,68 @@ export default class ShopForm extends React.Component {
 
   /***combobox相关**/
   onArticleInputComboBox = value => {
-    if(this.searchTimer) clearTimeout(this.searchTimer)
-    this.searchTimer = setTimeout( async () => {
-      const res = await getSimpleArticleList({params:{title:value}}).catch(()=>false)
-      if(res) {
-        const formatData = res.data.lists.map(item=>{
+    if (this.searchTimer) clearTimeout(this.searchTimer)
+    this.searchTimer = setTimeout(async () => {
+      const res = await getSimpleArticleList({params: {title: value}}).catch(() => false)
+      if (res) {
+        const formatData = res.data.lists.map(item => {
           return {
-            label:item.title,
-            value:String(item.id),
+            label: item.title,
+            value: String(item.id),
           }
         })
-        this.setState({articleData:formatData})
+        this.setState({articleData: formatData})
       }
-    },500)
+    }, 500)
     this.field.setValue('articleId', value)
   }
 
   onVerifyInputComboBox = value => {
-    if(this.searchTimer) clearTimeout(this.searchTimer)
-    this.searchTimer = setTimeout( async () => {
-      const res = await getSimpleVerifyList({params:{nickname:value}}).catch(()=>false)
-      if(res) {
-        const formatData = res.data.lists.map(item=>{
+    if (this.searchTimer) clearTimeout(this.searchTimer)
+    this.searchTimer = setTimeout(async () => {
+      const res = await getSimpleVerifyList({params: {nickname: value}}).catch(() => false)
+      if (res) {
+        const formatData = res.data.lists.map(item => {
           return {
-            label:(
+            label: (
               <div style={styles.verifyLabel}>
                 <img style={styles.verifyAvatar} src={item.headimg}/>
                 <span>{item.nickname}</span>
               </div>
             ),
-            value:String(item.id),
+            value: String(item.id),
           }
         })
-        this.setState({verifyData:formatData})
+        this.setState({verifyData: formatData})
       }
-    },500)
+    }, 500)
   }
 
   onManagerInputComboBox = value => {
-    if(this.searchTimer) clearTimeout(this.searchTimer)
-    this.searchTimer = setTimeout( async () => {
-      const res = await getSimpleVerifyList({params:{nickname:value}}).catch(()=>false)
-      if(res) {
-        const formatData = res.data.lists.map(item=>{
+    if (this.searchTimer) clearTimeout(this.searchTimer)
+    this.searchTimer = setTimeout(async () => {
+      const res = await getSimpleVerifyList({params: {nickname: value}}).catch(() => false)
+      if (res) {
+        const formatData = res.data.lists.map(item => {
           return {
-            label:(
+            label: (
               <div style={styles.verifyLabel}>
                 <img style={styles.verifyAvatar} src={item.headimg}/>
                 <span>{item.nickname}</span>
               </div>
             ),
-            value:String(item.id),
+            value: String(item.id),
           }
         })
-        this.setState({managerData:formatData})
+        this.setState({managerData: formatData})
       }
-    },500)
+    }, 500)
   }
 
   createInitArticleData = shopDetail => {
-    if(shopDetail) {
+    if (shopDetail) {
       return [
-        {label:shopDetail.articleInfo.title,value:String(shopDetail.articleInfo.id)}
+        {label: shopDetail.articleInfo.title, value: String(shopDetail.articleInfo.id)}
       ]
     } else {
       return []
@@ -209,16 +206,16 @@ export default class ShopForm extends React.Component {
   }
 
   createInitVerifyData = shopDetail => {
-    if(shopDetail) {
-      return shopDetail.verifyUserInfo.map(item=>{
+    if (shopDetail) {
+      return shopDetail.verifyUserInfo.map(item => {
         return {
-          label:(
+          label: (
             <div style={styles.verifyLabel}>
               <img style={styles.verifyAvatar} src={item.headimg}/>
               <span>{item.nickname}</span>
             </div>
           ),
-          value:String(item.id),
+          value: String(item.id),
         }
       })
     } else {
@@ -226,17 +223,17 @@ export default class ShopForm extends React.Component {
     }
   }
 
-  createInitManagerData =  shopDetail => {
-    if(shopDetail) {
-      return shopDetail.managerUserInfo.map(item=>{
+  createInitManagerData = shopDetail => {
+    if (shopDetail) {
+      return shopDetail.managerUserInfo.map(item => {
         return {
-          label:(
+          label: (
             <div style={styles.verifyLabel}>
               <img style={styles.verifyAvatar} src={item.headimg}/>
               <span>{item.nickname}</span>
             </div>
           ),
-          value:String(item.id),
+          value: String(item.id),
         }
       })
     } else {
@@ -249,10 +246,8 @@ export default class ShopForm extends React.Component {
   formatUploadInfo = values => {
     return {
       ...values,
-      fileId: values.shopCarousel.map(file => {
-        return file.response ? file.response.id : file.id
-      }),
-      logoId:values.logoImg[0].response ?  values.logoImg[0].response.id : values.logoImg[0].id,
+      fileId: values.shopCarousel[0].response ? values.shopCarousel[0].response.id : values.shopCarousel[0].id,
+      logoId: values.logoImg[0].response ? values.logoImg[0].response.id : values.logoImg[0].id,
       mapInfo: this.state.mapInfo,
     }
   }
@@ -304,7 +299,7 @@ export default class ShopForm extends React.Component {
   }
 
   render () {
-    const {isMapModalShow, mapInfo,articleData,verifyData,managerData} = this.state
+    const {isMapModalShow, mapInfo, articleData, verifyData, managerData} = this.state
     const {__loading, shopDetail, type, shopTypeList} = this.props
     const init = this.field.init
     const uploadConfig = {
@@ -347,8 +342,8 @@ export default class ShopForm extends React.Component {
               initValue: shopDetail ? String(shopDetail.shopType) : '',
             })}/>
           </FormItem>
-          <FormItem label="选择轮播图片：" {...formItemLayout} extra={carouselTips}>
-            <ImageUpload className="uploader" {...uploadConfig} {...init('shopCarousel', {
+          <FormItem label="选择店铺图片：" {...formItemLayout} extra={carouselTips}>
+            <ImageUpload limit={1} className="uploader" {...uploadConfig} {...init('shopCarousel', {
               rules: [{required: true, message: '请选择图片'}],
               valueName: 'fileList',
               initValue: this.createInitFileList(shopDetail),
@@ -383,7 +378,7 @@ export default class ShopForm extends React.Component {
               filterLocal={false}
               placeholder="请输入文章名称"
               dataSource={articleData}
-              {...init('articleId',{
+              {...init('articleId', {
                 initValue: shopDetail ? shopDetail.articleInfo.id : null,
               })}
             />
@@ -397,8 +392,8 @@ export default class ShopForm extends React.Component {
               filterLocal={false}
               placeholder="请输入核销员昵称"
               dataSource={verifyData}
-              {...init('verifyIds',{
-                initValue: shopDetail ? shopDetail.verifyUserInfo.map(info=>info.id) : null,
+              {...init('verifyIds', {
+                initValue: shopDetail ? shopDetail.verifyUserInfo.map(info => info.id) : null,
               })}
             />
           </FormItem>
@@ -411,8 +406,8 @@ export default class ShopForm extends React.Component {
               filterLocal={false}
               placeholder="请输入管理员昵称"
               dataSource={managerData}
-              {...init('managerIds',{
-                initValue: shopDetail ? shopDetail.managerUserInfo.map(info=>info.id) : null,
+              {...init('managerIds', {
+                initValue: shopDetail ? shopDetail.managerUserInfo.map(info => info.id) : null,
               })}
             />
           </FormItem>

@@ -202,7 +202,7 @@ export default class ArticleForm extends React.Component {
             </Col>
           </Row>
           <Row style={styles.formItem}>
-            <Col xxs="6" s="3" l="3" style={styles.formLabel}>文章大图：</Col>
+            <Col xxs="6" s="3" l="3" style={styles.formLabel}>文章大图(690*320)：</Col>
             <Col s="12" l="10">
               <IceFormBinder name="bigArticleImage" required message="请选择文章大图" valueFormatter={info=>{
                 if (info.fileList && info.fileList.length > 0) {
