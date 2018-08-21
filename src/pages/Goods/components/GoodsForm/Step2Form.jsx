@@ -184,8 +184,8 @@ export default class Step2Form extends React.Component {
                 })}/>
               </FormItem>
               <FormItem label="拼团持续时间：" {...formItemLayout}>
-                <Select style={isStock} dataSource={goodsGroupWaitTime}
-                        disabled={type === 'edit'}
+                <Select style={styles.input} dataSource={goodsGroupWaitTime}
+                        disabled={isStock}
                         placeholder="请选择拼团持续时间" {...init('goodsGroupWaitTime', {
                   rules: [{required: true, message: '请选择拼团持续时间'}],
                   initValue: step2Data ? String(step2Data.goodsGroupWaitTime) : '',

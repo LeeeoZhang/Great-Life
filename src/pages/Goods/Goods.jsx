@@ -132,8 +132,9 @@ export default class Goods extends React.Component {
       this.postOtherStepData(data, 0)
     } else {
       const res = await addGoods({data}).catch(() => false)
+      this.setState({loading: false})
       if (res) {
-        this.setState({stepFormId: res.data.id, loading: false})
+        this.setState({stepFormId: res.data.id})
         this.nextStep()
       }
     }
@@ -147,13 +148,13 @@ export default class Goods extends React.Component {
     this.setState({loading: true})
     //发送编辑请求
     const res = await editGoods({data}).catch(() => false)
+    this.setState({loading: false})
     if (res) {
       if (step !== 3) {
         this.nextStep()
       } else {
         window.location.replace('#/result/success')
       }
-      this.setState({loading: false})
     }
   }
 
@@ -255,11 +256,11 @@ export default class Goods extends React.Component {
     const {stepFormId, step} = this.state
     this.setState({loading:true})
     const res = await getGoodsDetail({params: {id: stepFormId, step}}).catch(() => false)
+    this.setState({loading:false})
     if (res) {
       this.setState({
         [`step${step}Data`]: {...res.data},
         step: step - 1,
-        loading:false,
       })
     }
   }
