@@ -63,21 +63,7 @@ const Toast = Feedback.toast
     },
     defaultBindingData: {
       lists: [],
-      count:0,
-    },
-  },
-  postStep1Data: {
-    url: `${DOMAIN}/admin/goods/add`,
-    method: 'post',
-    responseFormatter: (responseHandler, res, originResponse) => {
-      const formatResponse = {
-        status: originResponse.code === 200 ? 'SUCCESS' : 'ERROR',
-        data: res
-      }
-      responseHandler(formatResponse, originResponse)
-    },
-    defaultBindingData: {
-      id: null,
+      count: 0,
     },
   },
 })
@@ -89,16 +75,18 @@ export default class Goods extends React.Component {
     super(props)
     this.state = {
       isEdit: false,
+      isStock: false,
       step: 0,
       step1Data: {},
       step2Data: {},
       step3Data: {},
       step4Data: {},
       stepFormId: '',
-      current:1,
-      size:10,
-      title:'',
-      status:'',
+      current: 1,
+      size: 10,
+      title: '',
+      status: '',
+      loading: false,
     }
   }
 
@@ -139,12 +127,13 @@ export default class Goods extends React.Component {
   //新增时发送第一步数据，记录返回的id
   postStep1Data = async data => {
     const {stepFormId} = this.state
-    if(stepFormId) {
-      this.postOtherStepData(data,0)
+    this.setState({loading: true})
+    if (stepFormId) {
+      this.postOtherStepData(data, 0)
     } else {
       const res = await addGoods({data}).catch(() => false)
       if (res) {
-        this.setState({stepFormId: res.data.id})
+        this.setState({stepFormId: res.data.id, loading: false})
         this.nextStep()
       }
     }
@@ -155,6 +144,7 @@ export default class Goods extends React.Component {
     const {stepFormId} = this.state
     data.id = stepFormId
     data.step = step + 1
+    this.setState({loading: true})
     //发送编辑请求
     const res = await editGoods({data}).catch(() => false)
     if (res) {
@@ -163,6 +153,7 @@ export default class Goods extends React.Component {
       } else {
         window.location.replace('#/result/success')
       }
+      this.setState({loading: false})
     }
   }
 
@@ -197,9 +188,9 @@ export default class Goods extends React.Component {
   }
 
   //下架商品
-  saleOutGoods = async id=>{
-    const res = await saleOutGoods({params:{id}}).catch(()=>false)
-    if(res) {
+  saleOutGoods = async id => {
+    const res = await saleOutGoods({params: {id}}).catch(() => false)
+    if (res) {
       Toast.success('下架成功')
       this.getGoodsList()
     }
@@ -217,10 +208,10 @@ export default class Goods extends React.Component {
 
   //获取商品列表
   getGoodsList = () => {
-    const {current, size, title,status} = this.state
-    this.props.updateBindingData('goodsList',{
-      params:{
-        page:current,size,title,status
+    const {current, size, title, status} = this.state
+    this.props.updateBindingData('goodsList', {
+      params: {
+        page: current, size, title, status
       }
     })
   }
@@ -236,6 +227,7 @@ export default class Goods extends React.Component {
         step3Data: {...res.data.thirdStep},
         step4Data: {...res.data.fourStep},
         isEdit: true,
+        isStock: res.data.firstStep.status === 1,
       })
     }
   }
@@ -261,47 +253,49 @@ export default class Goods extends React.Component {
   preStep = async () => {
     //这个step是从0开始的
     const {stepFormId, step} = this.state
+    this.setState({loading:true})
     const res = await getGoodsDetail({params: {id: stepFormId, step}}).catch(() => false)
     if (res) {
       this.setState({
         [`step${step}Data`]: {...res.data},
-        step: step - 1
+        step: step - 1,
+        loading:false,
       })
     }
   }
 
   //翻页
   onChangePage = current => {
-    this.setState({current},()=>{
+    this.setState({current}, () => {
       this.getGoodsList()
     })
   }
 
   //查询
-  searching = ({searchTitle:title,status}) => {
+  searching = ({searchTitle: title, status}) => {
     this.setState({
       title,
       status,
-      page:1,
-    },()=>{
+      page: 1,
+    }, () => {
       this.getGoodsList()
     })
   }
 
   //重置查询
-  resetSearch = ()=>{
+  resetSearch = () => {
     this.setState({
-      current:1,
-      size:10,
-      title:'',
-      status:'',
-    },()=>{
+      current: 1,
+      size: 10,
+      title: '',
+      status: '',
+    }, () => {
       this.getGoodsList()
     })
   }
 
   render () {
-    const {step1Data, step2Data, step3Data, step4Data, step, isEdit,current} = this.state
+    const {step1Data, step2Data, step3Data, step4Data, step, isEdit, current, loading,isStock} = this.state
     const __loading = this.props.bindingData.__loading
     const {goodsNavList, goodsList, shopIdList} = this.props.bindingData
     return (
@@ -309,9 +303,11 @@ export default class Goods extends React.Component {
         {isEdit ?
           (<GoodsForm
             type="edit"
+            isStock={isStock}
             goodsNavList={goodsNavList.lists}
             shopIdList={shopIdList.lists}
             __loading={__loading}
+            loading={loading}
             postStep1Data={this.postStep1Data}
             step={step}
             step1Data={step1Data}
@@ -341,9 +337,11 @@ export default class Goods extends React.Component {
             <TabPane key="goodsForm" tab="添加商品">
               <GoodsForm
                 type="add"
+                isStock={isStock}
                 goodsNavList={goodsNavList.lists}
                 shopIdList={shopIdList.lists}
                 __loading={__loading}
+                loading={loading}
                 postStep1Data={this.postStep1Data}
                 step={step}
                 step1Data={step1Data}

@@ -78,7 +78,7 @@ export default class Step3Form extends React.Component {
   }
 
   render () {
-    const {step3Data, __loading,type} = this.props
+    const {step3Data, __loading,type,loading} = this.props
     const noteEditorConfig = {
       contentFormat: 'html',
       initialContent: step3Data.goodsBuyNotes || '',
@@ -118,13 +118,13 @@ export default class Step3Form extends React.Component {
           </Col>
         </Row>
         <div style={styles.nextFormItem}>
-          <Button onClick={this.preStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading}>
+          <Button onClick={this.preStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading || loading}>
             上一步
           </Button>
-          <Button onClick={this.nextStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading}>
+          <Button onClick={this.nextStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading || loading}>
             下一步
           </Button>
-          {type === 'edit' && (<Button onClick={this.backFromEdit} style={styles.buttonSpace} size="large">返回</Button>)}
+          {type === 'edit' && (<Button loading={__loading || loading} onClick={this.backFromEdit} style={styles.buttonSpace} size="large">返回</Button>)}
         </div>
       </div>
     )

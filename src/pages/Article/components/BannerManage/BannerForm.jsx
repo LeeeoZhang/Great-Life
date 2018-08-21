@@ -26,6 +26,9 @@ const styles = {
 const tipsContent = (
   <div style={styles.tipsContent}>如需点击图片跳转到文章，则需填写小程序路径，如：pages/xxx?id=xx,id为文章编号</div>
 )
+const bannerTips = (
+  <div style={styles.tipsContent}>建议大小750*370</div>
+)
 
 
 export default class BannerForm extends React.Component {
@@ -124,7 +127,7 @@ export default class BannerForm extends React.Component {
               initValue: bannerDetail ? bannerDetail.path : '',
             })}/>
           </FormItem>
-          <FormItem label="选择图片：" {...formItemLayout}>
+          <FormItem label="选择图片：" {...formItemLayout} extra={bannerTips}>
             <ImageUpload className="uploader" {...uploadConfig} {...init('bannerFile', {
                 rules: [{required: true, message: '请选择图片'}],
                 valueName: 'fileList',

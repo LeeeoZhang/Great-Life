@@ -66,7 +66,6 @@ export default class Step1Form extends React.Component {
     onChange: (name, value) => this.field.setValue(name, value)
   })
 
-
   //格式化商品导航选择框
   formatGoodsNavList = goodsNavList => {
     return goodsNavList.map(nav => {
@@ -105,7 +104,6 @@ export default class Step1Form extends React.Component {
       id: res.data ? String(res.data.id) : ''
     }
   }
-
 
   createInitFileList = step1Data => {
     const initFileList = []
@@ -146,7 +144,6 @@ export default class Step1Form extends React.Component {
         }
       }),
       goodsCarousel: null,
-
     }
   }
 
@@ -156,7 +153,9 @@ export default class Step1Form extends React.Component {
 
   render () {
     const init = this.field.init
-    const {goodsNavList, step1Data, __loading, shopIdList,type} = this.props
+    const {goodsNavList, step1Data, __loading, shopIdList,type,loading,isStock} = this.props
+    console.log('__loading',__loading)
+    console.log('loading',loading)
     const uploadConfig = {
       action: `${DOMAIN}/admin/file/upload`,
       accept: 'image/png, image/jpg, image/jpeg',
@@ -168,7 +167,7 @@ export default class Step1Form extends React.Component {
       <Form Form direction="ver" field={this.field} size="large">
         <FormItem label="选择商品所在导航：" {...formItemLayout}>
           <Select style={styles.input} dataSource={this.formatGoodsNavList(goodsNavList)}
-                  disabled={type === 'edit'}
+                  disabled={isStock}
                   placeholder="请选择商品所在导航" {...init('goodsNavId', {
             rules: [{required: true, message: '请选择商品所在导航'}],
             initValue: Object.keys(step1Data).length > 0 ? String(step1Data.goodsNavId) : '',
@@ -176,7 +175,7 @@ export default class Step1Form extends React.Component {
         </FormItem>
         <FormItem label="商品销售方式：" {...formItemLayout}>
           <Select style={styles.input} dataSource={goodsSaleMethod}
-                  disabled={type === 'edit'}
+                  disabled={isStock}
                   placeholder="请选择商品销售方式" {...init('goodsSaleMethod', {
             rules: [{required: true, message: '请选择商品销售方式'}],
             initValue: Object.keys(step1Data).length > 0 ? String(step1Data.goodsSaleMethod) : '',
@@ -184,7 +183,7 @@ export default class Step1Form extends React.Component {
         </FormItem>
         <FormItem label="商品类型：" {...formItemLayout}>
           <Select style={styles.input} dataSource={goodsType}
-                  disabled={type === 'edit'}
+                  disabled={isStock}
                   placeholder="请选择商品类型" {...init('goodsType', {
             rules: [{required: true, message: '请选择商品类型'}],
             initValue: Object.keys(step1Data).length > 0 ? String(step1Data.goodsType) : '',
@@ -192,7 +191,7 @@ export default class Step1Form extends React.Component {
         </FormItem>
         <FormItem label="店铺ID：" {...formItemLayout}>
           <Select style={styles.input} dataSource={this.formatShopIdList(shopIdList)}
-                  disabled={type === 'edit'}
+                  disabled={isStock}
                   placeholder="请输入店铺ID" {...init('shopId', {
             rules: [{required: true, message: '请输入店铺ID'}],
             initValue: Object.keys(step1Data).length > 0 ? String(step1Data.shopId) : '',
@@ -231,10 +230,10 @@ export default class Step1Form extends React.Component {
           })}/>
         </FormItem>
         <FormItem  {...formItemLayout} style={styles.nextFormItem}>
-          <Button onClick={this.nextStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading}>
+          <Button onClick={this.nextStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading || loading}>
             下一步
           </Button>
-          {type === 'edit' && (<Button onClick={this.backFromEdit} style={styles.buttonSpace} size="large">返回</Button>)}
+          {type === 'edit' && (<Button loading={__loading || loading} onClick={this.backFromEdit} style={styles.buttonSpace} size="large">返回</Button>)}
         </FormItem>
       </Form>
     )

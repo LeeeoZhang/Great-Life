@@ -92,7 +92,7 @@ export default class StyleForm extends React.Component {
 
 
   render () {
-    const {__loading, styleData, init} = this.props
+    const {__loading, styleData, init,type,isStock} = this.props
     const {indexId} = styleData
     const uploadConfig = {
       action: `${DOMAIN}/admin/file/upload`,
@@ -105,7 +105,7 @@ export default class StyleForm extends React.Component {
     return (
       <div style={styles.formBackground}>
         <FormItem label="选择款式图片：" {...formItemLayout} extra={styleImageTips}>
-          <ImageUpload className="uploader" {...uploadConfig} {...init(`styleImage${indexId}`, {
+          <ImageUpload disabled={isStock} className="uploader" {...uploadConfig} {...init(`styleImage${indexId}`, {
             rules: [{required: true, message: '请选择图片'}],
             valueName: 'fileList',
             initValue: this.createInitFileList(styleData),
@@ -113,31 +113,31 @@ export default class StyleForm extends React.Component {
           })}/>
         </FormItem>
         <FormItem label="款式名称：" {...formItemLayout}>
-          <Input placeholder="请输入款式名称" {...init(`styleTitle${indexId}`, {
+          <Input disabled={isStock} placeholder="请输入款式名称" {...init(`styleTitle${indexId}`, {
             rules: [{required: true, message: '请输入款式名称'}],
             initValue: styleData.title ? styleData.title : '',
           })}/>
         </FormItem>
         <FormItem label="销售价格：" {...formItemLayout}>
-          <Input placeholder="请输入销售价格" {...init(`styleSalePrice${indexId}`, {
+          <Input disabled={isStock} placeholder="请输入销售价格" {...init(`styleSalePrice${indexId}`, {
             rules: [{required: true, message: '请输入销售价格'}],
             initValue: styleData.salePrice ? styleData.salePrice/100 : '',
           })}/>
         </FormItem>
         <FormItem label="市场价格：" {...formItemLayout}>
-          <Input placeholder="请输入市场价格" {...init(`styleMarketPrice${indexId}`, {
+          <Input disabled={isStock} placeholder="请输入市场价格" {...init(`styleMarketPrice${indexId}`, {
             rules: [{required: true, message: '请输入市场价格'}],
             initValue: styleData.marketPrice ? styleData.marketPrice/100 : '',
           })}/>
         </FormItem>
         <FormItem label="库存量：" {...formItemLayout}>
-          <Input placeholder="请输入库存量" {...init(`styleStock${indexId}`, {
+          <Input disabled={isStock} placeholder="请输入库存量" {...init(`styleStock${indexId}`, {
             rules: [{required: true, message: '请输入库存量'}],
             initValue: styleData.stock ? styleData.stock : '',
           })}/>
         </FormItem>
         <FormItem label=" " {...formItemLayout}>
-          <Button shape="warning" onClick={() => this.delStyle(indexId)} style={styles.buttonSpace} loading={__loading}>
+          <Button disabled={isStock} shape="warning" onClick={() => this.delStyle(indexId)} style={styles.buttonSpace} loading={__loading}>
             删除该款式
           </Button>
         </FormItem>

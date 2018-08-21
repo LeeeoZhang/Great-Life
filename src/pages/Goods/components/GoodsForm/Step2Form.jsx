@@ -156,18 +156,18 @@ export default class Step2Form extends React.Component {
 
   render () {
     const init = this.field.init
-    const {step2Data, step1Data, __loading,type} = this.props
+    const {step2Data, step1Data, __loading,type,loading,isStock} = this.props
     const {styleList} = this.state
     return (
       <Form Form direction="ver" field={this.field} size="large">
         <FormItem label="商品单位：" {...formItemLayout}>
-          <Input placeholder="请输入商品单位" {...init('goodsUnit', {
+          <Input disabled={isStock} placeholder="请输入商品单位" {...init('goodsUnit', {
             rules: [{required: true, message: '请输入商品单位'}],
             initValue: step2Data ? step2Data.goodsUnit : '',
           })}/>
         </FormItem>
         <FormItem label="商品限购数量：" {...formItemLayout} extra={GoodsPurchaseTips}>
-          <Input placeholder="请输入商品限购数量" {...init('goodsPurchase', {
+          <Input disabled={isStock} placeholder="请输入商品限购数量" {...init('goodsPurchase', {
             rules: [{required: true, message: '请输入商品价格单位'}],
             initValue: step2Data ? step2Data.goodsPurchase : '',
           })}/>
@@ -177,20 +177,22 @@ export default class Step2Form extends React.Component {
             <Fragment>
               <FormItem label="成团人数：" {...formItemLayout}>
                 <Select style={styles.input} dataSource={GoodsGroupNum}
+                        disabled={isStock}
                         placeholder="请选择成团人数" {...init('goodsGroupNum', {
                   rules: [{required: true, message: '请选择成团人数'}],
                   initValue: step2Data ? String(step2Data.goodsGroupNum) : '',
                 })}/>
               </FormItem>
               <FormItem label="拼团持续时间：" {...formItemLayout}>
-                <Select style={styles.input} dataSource={goodsGroupWaitTime}
+                <Select style={isStock} dataSource={goodsGroupWaitTime}
+                        disabled={type === 'edit'}
                         placeholder="请选择拼团持续时间" {...init('goodsGroupWaitTime', {
                   rules: [{required: true, message: '请选择拼团持续时间'}],
                   initValue: step2Data ? String(step2Data.goodsGroupWaitTime) : '',
                 })}/>
               </FormItem>
               <FormItem label="拼团价格：" {...formItemLayout}>
-                <Input placeholder="请输入拼团价格" {...init('goodsGroupPrice', {
+                <Input disabled={isStock} placeholder="请输入拼团价格" {...init('goodsGroupPrice', {
                   rules: [{required: true, message: '请输入拼团价格'}],
                   initValue: step2Data ? step2Data.goodsGroupPrice/100 : '',
                 })}/>
@@ -208,22 +210,24 @@ export default class Step2Form extends React.Component {
               delStyle={this.delStyle}
               init={init}
               field={this.field}
+              type={type}
+              isStock={isStock}
             />
           ))
         }
         <FormItem label=" " {...formItemLayout}>
-          <Button onClick={this.addNewStyle} style={styles.buttonSpace} size="large" loading={__loading}>
+          <Button disabled={isStock} onClick={this.addNewStyle} style={styles.buttonSpace} size="large" loading={__loading}>
             新增款式
           </Button>
         </FormItem>
         <FormItem  {...formItemLayout} style={styles.nextFormItem}>
-          <Button onClick={this.preStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading}>
+          <Button onClick={this.preStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading || loading}>
             上一步
           </Button>
-          <Button onClick={this.nextStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading}>
+          <Button onClick={this.nextStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading || loading}>
             下一步
           </Button>
-          {type === 'edit' && (<Button onClick={this.backFromEdit} style={styles.buttonSpace} size="large">返回</Button>)}
+          {type === 'edit' && (<Button onClick={this.backFromEdit} loading={__loading || loading} style={styles.buttonSpace} size="large">返回</Button>)}
         </FormItem>
       </Form>
     )

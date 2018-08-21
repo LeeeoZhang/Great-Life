@@ -8,6 +8,66 @@ import Step4Form from './Step4Form'
 
 const {Row, Col} = Grid
 
+const StepForm = props => {
+  const {step1Data,step2Data,step3Data,step4Data,nextStep,preStep,onReportData,backFromEdit,type,loading,isStock,step} = props
+  const {goodsNavList,shopIdList,__loading,postStep1Data} = props
+  switch (step) {
+    case 0:
+      return (<Step1Form
+        type={type}
+        isStock={isStock}
+        step1Data={step1Data}
+        shopIdList={shopIdList}
+        goodsNavList={goodsNavList}
+        __loading={__loading}
+        loading={loading}
+        nextStep={nextStep}
+        postStep1Data={postStep1Data}
+        onReportData={onReportData}
+        backFromEdit={backFromEdit}
+      />)
+    case 1:
+      return (<Step2Form
+        type={type}
+        isStock={isStock}
+        step1Data={step1Data}
+        step2Data={step2Data}
+        __loading={__loading}
+        loading={loading}
+        nextStep={nextStep}
+        preStep={preStep}
+        onReportData={onReportData}
+        backFromEdit={backFromEdit}
+      />)
+    case 2:
+      return (<Step3Form
+        type={type}
+        isStock={isStock}
+        step3Data={step3Data}
+        __loading={__loading}
+        loading={loading}
+        nextStep={nextStep}
+        preStep={preStep}
+        onReportData={onReportData}
+        backFromEdit={backFromEdit}
+      />)
+    case 3:
+      return (<Step4Form
+        type={type}
+        isStock={isStock}
+        step1Data={step1Data}
+        step4Data={step4Data}
+        __loading={__loading}
+        loading={loading}
+        preStep={preStep}
+        onReportData={onReportData}
+        backFromEdit={backFromEdit}
+      />)
+    default :
+      return null
+  }
+}
+
 export default class GoodsForm extends React.Component {
 
   static displayName = 'GoodsForm'
@@ -18,57 +78,6 @@ export default class GoodsForm extends React.Component {
   }
 
 
-  renderForm = step => {
-    const {step1Data,step2Data,step3Data,step4Data,nextStep,preStep,onReportData,backFromEdit,type} = this.props
-    const {goodsNavList,shopIdList,__loading,postStep1Data} = this.props
-    switch (step) {
-      case 0:
-        return (<Step1Form
-          type={type}
-          step1Data={step1Data}
-          shopIdList={shopIdList}
-          goodsNavList={goodsNavList}
-          __loading={__loading}
-          nextStep={nextStep}
-          postStep1Data={postStep1Data}
-          onReportData={onReportData}
-          backFromEdit={backFromEdit}
-        />)
-      case 1:
-        return (<Step2Form
-          type={type}
-          step1Data={step1Data}
-          step2Data={step2Data}
-          __loading={__loading}
-          nextStep={nextStep}
-          preStep={preStep}
-          onReportData={onReportData}
-          backFromEdit={backFromEdit}
-        />)
-      case 2:
-        return (<Step3Form
-          type={type}
-          step3Data={step3Data}
-          __loading={__loading}
-          nextStep={nextStep}
-          preStep={preStep}
-          onReportData={onReportData}
-          backFromEdit={backFromEdit}
-        />)
-      case 3:
-       return (<Step4Form
-         type={type}
-         step1Data={step1Data}
-         step4Data={step4Data}
-         __loading={__loading}
-         preStep={preStep}
-         onReportData={onReportData}
-         backFromEdit={backFromEdit}
-       />)
-      default :
-        return null
-    }
-  }
 
   render () {
     const {step} = this.props
@@ -91,7 +100,7 @@ export default class GoodsForm extends React.Component {
           </Affix>
         </Col>
         <Col xxs="24" s="21" l="21">
-          {this.renderForm(step)}
+          <StepForm {...this.props}/>
         </Col>
       </Row>
     )

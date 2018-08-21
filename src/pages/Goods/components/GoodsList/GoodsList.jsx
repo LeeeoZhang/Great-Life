@@ -146,7 +146,7 @@ export default class GoodsList extends React.Component {
             return (
               <Fragment>
                 {/*disabled={Number(record.status) !== 0}*/}
-                <Button onClick={()=>this.onEdit(record.id)} size="small" style={styles.buttonSpace} type="primary">修改</Button>
+                <Button disabled={Number(record.status) === 2} onClick={()=>this.onEdit(record.id)} size="small" style={styles.buttonSpace} type="primary">修改</Button>
                 <Button size="small" style={styles.buttonSpace}>二维码</Button>
                 <Button onClick={()=>this.onSaleOut(record.id)} disabled={Number(record.status) !== 1} size="small" style={styles.buttonSpace} type="primary">下架</Button>
                 <DeleteBalloon

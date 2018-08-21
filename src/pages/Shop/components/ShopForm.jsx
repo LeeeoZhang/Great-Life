@@ -48,7 +48,11 @@ const shopKeyWordTips = (
   <div style={styles.tipsContent}>用$隔开，作为搜索时的关键字，同时也会在店铺搜索中作为标签展示</div>
 )
 const carouselTips = (
-  <div style={styles.tipsContent}>第一张轮播图将作为店铺列表的展示图片，建议大小：750*490(满足该比例即可)</div>
+  <div style={styles.tipsContent}>建议大小：750*490(满足该比例即可)</div>
+)
+
+const logoTips = (
+  <div style={styles.tipsContent}>建议大小比例为1：1的正方形</div>
 )
 const recommendRadio = [
   {value: '0', label: '否'},
@@ -350,7 +354,7 @@ export default class ShopForm extends React.Component {
               getValueFromEvent: this.formatUploadValue
             })}/>
           </FormItem>
-          <FormItem label="选择店铺Logo：" {...formItemLayout}>
+          <FormItem label="选择店铺Logo：" {...formItemLayout} extra={logoTips}>
             <ImageUpload limit={1} className="uploader" {...uploadConfig} {...init('logoImg', {
               rules: [{required: true, message: '请选择logo'}],
               valueName: 'fileList',

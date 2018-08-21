@@ -69,11 +69,11 @@ export default class Step4Form extends React.Component {
 
   render () {
     const init = this.field.init
-    const {step1Data, step4Data, __loading,type} = this.props
+    const {step1Data, step4Data, __loading,type,loading,isStock} = this.props
     return (
       <Form direction="ver" field={this.field} size="large">
         <FormItem label="商品上架时间：" {...formItemLayout}>
-          <DatePicker showTime  {...init('goodsPutawayTime', {
+          <DatePicker disabled={isStock} showTime  {...init('goodsPutawayTime', {
             rules: [{required: true, message: '请选择商品上架时间'}],
             initValue: step4Data.goodsPutawayTime ? step4Data.goodsPutawayTime : '',
             getValueFromEvent: this.formatTimePicker,
@@ -82,7 +82,7 @@ export default class Step4Form extends React.Component {
         {
           Number(step1Data.goodsSaleMethod) === 3 ? (
             <FormItem label="秒杀开始时间：" {...formItemLayout}>
-              <DatePicker showTime  {...init('goodsSeckillStartTime', {
+              <DatePicker disabled={isStock} showTime  {...init('goodsSeckillStartTime', {
                 rules: [{required: true, message: '请选择秒杀开始时间'}],
                 initValue: step4Data.goodsSeckillStartTime ? step4Data.goodsSeckillStartTime : '',
                 getValueFromEvent: this.formatTimePicker,
@@ -94,14 +94,14 @@ export default class Step4Form extends React.Component {
           Number(step1Data.goodsType) === 1 ? (
             <Fragment>
               <FormItem label="卡券开始时间：" {...formItemLayout}>
-                <DatePicker showTime  {...init('goodsCardStartTime', {
+                <DatePicker disabled={isStock} showTime  {...init('goodsCardStartTime', {
                   rules: [{required: true, message: '请选择卡券开始时间'}],
                   initValue: step4Data.goodsCardStartTime ? step4Data.goodsCardStartTime : '',
                   getValueFromEvent: this.formatTimePicker,
                 })}/>
               </FormItem>
               <FormItem label="卡券结束时间：" {...formItemLayout}>
-                <DatePicker showTime  {...init('goodsCardEndTime', {
+                <DatePicker disabled={isStock} showTime  {...init('goodsCardEndTime', {
                   rules: [{required: true, message: '请选择卡券结束时间'}],
                   initValue: step4Data.goodsCardEndTime ? step4Data.goodsCardEndTime : '',
                   getValueFromEvent: this.formatTimePicker,
@@ -119,19 +119,20 @@ export default class Step4Form extends React.Component {
         </FormItem>
         <FormItem label="订单关闭时间：" {...formItemLayout}>
           <Select style={styles.input} dataSource={goodsOrderCloseTime}
+                  disabled={isStock}
                   placeholder="请选择订单关闭时间" {...init('goodsOrderCloseTime', {
             rules: [{required: true, message: '请选择订单关闭时间'}],
             initValue: step4Data.goodsOrderCloseTime ? String(step4Data.goodsOrderCloseTime) : '',
           })}/>
         </FormItem>
         <FormItem  {...formItemLayout} style={styles.nextFormItem}>
-          <Button onClick={this.preStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading}>
+          <Button onClick={this.preStep} style={styles.buttonSpace} type="primary" size="large" loading={__loading || loading}>
             上一步
           </Button>
-          <Button onClick={this.onComplete} style={styles.buttonSpace} type="primary" size="large" loading={__loading}>
+          <Button onClick={this.onComplete} style={styles.buttonSpace} type="primary" size="large" loading={__loading || loading}>
             完成
           </Button>
-          {type === 'edit' && (<Button onClick={this.backFromEdit} style={styles.buttonSpace} size="large">返回</Button>)}
+          {type === 'edit' && (<Button loading={__loading || loading} onClick={this.backFromEdit} style={styles.buttonSpace} size="large">返回</Button>)}
         </FormItem>
       </Form>
     )
