@@ -29,7 +29,7 @@ const Toast = Feedback.toast
     defaultBindingData:{
       lists:[],
       count:0,
-    }
+    },
   }
 })
 export default class Account extends React.Component {

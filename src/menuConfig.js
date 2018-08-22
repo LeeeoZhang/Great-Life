@@ -41,6 +41,11 @@ const asideMenuConfig = [
     path: '/order',
     icon: 'ul-list',
   },
+  {
+    name: '结算中心',
+    path: '/balanceCenter',
+    icon: 'ul-list',
+  },
 ];
 
 export { headerMenuConfig, asideMenuConfig };

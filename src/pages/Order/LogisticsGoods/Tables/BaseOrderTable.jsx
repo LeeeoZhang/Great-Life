@@ -62,36 +62,36 @@ export default class BaseOrderTable extends React.Component {
     return (
       <Fragment>
         <Form direction="hoz" field={this.field} size="medium">
-          <FormItem>
-            <Select
-              style={styles.timeTypeSelect}
-              placeholder="选择时间类型"
-              {...init('timeType')}
-            >
-              <Select.Option value="1">按支付时间</Select.Option>
-              {/*<Select.Option disabled={tabId !== '1'} value="2">按发货时间</Select.Option>*/}
-              <Select.Option disabled={tabId !== '3'} value="3">按退款时间</Select.Option>
-            </Select>
-          </FormItem>
-          <FormItem>
-            <RangePicker
-              showTime
-              {...init('time', {
-                getValueFromEvent: this.formatTimePicker
-              })}
-            />
-          </FormItem>
-          <FormItem>
-            <Input style={styles.input} placeholder="搜索商品名称" {...init('searchTitle')}/>
-          </FormItem>
-          <FormItem>
-            <Button loading={__loading} style={styles.buttonSpace} type="primary" onClick={this.onSearch}><Icon
-              type="search"/>搜索</Button>
-            <Button loading={__loading} style={styles.buttonSpace} onClick={this.onClear}><Icon
-              type="refresh"/>清空</Button>
-            <Button loading={__loading} style={styles.buttonSpace}><Icon type="download"/>导出订单</Button>
-          </FormItem>
-        </Form>
+        <FormItem>
+          <Select
+            style={styles.timeTypeSelect}
+            placeholder="选择时间类型"
+            {...init('timeType')}
+          >
+            <Select.Option value="1">按支付时间</Select.Option>
+            <Select.Option disabled={tabId !== '3'} value="2">按退款时间</Select.Option>
+            {/*<Select.Option disabled={tabId !== '1'} value="3">按发货时间</Select.Option>*/}
+          </Select>
+        </FormItem>
+        <FormItem>
+          <RangePicker
+            showTime
+            {...init('time', {
+              getValueFromEvent: this.formatTimePicker
+            })}
+          />
+        </FormItem>
+        <FormItem>
+          <Input style={styles.input} placeholder="搜索商品名称" {...init('searchTitle')}/>
+        </FormItem>
+        <FormItem>
+          <Button loading={__loading} style={styles.buttonSpace} type="primary" onClick={this.onSearch}><Icon
+            type="search"/>搜索</Button>
+          <Button loading={__loading} style={styles.buttonSpace} onClick={this.onClear}><Icon
+            type="refresh"/>清空</Button>
+          <Button loading={__loading} style={styles.buttonSpace}><Icon type="download"/>导出订单</Button>
+        </FormItem>
+      </Form>
         <Table dataSource={orderList} isLoading={__loading}>
           <Table.Column title="交易单号" dataIndex="orderNum"/>
           <Table.Column title="商品信息" width={300} cell={(value, index, record) => {

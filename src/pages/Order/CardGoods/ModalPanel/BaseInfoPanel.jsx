@@ -42,7 +42,6 @@ const BaseInfoPanel = props => {
     </Col>),
   }
 
-
   return (
     <Panel style={styles.panelMargin}>
       <Panel.Header>

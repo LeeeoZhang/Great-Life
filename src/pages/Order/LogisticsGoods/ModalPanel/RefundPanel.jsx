@@ -1,13 +1,8 @@
 import React from 'react'
 import Panel from '@icedesign/panel'
-import {Grid, Input, Button,} from '@icedesign/base'
-import {
-  FormBinderWrapper as IceFormBinderWrapper,
-  FormBinder as IceFormBinder,
-  FormError as IceFormError,
-} from '@icedesign/form-binder'
+import RefundForm from '../../components/RefundForm'
+import RefundInfo from '../../components/RefundInfo'
 
-const {Row, Col} = Grid
 const styles = {
   rowSpace: {
     marginBottom: '10px',
@@ -33,36 +28,19 @@ export default class RefundPanel extends React.Component {
 
   static displayName = 'RefundPanel'
 
-  constructor (props) {
-    super(props)
-    this.state = {
-      refundReason: {
-        reason: '',
-      }
-    }
-  }
-
   render () {
-    const {refundReason} = this.state
-    const {tabId} = this.props
+    const {refundInfo, refund} = this.props
     return (
       <Panel style={styles.panelMargin}>
         <Panel.Header>
-          退款操作
+          退款操作/信息
         </Panel.Header>
         <Panel.Body>
-          <IceFormBinderWrapper ref="refundReasonForm" value={refundReason}>
-            <Row>
-              <Col span={6}>
-                <IceFormBinder name="reason">
-                  <Input size="large" placeholder="填写退款原因" style={styles.input}/>
-                </IceFormBinder>
-              </Col>
-              <Col offset={1}>
-                <Button disabled={tabId === '3'} type="primary" size="large">退款</Button>
-              </Col>
-            </Row>
-          </IceFormBinderWrapper>
+          {
+            refundInfo ?
+              refundInfo.map(info=>(<RefundInfo refundInfo={info}/>)) :
+              (<RefundForm refund={refund}/>)
+          }
         </Panel.Body>
       </Panel>
     )

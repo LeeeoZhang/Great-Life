@@ -2,8 +2,7 @@ import React, {Fragment} from 'react'
 import DataBinder from '@icedesign/data-binder'
 import {Tab, Feedback, Dialog} from "@icedesign/base"
 import DOMAIN from '@/domain'
-import {getOrderDetail,updateOrderBaseInfo,updateOrderExpressInfo} from "@/service"
-
+import {getOrderDetail,updateOrderBaseInfo,updateOrderExpressInfo,refund} from "@/service"
 import BaseOrderTable from './Tables/BaseOrderTable'
 import BaseInfoPanel from './ModalPanel/BaseInfoPanel'
 import GoodsInfoPanel from './ModalPanel/GoodsInfoPanel'
@@ -53,6 +52,7 @@ const TabList = [
         fileInfo:{},
       },
       additionalInfo: {},
+      refundInfo:null,
     },
   },
 })
@@ -92,6 +92,15 @@ export default class LogisticsGoods extends React.Component {
     this.setState({title, timeType, startTime, endTime, current: 1}, () => {
       this.getOrderRecord()
     })
+  }
+
+  //退款
+  refund = async refundDesc => {
+    const {orderId} = this.state
+    const res = await refund({data:{refundDesc, orderId}}).catch(()=>false)
+    if(res) {
+      Toast.success('退款成功')
+    }
   }
 
   //改变tab
@@ -181,10 +190,22 @@ export default class LogisticsGoods extends React.Component {
     }
   }
 
+  isNotShowAddressPanel = () => {
+    const {orderDetail} = this.props.bindingData
+    const {baseInfo} = orderDetail
+    return baseInfo.orderPayStatus === 2 || baseInfo.orderStatus === 1 || baseInfo.orderStatus === 2
+  }
+
+  isNotShowRefundPanel = () =>{
+    const {orderDetail} = this.props.bindingData
+    const {baseInfo} = orderDetail
+    return  baseInfo.orderStatus === 1 || baseInfo.orderStatus === 2
+  }
+
   render () {
     const __loading = this.props.bindingData.__loading
     const {orderRecord,orderDetail} = this.props.bindingData
-    const {baseInfo,goodsInfo,additionalInfo} = orderDetail
+    const {baseInfo,goodsInfo,additionalInfo,refundInfo} = orderDetail
     const {size, current, tabId, isDetailModalShow} = this.state
     return (
       <Fragment>
@@ -220,13 +241,13 @@ export default class LogisticsGoods extends React.Component {
             <BaseInfoPanel baseInfo={baseInfo} tabId={tabId}/>
             <GoodsInfoPanel goodsInfo={goodsInfo}/>
             {
-              tabId === '3' ? null : (<AddressInfoPanel
+              this.isNotShowAddressPanel() ? null : (<AddressInfoPanel
                                         updateAddressInfo={this.updateAddressInfo}
                                         updateExpressInfo={this.updateExpressInfo}
                                         additionalInfo={additionalInfo}
                                       />)
             }
-            <RefundPanel tabId={tabId}/>
+            {this.isNotShowRefundPanel() ? null : (<RefundPanel refundInfo={refundInfo} refund={this.refund}/>)}
           </div>
         </Dialog>
       </Fragment>

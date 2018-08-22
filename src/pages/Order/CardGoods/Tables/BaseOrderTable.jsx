@@ -68,8 +68,8 @@ export default class BaseOrderTable extends React.Component {
               {...init('timeType')}
             >
               <Select.Option value="1">按支付时间</Select.Option>
-              {/*<Select.Option disabled={tabId !== '1'} value="2">按发货时间</Select.Option>*/}
-              <Select.Option disabled={tabId !== '3'} value="3">按退款时间</Select.Option>
+              <Select.Option disabled={tabId !== '3'} value="2">按退款时间</Select.Option>
+              <Select.Option disabled={tabId !== '1'} value="3">按核销时间</Select.Option>
             </Select>
           </FormItem>
           <FormItem>

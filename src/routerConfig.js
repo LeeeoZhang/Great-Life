@@ -73,6 +73,10 @@ const Order = Loadable({
   loader: () => import('./pages/Order'),
   loading: LoadingIndicator,
 })
+const BalanceCenter = Loadable({
+  loader: () => import('./pages/BalanceCenter'),
+  loading: LoadingIndicator,
+})
 
 const routerConfig = [
   {
@@ -116,9 +120,14 @@ const routerConfig = [
     component: HomeRepair,
   },
   {
-    path: '/Order',
+    path: '/order',
     layout: HeaderAsideFooterLayout,
     component: Order,
+  },
+  {
+    path: '/balanceCenter',
+    layout: HeaderAsideFooterLayout,
+    component: BalanceCenter,
   },
   {
     path: '/exception',

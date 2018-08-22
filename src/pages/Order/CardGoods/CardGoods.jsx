@@ -2,7 +2,7 @@ import React, {Fragment} from 'react'
 import DataBinder from '@icedesign/data-binder'
 import {Tab, Feedback, Dialog} from "@icedesign/base"
 import DOMAIN from '@/domain'
-import {getOrderDetail,updateOrderBaseInfo} from "@/service"
+import {getOrderDetail, updateOrderBaseInfo,refund} from "@/service"
 
 import BaseOrderTable from './Tables/BaseOrderTable'
 import BaseInfoPanel from './ModalPanel/BaseInfoPanel'
@@ -46,14 +46,15 @@ const TabList = [
     },
     defaultBindingData: {
       baseInfo: {
-        orderType:1,
-        orderStatus:0,
-        orderPayStatus:1,
+        orderType: 1,
+        orderStatus: 0,
+        orderPayStatus: 1,
       },
       goodsInfo: {
-        fileInfo:{},
+        fileInfo: {},
       },
       additionalInfo: {},
+      refundInfo:null,
     },
   },
 })
@@ -72,7 +73,7 @@ export default class CardGoods extends React.Component {
       startTime: '',
       endTime: '',
       timeType: '',
-      orderId:'',
+      orderId: '',
     }
   }
 
@@ -92,6 +93,15 @@ export default class CardGoods extends React.Component {
     this.setState({title, timeType, startTime, endTime, current: 1}, () => {
       this.getOrderRecord()
     })
+  }
+
+  //退款
+  refund = async refundDesc => {
+    const {orderId} = this.state
+    const res = await refund({data:{refundDesc, orderId}}).catch(()=>false)
+    if(res) {
+      Toast.success('退款成功')
+    }
   }
 
   //改变tab
@@ -138,10 +148,10 @@ export default class CardGoods extends React.Component {
 
   //获取订单详情
   getOrderDetail = id => {
-    this.setState({orderId:id})
+    this.setState({orderId: id})
     this.props.updateBindingData('orderDetail', {
-      params:{id},
-      success:()=>{
+      params: {id},
+      success: () => {
         this.openDetailModal()
       }
     })
@@ -164,19 +174,30 @@ export default class CardGoods extends React.Component {
   updateAddressInfo = async data => {
     const {orderId} = this.state
     data.orderBaseId = orderId
-    const res = await updateOrderBaseInfo({data}).catch(()=>false)
-    if(res) {
+    const res = await updateOrderBaseInfo({data}).catch(() => false)
+    if (res) {
       Toast.success('更新成功')
       this.getOrderDetail(orderId)
     }
   }
 
+  isNotShowAddressPanel = () => {
+    const {orderDetail} = this.props.bindingData
+    const {baseInfo} = orderDetail
+    return baseInfo.orderPayStatus === 2 || baseInfo.orderStatus === 1 || baseInfo.orderStatus === 2
+  }
+
+  isNotShowRefundPanel = () =>{
+    const {orderDetail} = this.props.bindingData
+    const {baseInfo} = orderDetail
+    return  baseInfo.orderStatus === 1 || baseInfo.orderStatus === 2
+  }
+
   render () {
     const __loading = this.props.bindingData.__loading
-    const {orderRecord,orderDetail} = this.props.bindingData
-    const {baseInfo,goodsInfo,additionalInfo} = orderDetail
+    const {orderRecord, orderDetail} = this.props.bindingData
+    const {baseInfo, goodsInfo, additionalInfo,refundInfo} = orderDetail
     const {size, current, tabId, isDetailModalShow} = this.state
-
     return (
       <Fragment>
         <Tab onChange={this.changeTab}>
@@ -206,17 +227,18 @@ export default class CardGoods extends React.Component {
           title="订单详情"
           onClose={this.closeDetailModal}
           onCancel={this.closeDetailModal}
+          shouldUpdatePosition={true}
         >
           <div style={styles.detailWrap}>
             <BaseInfoPanel baseInfo={baseInfo} tabId={tabId}/>
             <GoodsInfoPanel goodsInfo={goodsInfo}/>
             {
-              tabId === '3' || tabId === '2' ? null : (<AddressInfoPanel
-                                                          additionalInfo={additionalInfo}
-                                                          updateAddressInfo={this.updateAddressInfo}
-                                                      />)
+              this.isNotShowAddressPanel() ? null : (<AddressInfoPanel
+                additionalInfo={additionalInfo}
+                updateAddressInfo={this.updateAddressInfo}
+              />)
             }
-            <RefundPanel tabId={tabId}/>
+            {this.isNotShowRefundPanel() ? null : (<RefundPanel refundInfo={refundInfo} refund={this.refund}/>)}
           </div>
         </Dialog>
       </Fragment>

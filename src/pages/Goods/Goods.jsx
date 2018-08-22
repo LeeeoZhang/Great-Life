@@ -85,6 +85,8 @@ export default class Goods extends React.Component {
       current: 1,
       size: 10,
       title: '',
+      goodsType:'',
+      saleMethod:'',
       status: '',
       loading: false,
     }
@@ -209,10 +211,10 @@ export default class Goods extends React.Component {
 
   //获取商品列表
   getGoodsList = () => {
-    const {current, size, title, status} = this.state
+    const {current, size, title, status,goodsType,saleMethod} = this.state
     this.props.updateBindingData('goodsList', {
       params: {
-        page: current, size, title, status
+        page: current, size, title, status,goodsType,saleMethod
       }
     })
   }
@@ -274,9 +276,12 @@ export default class Goods extends React.Component {
   }
 
   //查询
-  searching = searchConfig => {
+  searching = ({title, status, goodsType, saleMethod}) => {
     this.setState({
-      ...searchConfig,
+      saleMethod,
+      goodsType,
+      title,
+      status,
       page: 1,
     }, () => {
       this.getGoodsList()
@@ -290,6 +295,8 @@ export default class Goods extends React.Component {
       size: 10,
       title: '',
       status: '',
+      goodsType:'',
+      saleMethod:'',
     }, () => {
       this.getGoodsList()
     })
