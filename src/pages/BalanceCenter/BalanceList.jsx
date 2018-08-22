@@ -13,6 +13,8 @@ import {
   Pagination,
 } from "@icedesign/base"
 
+const FormItem = Form.Item
+
 export default class BalanceList extends Component {
 
   static displayName = 'BalanceList'
@@ -78,13 +80,13 @@ const styles = {
     justifyContent: 'flex-end',
   },
   select: {
-    width: '200px',
+    width: '300px',
   },
   timePick: {
     width: '150px',
   },
   input: {
-    width: '200px',
+    width: '500px',
   },
   searchAction: {
     marginBottom: '16px',

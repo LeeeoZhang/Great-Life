@@ -108,11 +108,10 @@ export default class LogisticsGoods extends React.Component {
     this.setState({
       tabId: key,
       current: 1,
-      size: 20,
       title: '',
       startTime: '',
       endTime: '',
-      timeType: '',
+      timeType: key === '3' ? 2 : (key === '1' ?  3 : ''),
     }, () => {
       this.getOrderRecord()
     })
@@ -120,13 +119,13 @@ export default class LogisticsGoods extends React.Component {
 
   //获取订单列表
   getOrderRecord = () => {
-    const {tabId, orderType, current, title, startTime, endTime, timeType} = this.state
+    const {tabId, orderType, current, title, startTime, endTime, timeType,size} = this.state
     this.props.updateBindingData('orderRecord', {
       params: {
         orderType,
         orderStatus: tabId,
         page: current,
-        size: 20,
+        size,
         title,
         startTime,
         endTime,

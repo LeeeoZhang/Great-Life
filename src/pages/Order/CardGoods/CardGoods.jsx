@@ -68,7 +68,7 @@ export default class CardGoods extends React.Component {
       tabId: '-1',
       orderType: 1,
       current: 1,
-      size: 20,
+      size: 5,
       title: '',
       startTime: '',
       endTime: '',
@@ -109,11 +109,10 @@ export default class CardGoods extends React.Component {
     this.setState({
       tabId: key,
       current: 1,
-      size: 20,
       title: '',
       startTime: '',
       endTime: '',
-      timeType: '',
+      timeType: key === '3' ? 2 : (key === '1' ?  3 : ''),
     }, () => {
       this.getOrderRecord()
     })
@@ -131,13 +130,13 @@ export default class CardGoods extends React.Component {
 
   //获取订单列表
   getOrderRecord = () => {
-    const {tabId, orderType, current, title, startTime, endTime, timeType} = this.state
+    const {tabId, orderType, current, title, startTime, endTime, timeType,size} = this.state
     this.props.updateBindingData('orderRecord', {
       params: {
         orderType,
         orderStatus: tabId,
         page: current,
-        size: 20,
+        size,
         title,
         startTime,
         endTime,

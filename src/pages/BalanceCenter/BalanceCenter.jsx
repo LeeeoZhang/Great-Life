@@ -2,6 +2,7 @@ import React, {Component, Fragment} from 'react'
 import IceContainer from '@icedesign/container'
 import DataBinder from '@icedesign/data-binder'
 import DOMAIN from '@/domain'
+import BalanceList from './BalanceList'
 
 
 @DataBinder({
@@ -32,7 +33,7 @@ export default class BalanceCenter extends Component {
   render(){
     return (
       <IceContainer>
-
+        <BalanceList/>
       </IceContainer>
     )
   }
