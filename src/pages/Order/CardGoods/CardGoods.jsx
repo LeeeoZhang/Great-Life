@@ -68,7 +68,7 @@ export default class CardGoods extends React.Component {
       tabId: '-1',
       orderType: 1,
       current: 1,
-      size: 5,
+      size: 20,
       title: '',
       startTime: '',
       endTime: '',
