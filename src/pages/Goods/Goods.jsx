@@ -255,9 +255,9 @@ export default class Goods extends React.Component {
   preStep = async () => {
     //这个step是从0开始的
     const {stepFormId, step} = this.state
-    this.setState({loading:true})
+    this.setState({loading: true})
     const res = await getGoodsDetail({params: {id: stepFormId, step}}).catch(() => false)
-    this.setState({loading:false})
+    this.setState({loading: false})
     if (res) {
       this.setState({
         [`step${step}Data`]: {...res.data},
@@ -274,8 +274,10 @@ export default class Goods extends React.Component {
   }
 
   //查询
-  searching = ({searchTitle: title, status}) => {
+  searching = ({searchTitle: title, status, goodsType, saleMethod}) => {
     this.setState({
+      saleMethod,
+      goodsType,
       title,
       status,
       page: 1,
@@ -297,7 +299,7 @@ export default class Goods extends React.Component {
   }
 
   render () {
-    const {step1Data, step2Data, step3Data, step4Data, step, isEdit, current, loading,isStock} = this.state
+    const {step1Data, step2Data, step3Data, step4Data, step, isEdit, current, loading, isStock} = this.state
     const __loading = this.props.bindingData.__loading
     const {goodsNavList, goodsList, shopIdList} = this.props.bindingData
     return (

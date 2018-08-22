@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {Input, Button, Table, Pagination, Form, Field, Icon,Select} from '@icedesign/base'
+import {Input, Button, Table, Pagination, Form, Field, Icon, Select} from '@icedesign/base'
 import DeleteBalloon from '@/components/DeleteBalloon'
 
 const FormItem = Form.Item
@@ -47,9 +47,10 @@ export default class GoodsList extends React.Component {
   render () {
     const init = this.field.init
     const {size} = this.state
-    const {__loading, goodsList,count,current} = this.props
-    const deleteButton = (
-      <Button size="small" style={styles.buttonSpace} shape="warning">删除</Button>
+    const {__loading, goodsList, count, current} = this.props
+    const DeleteButton = props => (
+      <Button disabled={Number(props.record.status) !== 0} size="small" style={styles.buttonSpace}
+              shape="warning">删除</Button>
     )
     return (
       <Fragment>
@@ -63,6 +64,27 @@ export default class GoodsList extends React.Component {
               <Select.Option value="1">上架</Select.Option>
               <Select.Option value="2">下架</Select.Option>
               <Select.Option value="3">待上架</Select.Option>
+            </Select>
+          </FormItem>
+          <FormItem>
+            <Select
+              style={styles.timeTypeSelect}
+              placeholder="商品类型"
+              {...init('goodsType')}
+            >
+              <Select.Option value="1">核销商品</Select.Option>
+              <Select.Option value="2">物流商品</Select.Option>
+            </Select>
+          </FormItem>
+          <FormItem>
+            <Select
+              style={styles.timeTypeSelect}
+              placeholder="销售方式"
+              {...init('saleMethod')}
+            >
+              <Select.Option value="1">基本</Select.Option>
+              <Select.Option value="2">团购</Select.Option>
+              <Select.Option value="3">秒杀</Select.Option>
             </Select>
           </FormItem>
           <FormItem>
@@ -84,9 +106,9 @@ export default class GoodsList extends React.Component {
             )
           }}/>
           <Table.Column align="center" width={50} title="团购价格" cell={(value, index, record) => {
-            return (<div>{record.goodsPrice.groupPrice/100}</div>)
+            return (<div>{record.goodsPrice.groupPrice / 100}</div>)
           }}/>
-          <Table.Column  width={80} title="销售方式" cell={(value, index, record) => {
+          <Table.Column width={80} title="销售方式" cell={(value, index, record) => {
             return (
               <div>
                 <div>{record.goodsMode.saleMethodName}</div>
@@ -113,8 +135,10 @@ export default class GoodsList extends React.Component {
               <div style={styles.goodsStyleWrap}>
                 {record.goodsStyle.map((item, index) => (
                   <div key={index}>
-                    <p style={{fontSize: '12px'}}>{`已支付:${item.orderInfo.already} 已关闭:${item.orderInfo.close} 已创建:${item.orderInfo.create}`}</p>
-                    <p style={{fontSize: '12px'}}>{`已过期:${item.orderInfo.expire} 已退款:${item.orderInfo.refund} 已核销:${item.orderInfo.verify}`}</p>
+                    <p
+                      style={{fontSize: '12px'}}>{`已支付:${item.orderInfo.already} 已关闭:${item.orderInfo.close} 已创建:${item.orderInfo.create}`}</p>
+                    <p
+                      style={{fontSize: '12px'}}>{`已过期:${item.orderInfo.expire} 已退款:${item.orderInfo.refund} 已核销:${item.orderInfo.verify}`}</p>
                   </div>
                 ))}
               </div>
@@ -125,7 +149,8 @@ export default class GoodsList extends React.Component {
               <div style={styles.goodsStyleWrap}>
                 {record.goodsStyle.map((item, index) => (
                   <div key={index}>
-                    <p style={{fontSize: '12px'}}>{`市场价:${item.marketPrice/100} 销售价:${item.salePrice/100} 库存:${item.stock}`}</p>
+                    <p
+                      style={{fontSize: '12px'}}>{`市场价:${item.marketPrice / 100} 销售价:${item.salePrice / 100} 库存:${item.stock}`}</p>
                   </div>
                 ))}
               </div>
@@ -146,12 +171,14 @@ export default class GoodsList extends React.Component {
             return (
               <Fragment>
                 {/*disabled={Number(record.status) !== 0}*/}
-                <Button disabled={Number(record.status) === 2} onClick={()=>this.onEdit(record.id)} size="small" style={styles.buttonSpace} type="primary">修改</Button>
+                <Button disabled={Number(record.status) === 2} onClick={() => this.onEdit(record.id)} size="small"
+                        style={styles.buttonSpace} type="primary">修改</Button>
                 <Button size="small" style={styles.buttonSpace}>二维码</Button>
-                <Button onClick={()=>this.onSaleOut(record.id)} disabled={Number(record.status) !== 1} size="small" style={styles.buttonSpace} type="primary">下架</Button>
+                <Button onClick={() => this.onSaleOut(record.id)} disabled={Number(record.status) !== 1} size="small"
+                        style={styles.buttonSpace} type="primary">下架</Button>
                 <DeleteBalloon
-                  trigger={deleteButton}
-                  confirmDelete={()=>this.onDel(record.id)}
+                  trigger={<DeleteButton record={record}/>}
+                  confirmDelete={() => this.onDel(record.id)}
                 />
               </Fragment>
             )
