@@ -88,7 +88,7 @@ export default class GoodsList extends React.Component {
             </Select>
           </FormItem>
           <FormItem>
-            <Input style={styles.input} placeholder="搜索商品名称" {...init('searchTitle')}/>
+            <Input style={styles.input} placeholder="搜索商品名称" {...init('title')}/>
           </FormItem>
           <FormItem>
             <Button style={styles.buttonSpace} type="primary" onClick={this.onSearch}><Icon type="search"/>搜索</Button>

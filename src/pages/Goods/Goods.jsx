@@ -274,12 +274,9 @@ export default class Goods extends React.Component {
   }
 
   //查询
-  searching = ({searchTitle: title, status, goodsType, saleMethod}) => {
+  searching = searchConfig => {
     this.setState({
-      saleMethod,
-      goodsType,
-      title,
-      status,
+      ...searchConfig,
       page: 1,
     }, () => {
       this.getGoodsList()
