@@ -28,15 +28,29 @@ export default class BalanceList extends Component {
     onChange: (name, value) => this.field.setValue(name, value)
   })
 
+  onPaginationChange = current => {
+    this.props.onPagination(current)
+  }
+
+  onSearch = () => {
+    this.props.searching(this.field.getValues())
+  }
+
+  onClear = ()=>{
+    this.props.clear()
+    this.field.reset(true)
+  }
+
   render () {
     const init = this.field.init
-    const {__loading} = this.props
+    const {__loading, balanceList, count,size,current} = this.props
 
     return (
       <Fragment>
         <Form direction="hoz" field={this.field} size="medium">
           <FormItem>
             <Select
+              defaultValue={undefined}
               style={styles.select}
               placeholder="搜索类型"
               {...init('searchType')}
@@ -68,6 +82,27 @@ export default class BalanceList extends Component {
             </Button>
           </FormItem>
         </Form>
+        <Table dataSource={balanceList} isLoading={__loading}>
+          <Table.Column title="商家名称" dataIndex="shopTitle"/>
+          <Table.Column title="商品名称" dataIndex="goodsTitle"/>
+          <Table.Column title="销量" dataIndex="orderInfo.saleOrderNum"/>
+          <Table.Column title="销量额(元)" dataIndex="orderInfo.salePrice"/>
+          <Table.Column title="核销数" dataIndex="orderInfo.verifyNum"/>
+          <Table.Column title="核销总额(元)" dataIndex="orderInfo.verifyPrice"/>
+          <Table.Column title="退款数" dataIndex="orderInfo.refundNum"/>
+          <Table.Column title="退款总额(元)" dataIndex="orderInfo.refundPrice"/>
+          <Table.Column title="过期数" dataIndex="orderInfo.expireNum"/>
+          <Table.Column title="过期总额(元)" dataIndex="orderInfo.expirePrice"/>
+        </Table>
+        <div style={styles.paginationWrap}>
+          <Pagination onChange={this.onPaginationChange}
+                      showJump={false}
+                      shape="arrow-only"
+                      total={count}
+                      pageSize={size}
+                      current={current}
+          />
+        </div>
       </Fragment>
     )
   }

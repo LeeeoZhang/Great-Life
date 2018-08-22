@@ -46,7 +46,7 @@ export default class BaseOrderTable extends React.Component {
 
   onClear = () => {
     this.props.clear()
-    this.field.reset()
+    this.field.reset(true)
   }
 
   formatTimePicker = (data, dataStr) => dataStr

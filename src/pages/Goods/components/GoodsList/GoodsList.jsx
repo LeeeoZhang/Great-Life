@@ -41,7 +41,7 @@ export default class GoodsList extends React.Component {
 
   onClear = () => {
     this.props.resetSearch()
-    this.field.reset()
+    this.field.reset(true)
   }
 
   render () {

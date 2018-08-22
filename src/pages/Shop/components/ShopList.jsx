@@ -50,8 +50,8 @@ export default class ShopList extends React.Component {
   }
 
   onClear = () => {
-    this.field.reset()
     this.props.resetSearch()
+    this.field.reset(true)
   }
 
   render () {
