@@ -46,6 +46,11 @@ const asideMenuConfig = [
     path: '/balanceCenter',
     icon: 'ul-list',
   },
+  {
+    name: '数据中心',
+    path: '/dataCenter',
+    icon: 'ul-list',
+  },
 ];
 
 export { headerMenuConfig, asideMenuConfig };

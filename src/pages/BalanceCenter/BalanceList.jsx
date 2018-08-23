@@ -12,6 +12,7 @@ import {
   Table,
   Pagination,
 } from "@icedesign/base"
+import DOMAIN from '@/domain'
 
 const FormItem = Form.Item
 
@@ -21,11 +22,17 @@ export default class BalanceList extends Component {
 
   constructor () {
     super()
-    this.state = {}
+    this.state = {
+      searchType:'',
+      searchTitle:'',
+    }
   }
 
   field = new Field(this, {
-    onChange: (name, value) => this.field.setValue(name, value)
+    onChange: (name, value) => {
+      this.field.setValue(name, value)
+      this.setState({[name]:value})
+    }
   })
 
   onPaginationChange = current => {
@@ -39,12 +46,16 @@ export default class BalanceList extends Component {
   onClear = ()=>{
     this.props.clear()
     this.field.reset(true)
+    this.setState({
+      searchType:'',
+      searchTitle:'',
+    })
   }
 
   render () {
     const init = this.field.init
     const {__loading, balanceList, count,size,current} = this.props
-
+    const {searchType,searchTitle} = this.state
     return (
       <Fragment>
         <Form direction="hoz" field={this.field} size="medium">
@@ -79,6 +90,18 @@ export default class BalanceList extends Component {
             >
               <Icon type="refresh"/>
               清空
+            </Button>
+            <Button
+              style={{position:'relative'}}
+              loading={__loading}
+            >
+              <Icon type="download"/>
+              下载Excel表格
+              <a
+                download
+                href={`${DOMAIN}/admin/shop/exportSettlement?searchType=${searchType}&searchTitle=${searchTitle}`}
+                style={styles.downloadAlien}
+              />
             </Button>
           </FormItem>
         </Form>
@@ -121,13 +144,14 @@ const styles = {
     width: '150px',
   },
   input: {
-    width: '500px',
+    width: '300px',
   },
   searchAction: {
     marginBottom: '16px',
   },
   buttonSpace: {
-    margin: '3px'
+    margin: '3px',
+    position:'relative',
   },
   carouselImgWrap: {
     display: 'flex',
@@ -141,4 +165,12 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
   },
+  downloadAlien:{
+    display:'block',
+    width:'100%',
+    height:'100%',
+    position:'absolute',
+    left:0,
+    top:0,
+  }
 }

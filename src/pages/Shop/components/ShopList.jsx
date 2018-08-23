@@ -119,6 +119,7 @@ export default class ShopList extends React.Component {
               )
             })
           }}/>
+          <Table.Column title="商品数量" dataIndex="goodsNum"/>
           <Table.Column title="创建时间" dataIndex="ctime"/>
           <Table.Column align="center" title="操作" cell={(value,index,record)=> {
             return (
