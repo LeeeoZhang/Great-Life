@@ -188,7 +188,7 @@ export default class ArticleForm extends React.Component {
             </Col>
           </Row>
           <Row style={styles.formItem}>
-            <Col xxs="6" s="3" l="3" style={styles.formLabel}>文章封面(290*220)：</Col>
+            <Col xxs="6" s="3" l="3" style={styles.formLabel}>文章封面：</Col>
             <Col s="12" l="10">
               <IceFormBinder name="articleImage" required message="请选择文章封面" valueFormatter={info=>{
                   if (info.fileList && info.fileList.length > 0) {
@@ -199,10 +199,11 @@ export default class ArticleForm extends React.Component {
                 <FormatImageUpload/>
               </IceFormBinder>
               <IceFormError name="articleImage"/>
+              <p style={styles.imageTips}>建议大小:290*220</p>
             </Col>
           </Row>
           <Row style={styles.formItem}>
-            <Col xxs="6" s="3" l="3" style={styles.formLabel}>文章大图(690*320)：</Col>
+            <Col xxs="6" s="3" l="3" style={styles.formLabel}>文章大图：</Col>
             <Col s="12" l="10">
               <IceFormBinder name="bigArticleImage" required message="请选择文章大图" valueFormatter={info=>{
                 if (info.fileList && info.fileList.length > 0) {
@@ -213,6 +214,7 @@ export default class ArticleForm extends React.Component {
                 <FormatImageUpload/>
               </IceFormBinder>
               <IceFormError name="bigArticleImage"/>
+              <p style={styles.imageTips}>建议大小:690*320</p>
             </Col>
           </Row>
           <Row style={styles.formItem}>
@@ -275,7 +277,11 @@ const styles = {
   },
   buttonSpace: {
     margin: '0 3px',
-  }
+  },
+  imageTips: {
+    fontSize:'12px',
+    margin:0,
+  },
 }
 
 

@@ -62,23 +62,23 @@ export default class ArticleList extends React.Component {
       <Fragment>
         <Row style={styles.searchInput}>
           <Col s="12" l="10">
-            <Search autoWidth placeholder="搜索条件" onChange={this.onSearchInputChange} onSearch={this.onSearch}/>
+            <Search autoWidth placeholder="输入文章名称进行搜索" onChange={this.onSearchInputChange} onSearch={this.onSearch}/>
           </Col>
         </Row>
         <Table isLoading={__loading} dataSource={articleList}>
-          <Table.Column title="文章编号" dataIndex="id"/>
-          <Table.Column title="文章标题" dataIndex="title"/>
-          <Table.Column title="文章封面" cell={(value,index,record)=>{
+          <Table.Column title="编号" align="center" dataIndex="id" width={60}/>
+          <Table.Column title="文章标题" dataIndex="title" width={300}/>
+          <Table.Column title="文章封面" width={110} cell={(value,index,record)=>{
             return (
               <img src={record.fileInfo.compressHttpUrl} style={styles.tableImage}/>
             )
           }}/>
-          <Table.Column title="文章大图" cell={(value,index,record)=>{
+          <Table.Column title="文章大图" width={110} cell={(value,index,record)=>{
             return (
               <img src={record.bigFileInfo.compressHttpUrl} style={styles.tableImage}/>
             )
           }}/>
-          <Table.Column title="作者" dataIndex="author"/>
+          <Table.Column title="作者" align="center" dataIndex="author"/>
           <Table.Column title="创建时间" dataIndex="ctime"/>
           <Table.Column width={100} align="center" title="操作" cell={(value, index, record) => (
             <Fragment>
@@ -132,6 +132,6 @@ const styles = {
     marginBottom:'20px',
   },
   tableImage:{
-    width:'100px',
+    width:'80px',
   }
 }

@@ -128,7 +128,6 @@ export default class Grouping extends React.Component {
               type="search"/>搜索</Button>
             <Button loading={__loading} style={styles.buttonSpace} onClick={this.onClear}><Icon
               type="refresh"/>清空</Button>
-            <Button loading={__loading} style={styles.buttonSpace}><Icon type="download"/>导出订单</Button>
           </FormItem>
         </Form>
         <Table dataSource={groupingList.lists} isLoading={__loading}>

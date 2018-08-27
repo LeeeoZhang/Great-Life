@@ -1,5 +1,4 @@
 
-
 /*
 * 使upload组件拥有FormBinder的标准api
 * 对upload组件进行一层包装
@@ -54,7 +53,7 @@ export default class FormatImageUpload extends React.Component {
     }
     const {fileList} = this.state
     return (
-      <ImageUpload onChange={this.onChange} class="uploader" fileList={fileList} {...uploadConfig} style={{width:'100%'}}/>
+      <ImageUpload onChange={this.onChange} className="uploader" fileList={fileList} {...uploadConfig} style={{width:'100%'}}/>
     )
   }
 }

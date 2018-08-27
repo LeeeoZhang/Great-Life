@@ -91,14 +91,16 @@ export default class ShopList extends React.Component {
             )
           }}/>
           <Table.Column title="店铺联系电话" dataIndex="shopTel"/>
-          <Table.Column title="店铺详细地址" dataIndex="mapInfo" cell={(value,index,record)=>{
-            return (<div>{value.areaStr+value.address}</div>)
+          <Table.Column title="店铺详细地址" dataIndex="mapInfo" cell={value=>{
+            return (<div title={value.areaStr+value.address} style={styles.overflowEllipsis}>{value.areaStr+value.address}</div>)
           }}/>
           <Table.Column title="店铺logo" align="center" dataIndex="connectMerchantTitle" cell={(value,index,record)=>{
             return (<img style={styles.logo} src={record.logoInfo.compressHttpUrl}/>)
           }}/>
           <Table.Column title="营业时间" dataIndex="businessHours"/>
-          <Table.Column title="关联文章" dataIndex="articleTitle"/>
+          <Table.Column title="关联文章" dataIndex="articleTitle" cell={value=>{
+            return (<div title={value} style={styles.overflowEllipsis}>{value}</div>)
+          }}/>
           <Table.Column title="核销员" cell={(value,index,record)=>{
             return record.verifyUserInfo.map(info => {
               return (
@@ -179,6 +181,9 @@ const styles = {
     display:'flex',
     alignItems:'center',
     fontSize:'12px',
+    overflow:'hidden',
+    textOverflow:'ellipsis',
+    whiteSpace:'nowrap',
   },
   verifyAvatar:{
     width:'20px',
@@ -186,6 +191,11 @@ const styles = {
     borderRadius:'50%',
     marginRight:'5px',
     flexShrink:0,
+  },
+  overflowEllipsis: {
+    overflow:'hidden',
+    textOverflow:'ellipsis',
+    whiteSpace:'nowrap',
   }
 }
 

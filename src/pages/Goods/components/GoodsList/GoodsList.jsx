@@ -124,7 +124,7 @@ export default class GoodsList extends React.Component {
               <div style={styles.goodsStyleWrap}>
                 {record.goodsStyle.map((item, index) => (
                   <div key={index}>
-                    <p>{item.title}</p>
+                    <p title={item.title} style={styles.overflowEllipsis}>{item.title}</p>
                   </div>
                 ))}
               </div>
@@ -225,4 +225,9 @@ const styles = {
   input: {
     width: '300px',
   },
+  overflowEllipsis: {
+    overflow:'hidden',
+    textOverflow:'ellipsis',
+    whiteSpace:'nowrap',
+  }
 }

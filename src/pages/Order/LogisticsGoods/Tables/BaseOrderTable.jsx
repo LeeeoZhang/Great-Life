@@ -12,6 +12,7 @@ import {
   Table,
   Pagination,
 } from "@icedesign/base"
+import DOMAIN from '@/domain'
 
 const FormItem = Form.Item
 const {RangePicker} = DatePicker
@@ -22,11 +23,18 @@ export default class BaseOrderTable extends React.Component {
 
   constructor (props) {
     super(props)
-    this.state = {}
+    this.state = {
+      time:[],
+      searchTitle:'',
+      timeType:'',
+    }
   }
 
   field = new Field(this, {
-    onChange: (name, value) => this.field.setValue(name, value)
+    onChange: (name, value) => {
+      this.field.setValue(name, value)
+      this.setState({[name]:value})
+    }
   })
 
   onSearch = () => {
@@ -47,6 +55,11 @@ export default class BaseOrderTable extends React.Component {
   onClear = () => {
     this.props.clear()
     this.field.reset(true)
+    this.setState({
+      time:[],
+      searchTitle:'',
+      timeType:'',
+    })
   }
 
   formatTimePicker = (data, dataStr) => dataStr
@@ -54,6 +67,12 @@ export default class BaseOrderTable extends React.Component {
 
   onCheckOrderDetail = (id) => {
     this.props.getOrderDetail(id)
+  }
+
+  get downloadQuery(){
+    const {time,searchTitle,timeType} = this.state
+    const {tabId} = this.props
+    return `orderType=2&orderStatus=${tabId}&title=${searchTitle}&timeType=${timeType}&startTime=${time[0]}&endTime=${time[1]}`
   }
 
   render () {
@@ -89,7 +108,17 @@ export default class BaseOrderTable extends React.Component {
             type="search"/>搜索</Button>
           <Button loading={__loading} style={styles.buttonSpace} onClick={this.onClear}><Icon
             type="refresh"/>清空</Button>
-          <Button loading={__loading} style={styles.buttonSpace}><Icon type="download"/>导出订单</Button>
+          <Button
+            loading={__loading}
+            style={styles.buttonSpace}
+          >
+            <Icon type="download"/>导出订单
+            <a
+              download
+              href={`${DOMAIN}/admin/order/exportLists?${this.downloadQuery}`}
+              style={styles.downloadAlien}
+            />
+          </Button>
         </FormItem>
       </Form>
         <Table dataSource={orderList} isLoading={__loading}>
@@ -174,5 +203,13 @@ const styles = {
   goodsInfo: {
     display: 'flex',
     alignItems: 'center',
+  },
+  downloadAlien:{
+    display:'block',
+    width:'100%',
+    height:'100%',
+    position:'absolute',
+    left:0,
+    top:0,
   },
 }

@@ -277,7 +277,7 @@ export default class ShopForm extends React.Component {
   }
 
   //获取地图弹窗的选取的信息
-  submitMapInfo = (mapInfo) => {
+  submitMapInfo = mapInfo => {
     this.setState({mapInfo: {...mapInfo}})
     console.log(mapInfo)
   }
@@ -316,17 +316,12 @@ export default class ShopForm extends React.Component {
     return (
       <Fragment>
         <Form direction="ver" field={this.field} size="large">
+          <FormItem label="店铺地址" {...formItemLayout}>
+            <Input readOnly value={mapInfo ? mapInfo.address : ''}/>
+          </FormItem>
           <FormItem label=" " {...formItemLayout}>
             <Button type="primary" onClick={this.openMapModal}>选取店铺位置信息</Button>
           </FormItem>
-          {
-            this.checkMapInfo() ?
-              (
-                <FormItem label=" " {...formItemLayout}>
-                  <div>地址：{mapInfo.areaStr + mapInfo.address}</div>
-                </FormItem>
-              ) : null
-          }
           <FormItem label="店铺名称：" {...formItemLayout}>
             <Input placeholder="请输入店铺名称" {...init('shopTitle', {
               rules: [{required: true, message: '请输入店铺名称'}],

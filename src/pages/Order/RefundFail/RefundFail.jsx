@@ -13,10 +13,11 @@ import {
   Pagination,
 } from "@icedesign/base"
 import DataBinder from '@icedesign/data-binder'
-import {getOrderDetail} from "@/service"
+import {getOrderDetail,refund} from "@/service"
 import DOMAIN from '@/domain'
 
 const FormItem = Form.Item
+const Toast = Feedback.toast
 const {RangePicker} = DatePicker
 
 @DataBinder({
@@ -47,6 +48,7 @@ export default class RefundFail extends React.Component {
       title: '',
       startTime: '',
       endTime: '',
+      loading:false,
     }
   }
 
@@ -88,6 +90,15 @@ export default class RefundFail extends React.Component {
     })
   }
 
+  onRefund = async id => {
+    this.setState({loading:true})
+    const res = await refund({data:{orderId:id}}).catch(()=>false)
+    this.setState({loading:false})
+    if(res) {
+      Toast.success('退款成功')
+    }
+  }
+
   //获取退款失败订单列表
   getRefundFailOrderRecord = () => {
     const {current, title, startTime, endTime, size} = this.state
@@ -108,7 +119,7 @@ export default class RefundFail extends React.Component {
     const init = this.field.init
     const __loading = this.props.bindingData.__loading
     const {refundFailList} = this.props.bindingData
-    const {size, current} = this.state
+    const {size, current,loading} = this.state
     return (
       <Fragment>
         <Form direction="hoz" field={this.field} size="medium">
@@ -128,7 +139,6 @@ export default class RefundFail extends React.Component {
               type="search"/>搜索</Button>
             <Button loading={__loading} style={styles.buttonSpace} onClick={this.onClear}><Icon
               type="refresh"/>清空</Button>
-            <Button loading={__loading} style={styles.buttonSpace}><Icon type="download"/>导出订单</Button>
           </FormItem>
         </Form>
         <Table dataSource={refundFailList.lists} isLoading={__loading}>
@@ -146,6 +156,9 @@ export default class RefundFail extends React.Component {
           <Table.Column title="订单数量" align="center" dataIndex="orderQuantity"/>
           <Table.Column title="订单单价" align="center" dataIndex="orderSalePrice"/>
           <Table.Column title="支付金额" align="center" dataIndex="payPrice"/>
+          <Table.Column title="操作" align="center" cell={(value,index,record) => {
+           return (<Button loading={loading || __loading} size="small" type="primary" onClick={()=>this.onRefund(record.id)}>退款</Button>)
+          }}/>
         </Table>
         <div style={styles.paginationWrap}>
           <Pagination onChange={this.onPaginationChange}
@@ -193,5 +206,13 @@ const styles = {
   goodsInfo: {
     display: 'flex',
     alignItems: 'center',
+  },
+  downloadAlien: {
+    display: 'block',
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    left: 0,
+    top: 0,
   },
 }
