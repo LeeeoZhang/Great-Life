@@ -6,6 +6,11 @@ const headerMenuConfig = [];
 
 const asideMenuConfig = [
   {
+    name: '概况',
+    path: '/',
+    icon: 'chart',
+  },
+  {
     name: '账号管理',
     path: '/account',
     icon: 'person',
@@ -16,11 +21,6 @@ const asideMenuConfig = [
     path: '/article',
     icon: 'content',
   },
-  // {
-  //   name: '商家管理',
-  //   path: '/merchant',
-  //   icon: 'fans',
-  // },
   {
     name: '店铺管理',
     path: '/shop',

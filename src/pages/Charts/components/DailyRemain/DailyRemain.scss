@@ -1,0 +1,24 @@
+.remain-data-wrap {
+  width: 100%;
+  .data-row {
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    font-size: 15px;
+    .data {
+      width: 12.5%;
+      box-sizing: border-box;
+      text-align: center;
+      line-height: 1;
+      padding: 1em 0;
+      margin: 1px;
+      border-radius: 5px;
+    }
+    .data.header {
+      font-size: 16px;
+    }
+    .data.content {
+      background: #f8f8f8;
+    }
+  }
+}

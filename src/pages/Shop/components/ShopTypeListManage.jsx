@@ -13,6 +13,30 @@ const formItemLayout = {
     span: 10
   }
 }
+const styles = {
+  input: {
+    width: '100%'
+  },
+  formItem: {
+    marginBottom: '20px',
+    alignItems: 'center'
+  },
+  formLabel: {
+    height: '32px',
+    lineHeight: '32px',
+    textAlign: 'right',
+  },
+  buttonSpace: {
+    margin: '3px',
+  },
+  tips :{
+    margin: '5px 0',
+    fontSize:'12px',
+  },
+}
+const sortTips = (
+  <div style={styles.tips}>输入排序数字，数字越大，排序越靠前，不填则系统自动排序</div>
+)
 
 export default class ShopTypeListManage extends React.Component {
 
@@ -48,15 +72,9 @@ export default class ShopTypeListManage extends React.Component {
     this.field.reset()
   }
 
-  onEditShopTypeName = (value, index) => {
+  onEditItem = (value,index,key)=>  {
     const newShopTypeList = [...this.state.shopTypeList]
-    newShopTypeList[index].title = value
-    this.setState({shopTypeList: newShopTypeList})
-  }
-
-  onEditShopType = (value,index) => {
-    const newShopTypeList = [...this.state.shopTypeList]
-    newShopTypeList[index].type = value
+    newShopTypeList[index][key] = value
     this.setState({shopTypeList: newShopTypeList})
   }
 
@@ -109,6 +127,9 @@ export default class ShopTypeListManage extends React.Component {
               <Option value="4">其他类</Option>
             </Select>
           </FormItem>
+          <FormItem label="排序标识：" {...formItemLayout} extra={sortTips}>
+            <Input size="large" placeholder="填写排序标识" {...init('secondShopTypeName')}/>
+          </FormItem>
           <FormItem label=" " {...formItemLayout}>
             <Button style={styles.buttonSpace} type="primary" size="large" onClick={this.submitInfo}>提交</Button>
           </FormItem>
@@ -116,17 +137,20 @@ export default class ShopTypeListManage extends React.Component {
         <IceTitle text="店铺类型列表" decoration/>
         <Table isLoading={__loading} dataSource={shopTypeList} style={styles.accountList}>
           <Table.Column title="二级类目名称" dataIndex="title" cell={(value, index, record) => {
-            return (<Input value={value} onChange={(value) => this.onEditShopTypeName(value, index)}/>)
+            return (<Input value={value} onChange={(value) => this.onEditItem(value, index,'title')}/>)
           }}/>
           <Table.Column title="所属一级类目" dataIndex="type" cell={(value, index, record) => {
             return (
-              <Select placeholder="选择具体类目" style={styles.input} value={value} onChange={value=>this.onEditShopType(value,index)}>
+              <Select placeholder="选择具体类目" style={styles.input} value={value} onChange={value=>this.onEditItem(value,index,'type')}>
                 <Option value="1">美食类</Option>
                 <Option value="2">健康运动类</Option>
                 <Option value="3">周边旅游类</Option>
                 <Option value="4">其他类</Option>
               </Select>
             )
+          }}/>
+          <Table.Column title="排序标识" dataIndex="sort" cell={(value, index, record) => {
+            return (<Input value={value} onChange={(value) =>  this.onEditItem(value, index,'sort')}/>)
           }}/>
           <Table.Column title="创建时间" dataIndex="ctime"/>
           <Table.Column align="center" title="操作" cell={(value, index, record) => {
@@ -146,20 +170,3 @@ export default class ShopTypeListManage extends React.Component {
   }
 }
 
-const styles = {
-  input: {
-    width: '100%'
-  },
-  formItem: {
-    marginBottom: '20px',
-    alignItems: 'center'
-  },
-  formLabel: {
-    height: '32px',
-    lineHeight: '32px',
-    textAlign: 'right',
-  },
-  buttonSpace: {
-    margin: '3px',
-  }
-}

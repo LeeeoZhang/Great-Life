@@ -88,7 +88,7 @@ export default class Shop extends React.Component {
     const res = await editShop({data}).catch(() => false)
     if (res) {
       this.backFromEdit()
-      Toast.success('修改成功')
+      Toast.success('编辑成功')
       this.getShopList()
     }
     console.log(data)
@@ -98,7 +98,7 @@ export default class Shop extends React.Component {
   delShop = async id => {
     const res = await delShop({params: {id}}).catch(() => false)
     if (res) {
-      Toast.success('添加成功')
+      Toast.success('删除成功')
       this.getShopList()
     }
     console.log(id)
@@ -146,7 +146,7 @@ export default class Shop extends React.Component {
 
   //翻页
   paging = current => {
-    this.setState({current},()=>{
+    this.setState({current}, () => {
       this.getShopList()
     })
   }
@@ -155,7 +155,7 @@ export default class Shop extends React.Component {
   //TODO:1.翻页过程中进行搜索应该返回到第一页；2.查询后翻页应携带查询数据进行翻页；3.查询或翻页过程中进行增删改操作后，应在当前查询翻页条件下重新请求数据
   //查询
   searching = (searchTitle, searchType) => {
-    this.setState({title: searchTitle, secondType:searchType,size:10,current:1},()=>{
+    this.setState({title: searchTitle, secondType: searchType, size: 10, current: 1}, () => {
       this.getShopList()
     })
   }
@@ -167,7 +167,7 @@ export default class Shop extends React.Component {
       size: 10,
       title: '',
       secondType: '',
-    },()=>{
+    }, () => {
       this.getShopList()
     })
   }
@@ -187,7 +187,7 @@ export default class Shop extends React.Component {
     const {current, size, title, secondType} = this.state
     this.props.updateBindingData('shopList', {
       params: {
-        page:current, size, title, secondType
+        page: current, size, title, secondType
       }
     })
   }
@@ -195,7 +195,7 @@ export default class Shop extends React.Component {
   render () {
     const {isEdit, shopDetail, current} = this.state
     const __loading = this.props.bindingData.__loading
-    const { shopTypeList, shopList} = this.props.bindingData
+    const {shopTypeList, shopList} = this.props.bindingData
     return (
       <IceContainer>
         {isEdit ?

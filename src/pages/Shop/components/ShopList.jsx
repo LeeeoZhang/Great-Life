@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {Button, Pagination, Table,Select,Input,Icon,Form,Field} from '@icedesign/base'
+import {Button, Pagination, Table, Select, Input, Icon, Form, Field} from '@icedesign/base'
 import DeleteBalloon from '@/components/DeleteBalloon'
 
 const FormItem = Form.Item
@@ -83,7 +83,7 @@ export default class ShopList extends React.Component {
         <Table dataSource={shopList} isloading={__loading}>
           <Table.Column title="店铺名称" dataIndex="shopTitle"/>
           <Table.Column title="店铺分类" dataIndex="shopTypeTitle"/>
-          <Table.Column title="店铺轮播图" dataIndex="fileInfo" cell={value=>{
+          <Table.Column title="店铺图片" dataIndex="fileInfo" cell={value=>{
             return (
               <div style={styles.carouselImgWrap}>
                 {(<img style={styles.carouselImg} src={value.compressHttpUrl} key={value.id}/>)}

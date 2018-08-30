@@ -317,7 +317,7 @@ export default class ShopForm extends React.Component {
       <Fragment>
         <Form direction="ver" field={this.field} size="large">
           <FormItem label="店铺地址" {...formItemLayout}>
-            <Input readOnly value={mapInfo ? mapInfo.address : ''}/>
+            <Input placeholder="点击按钮选择店铺地址" readOnly value={mapInfo ? mapInfo.address : ''}/>
           </FormItem>
           <FormItem label=" " {...formItemLayout}>
             <Button type="primary" onClick={this.openMapModal}>选取店铺位置信息</Button>
@@ -426,6 +426,11 @@ export default class ShopForm extends React.Component {
             <Input placeholder="请输入营业时间" {...init('businessHours', {
               rules: [{required: true, message: '请输入营业时间'}],
               initValue: shopDetail ? shopDetail.businessHours : '',
+            })}/>
+          </FormItem>
+          <FormItem label="优惠说明：" {...formItemLayout}>
+            <Input placeholder="输入优惠说明" {...init('welfareDesc', {
+              initValue: shopDetail ? shopDetail.welfareDesc : '',
             })}/>
           </FormItem>
           <FormItem label="是否是好店推荐：" {...formItemLayout}>
