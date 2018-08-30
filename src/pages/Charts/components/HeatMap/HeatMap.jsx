@@ -43,7 +43,7 @@ export default class HeatMap extends Component {
   render () {
     return (
       <IceContainer>
-        <h4 style={styles.title}>店铺热力图</h4>
+        <h4 style={styles.title}>近7日店铺热力图</h4>
         <div id="map">
 
         </div>

@@ -51,6 +51,11 @@ const asideMenuConfig = [
     path: '/dataCenter',
     icon: 'ul-list',
   },
+  {
+    name: '配置中心',
+    path: '/configCenter',
+    icon: 'light',
+  },
 ];
 
 export { headerMenuConfig, asideMenuConfig };

@@ -85,6 +85,11 @@ const Chart = Loadable({
   loader: () => import('./pages/Charts'),
   loading: LoadingIndicator,
 })
+const ConfigCenter = Loadable({
+  loader: () => import('./pages/ConfigCenter'),
+  loading: LoadingIndicator,
+})
+
 
 
 const routerConfig = [
@@ -142,6 +147,11 @@ const routerConfig = [
     path: '/dataCenter',
     layout: HeaderAsideFooterLayout,
     component: DataCenter,
+  },
+  {
+    path: '/configCenter',
+    layout: HeaderAsideFooterLayout,
+    component: ConfigCenter,
   },
   {
     path: '/exception',
