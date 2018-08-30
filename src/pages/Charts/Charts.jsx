@@ -8,6 +8,7 @@ import axios from '@/service'
 import KeyData from './components/KeyData/'
 import AnalysisChart from './components/AnalysisChart'
 import DailyRemain from './components/DailyRemain'
+import HeatMap from './components/HeatMap'
 
 const {Row, Col} = Grid
 
@@ -65,6 +66,19 @@ const {Row, Col} = Grid
       ],
     },
   },
+  mapData: {
+    url: `${DOMAIN}/admin/index/shopHotSale`,
+    responseFormatter: (responseHandler, res, originResponse) => {
+      const formatResponse = {
+        status: originResponse.code === 200 ? 'SUCCESS' : 'ERROR',
+        data: res
+      }
+      responseHandler(formatResponse, originResponse)
+    },
+    defaultBindingData: {
+      lists: [],
+    },
+  },
 })
 export default class Charts extends Component {
 
@@ -79,6 +93,7 @@ export default class Charts extends Component {
     this.getKeyData()
     this.getAnalysisData()
     this.getRemainData()
+    this.getMapData()
   }
 
   getKeyData () {
@@ -93,12 +108,17 @@ export default class Charts extends Component {
     this.props.updateBindingData('remainData')
   }
 
+  getMapData(){
+    this.props.updateBindingData('mapData')
+  }
+
   render () {
     const __loading = this.props.bindingData.__loading
-    const {keyData, analysisData, remainData} = this.props.bindingData
+    const {keyData, analysisData, remainData,mapData} = this.props.bindingData
     const {todayInfo, yesterdayInfo, beforedayInfo} = keyData
     const {visitPvInfo, visitUvInfo, sessionCntInfo, stayTimeUvInfo} = analysisData
     const remainList = remainData.lists
+    const mapDataList = mapData.lists
 
     return (
       <div className="charts-page">
@@ -113,11 +133,13 @@ export default class Charts extends Component {
           sessionCntInfo={sessionCntInfo}
           stayTimeUvInfo={stayTimeUvInfo}
         />
-        <Row>
-          <Col span={12}>
+        <Row justify="space-between">
+          <Col span={12} style={{marginRight:'20px'}}>
             <DailyRemain remainList={remainList}/>
           </Col>
-          <Col span={12}></Col>
+          <Col>
+            <HeatMap mapDataList={mapDataList}/>
+          </Col>
         </Row>
       </div>
     )
