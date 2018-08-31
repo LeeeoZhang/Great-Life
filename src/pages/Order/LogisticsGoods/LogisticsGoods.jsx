@@ -192,7 +192,7 @@ export default class LogisticsGoods extends React.Component {
   isNotShowAddressPanel = () => {
     const {orderDetail} = this.props.bindingData
     const {baseInfo} = orderDetail
-    return baseInfo.orderPayStatus === 2 || baseInfo.orderStatus === 1 || baseInfo.orderStatus === 2
+    return baseInfo.orderPayStatus === 2
   }
 
   isNotShowRefundPanel = () =>{
@@ -235,6 +235,7 @@ export default class LogisticsGoods extends React.Component {
           title="订单详情"
           onClose={this.closeDetailModal}
           onCancel={this.closeDetailModal}
+          shouldUpdatePosition={true}
         >
           <div style={styles.detailWrap}>
             <BaseInfoPanel baseInfo={baseInfo} tabId={tabId}/>

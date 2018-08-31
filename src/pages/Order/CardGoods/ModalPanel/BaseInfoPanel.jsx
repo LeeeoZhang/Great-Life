@@ -16,7 +16,7 @@ const BaseInfoPanel = props => {
   const {baseInfo,tabId} = props
   const status = {
     1: {0: '未消费', 1: '已消费', 2: '已过期'},
-    2: {0: '未发货', 1: '未发货', 2: '已过期'},
+    2: {0: '未发货', 1: '已发货', 2: '已过期'},
   }
   const isRefund = baseInfo.orderPayStatus === 2
   const timeNode = {

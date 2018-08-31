@@ -136,7 +136,7 @@ export default class BaseOrderTable extends React.Component {
           <Table.Column title="状态" align="center" cell={(value, index, record) => {
             const status = {
               1: {0: '未消费', 1: '已消费', 2: '已过期'},
-              2: {0: '未发货', 1: '未发货', 2: '已过期'},
+              2: {0: '未发货', 1: '已发货', 2: '已过期'},
             }
             const isRefund = record.orderPayStatus === 2
             return isRefund ? (<span>已退款</span>) : (<span>{status[record.orderType][record.orderSataus]}</span>)
@@ -146,7 +146,7 @@ export default class BaseOrderTable extends React.Component {
           <Table.Column title="支付金额" align="center" dataIndex="payPrice"/>
           <Table.Column title="支付时间" dataIndex="payTime"/>
           {
-            tabId === '1' ? (<Table.Column title="消费时间" dataIndex="payTime"/>) : null
+            tabId === '1' ? (<Table.Column title="发货时间" dataIndex="logisticsTime"/>) : null
           }
           {
             tabId === '3' ? (<Table.Column title="退款时间" dataIndex="refundTime"/>) : null
