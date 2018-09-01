@@ -42,7 +42,7 @@ const styles = {
     height: '20px',
     borderRadius: '50%',
     marginRight: '5px',
-  }
+  },
 }
 const shopKeyWordTips = (
   <div style={styles.tipsContent}>用$隔开，作为搜索时的关键字，同时也会在店铺搜索中作为标签展示</div>

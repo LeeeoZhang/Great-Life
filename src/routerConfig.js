@@ -89,6 +89,10 @@ const ConfigCenter = Loadable({
   loader: () => import('./pages/ConfigCenter'),
   loading: LoadingIndicator,
 })
+const TemplateMessage =Loadable({
+  loader: () => import('./pages/TemplateMessage'),
+  loading: LoadingIndicator,
+})
 
 
 
@@ -152,6 +156,11 @@ const routerConfig = [
     path: '/configCenter',
     layout: HeaderAsideFooterLayout,
     component: ConfigCenter,
+  },
+  {
+    path: '/templateMessage',
+    layout: HeaderAsideFooterLayout,
+    component: TemplateMessage,
   },
   {
     path: '/exception',

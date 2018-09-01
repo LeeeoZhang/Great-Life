@@ -1,8 +1,64 @@
 import React, {Fragment} from 'react'
-import {Input, Button, Table, Pagination, Form, Field, Icon, Select} from '@icedesign/base'
+import {Input, Button, Table, Pagination, Form, Field, Icon, Select,Balloon} from '@icedesign/base'
 import DeleteBalloon from '@/components/DeleteBalloon'
 
+const styles = {
+  goodsInfoWrap: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  goodsStyleWrap: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  tableImage: {
+    flexShrink: '0',
+    width: '100px',
+  },
+  goodsTitle: {
+    marginLeft: '10px',
+  },
+  buttonSpace: {
+    margin: '3px',
+  },
+  paginationWrap: {
+    margin: '25px auto 70px',
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  input: {
+    width: '300px',
+  },
+  overflowEllipsis: {
+    overflow:'hidden',
+    textOverflow:'ellipsis',
+    whiteSpace:'nowrap',
+  },
+  qrcode:{
+    width:'150px'
+  },
+  detailBalloon :{
+    width:'250px',
+  },
+}
 const FormItem = Form.Item
+
+const PopDetail = props => {
+  const path = {
+    1:'pages/BaseGoodsDetail',
+    2:'pages/GroupGoodsDetail',
+    3:'pages/SeckillGoodsDetail',
+  }
+
+  return (
+    <Fragment>
+      <h4>小程序路径：{`${path[props.goodsDetail.goodsMode.saleMethod]}?id=${props.goodsDetail.id}`}</h4>
+      <hr/>
+      <h4>小程序二维码：</h4>
+      <img style={styles.qrcode} src={props.goodsDetail.qrcode} alt="qrcode"/>
+    </Fragment>
+  )
+}
 
 export default class GoodsList extends React.Component {
 
@@ -173,7 +229,15 @@ export default class GoodsList extends React.Component {
                 {/*disabled={Number(record.status) !== 0}*/}
                 <Button disabled={Number(record.status) === 2} onClick={() => this.onEdit(record.id)} size="small"
                         style={styles.buttonSpace} type="primary">修改</Button>
-                <Button size="small" style={styles.buttonSpace}>二维码</Button>
+                <Balloon
+                  trigger={<Button size="small" style={styles.buttonSpace}>二维码</Button>}
+                  align="lt"
+                  alignment="edge"
+                  triggerType="click"
+                  style={styles.detailBalloon}
+                >
+                  <PopDetail goodsDetail={record}/>
+                </Balloon>
                 <Button onClick={() => this.onSaleOut(record.id)} disabled={Number(record.status) !== 1} size="small"
                         style={styles.buttonSpace} type="primary">下架</Button>
                 <DeleteBalloon
@@ -195,39 +259,5 @@ export default class GoodsList extends React.Component {
         </div>
       </Fragment>
     )
-  }
-}
-
-const styles = {
-  goodsInfoWrap: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  goodsStyleWrap: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  tableImage: {
-    flexShrink: '0',
-    width: '100px',
-  },
-  goodsTitle: {
-    marginLeft: '10px',
-  },
-  buttonSpace: {
-    margin: '3px',
-  },
-  paginationWrap: {
-    margin: '25px auto 70px',
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-  input: {
-    width: '300px',
-  },
-  overflowEllipsis: {
-    overflow:'hidden',
-    textOverflow:'ellipsis',
-    whiteSpace:'nowrap',
   }
 }

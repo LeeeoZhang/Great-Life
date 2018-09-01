@@ -14,7 +14,6 @@ const asideMenuConfig = [
     name: '账号管理',
     path: '/account',
     icon: 'person',
-    isAuth: () => true,
   },
   {
     name: '文章管理',
@@ -55,6 +54,12 @@ const asideMenuConfig = [
     name: '配置中心',
     path: '/configCenter',
     icon: 'light',
+  },
+  {
+    name: '模板消息管理',
+    path: '/templateMessage',
+    icon: 'message',
+    isAuth: () => true,
   },
 ];
 
