@@ -12,7 +12,6 @@ import HeatMap from './components/HeatMap'
 
 const {Row, Col} = Grid
 
-
 @DataBinder({
   keyData: {
     url: `${DOMAIN}/admin/index/keyIndicators`,
@@ -104,8 +103,12 @@ export default class Charts extends Component {
     this.props.updateBindingData('analysisData')
   }
 
-  getRemainData () {
-    this.props.updateBindingData('remainData')
+  getRemainData =  (type = '0') => {
+    this.props.updateBindingData('remainData',{
+      params:{
+        type,
+      }
+    })
   }
 
   getMapData(){
@@ -135,7 +138,7 @@ export default class Charts extends Component {
         />
         <Row justify="space-between">
           <Col span={12} style={{marginRight:'20px'}}>
-            <DailyRemain remainList={remainList}/>
+            <DailyRemain getRemainData={this.getRemainData} remainList={remainList}/>
           </Col>
           <Col>
             <HeatMap mapDataList={mapDataList}/>

@@ -11,7 +11,7 @@ const PercentDesc = props => {
       <span>较前一{unit[searchType]}</span>
       <span style={styles[percentageInfo[dataKey] >= 0 ? 'up' : 'down']}>
         {percentageInfo[dataKey] >= 0 ? '上升' : '下降'}
-        {percentageInfo[dataKey]}%
+        {(percentageInfo[dataKey]*100).toFixed(2)}%
       </span>
     </div>)
 }
@@ -79,7 +79,7 @@ export default class DataCard extends Component {
               下单金额（元）
             </div>
             <div style={styles.count}>
-              {numInfo.orderTotalFee}
+              {numInfo.orderTotalFee/100}
             </div>
             <PercentDesc searchType={searchType} percentageInfo={percentageInfo} dataKey="orderTotalFee"/>
           </Col>
@@ -108,7 +108,7 @@ export default class DataCard extends Component {
               付款金额（元）
             </div>
             <div style={styles.count}>
-              {numInfo.tradeTotalFee}
+              {numInfo.tradeTotalFee/100}
             </div>
             <PercentDesc searchType={searchType} percentageInfo={percentageInfo} dataKey="tradeTotalFee"/>
           </Col>

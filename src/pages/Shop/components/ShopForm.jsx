@@ -59,7 +59,6 @@ const recommendRadio = [
   {value: '1', label: '是'},
 ]
 
-
 export default class ShopForm extends React.Component {
 
   static displayName = 'ShopForm'

@@ -7,11 +7,12 @@ import {
 import {Grid, Input, Button, Feedback, Select} from "@icedesign/base"
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/braft.css'
-import {uploadArticleIMG} from '@/service'
+import {uploadArticleIMG, getSimpleShopList} from '@/service'
 import FormatImageUpload from './FormatImageUpload'
 
 const {Row, Col} = Grid
 const Toast = Feedback.toast
+const {Combobox} = Select
 
 export default class ArticleForm extends React.Component {
 
@@ -28,8 +29,10 @@ export default class ArticleForm extends React.Component {
         id: props.articleDetail ? props.articleDetail.id : '',
         articleImage: this.createArticleImageInitFileList(props.articleDetail),
         bigArticleImage: this.createBigArticleImageInitFileList(props.articleDetail),
+        shopIds: props.articleDetail ? props.articleDetail.shopInfo.map(info=>info.id) : [],
       },
       articleHTML: props.articleDetail ? props.articleDetail.content : '',
+      shopList: this.createInitShopIds(props.articleDetail),
     }
   }
 
@@ -85,7 +88,6 @@ export default class ArticleForm extends React.Component {
   createArticleImageInitFileList = articleDetail => {
     const initFileList = []
     const file = {}
-    console.log(articleDetail)
     if (articleDetail) {
       file.name = file.fileName = 'file'
       file.status = 'done'
@@ -99,7 +101,6 @@ export default class ArticleForm extends React.Component {
   createBigArticleImageInitFileList = articleDetail => {
     const initFileList = []
     const file = {}
-    console.log(articleDetail)
     if (articleDetail) {
       file.name = file.fileName = 'file'
       file.status = 'done'
@@ -118,9 +119,12 @@ export default class ArticleForm extends React.Component {
         author: '',
         desc: '',
         navId: '',
-        articleImage:[],
+        articleImage: [],
+        bigArticleImage:[],
+        shopIds:[],
       },
       articleHTML: '',
+      shopList:[],
     })
   }
 
@@ -142,20 +146,49 @@ export default class ArticleForm extends React.Component {
   formatSubmitInfo = (values, articleHTML) => {
     console.log(values)
     return {
+      shopIds: values.shopIds,
       title: values.title,
       author: values.author,
       desc: values.desc,
       type: values.navId,
       content: articleHTML,
-      fileId:values.articleImage[0].response ? values.articleImage[0].response.id:values.articleImage[0].id,
-      bigFileId:values.bigArticleImage[0].response ? values.bigArticleImage[0].response.id:values.bigArticleImage[0].id,
+      fileId: values.articleImage[0].response ? values.articleImage[0].response.id : values.articleImage[0].id,
+      bigFileId: values.bigArticleImage[0].response ? values.bigArticleImage[0].response.id : values.bigArticleImage[0].id,
     }
   }
 
+  onShopInputComboBox = value => {
+    if (this.searchTimer) clearTimeout(this.searchTimer)
+    this.searchTimer = setTimeout(async () => {
+      const res = await getSimpleShopList({params: {title: value}}).catch(() => false)
+      if (res) {
+        const formatData = res.data.lists.map(item => {
+          return {
+            label: item.title,
+            value: String(item.id),
+          }
+        })
+        this.setState({shopList: formatData})
+      }
+    }, 500)
+  }
+
+  createInitShopIds = articleDetail => {
+    if (articleDetail) {
+      return articleDetail.shopInfo.map(info => {
+        return {
+          label: info.title,
+          value: String(info.id),
+        }
+      })
+    } else {
+      return []
+    }
+  }
 
   render () {
     const {__loading, type, navList} = this.props
-    const {articleInfo, articleHTML} = this.state
+    const {articleInfo, articleHTML, shopList} = this.state
     const editorConfig = {
       contentFormat: 'html',
       initialContent: articleHTML,
@@ -190,11 +223,11 @@ export default class ArticleForm extends React.Component {
           <Row style={styles.formItem}>
             <Col xxs="6" s="3" l="3" style={styles.formLabel}>文章封面：</Col>
             <Col s="12" l="10">
-              <IceFormBinder name="articleImage" required message="请选择文章封面" valueFormatter={info=>{
-                  if (info.fileList && info.fileList.length > 0) {
-                    return info.fileList
-                  }
-                  return []
+              <IceFormBinder name="articleImage" required message="请选择文章封面" valueFormatter={info => {
+                if (info.fileList && info.fileList.length > 0) {
+                  return info.fileList
+                }
+                return []
               }}>
                 <FormatImageUpload/>
               </IceFormBinder>
@@ -205,7 +238,7 @@ export default class ArticleForm extends React.Component {
           <Row style={styles.formItem}>
             <Col xxs="6" s="3" l="3" style={styles.formLabel}>文章大图：</Col>
             <Col s="12" l="10">
-              <IceFormBinder name="bigArticleImage" required message="请选择文章大图" valueFormatter={info=>{
+              <IceFormBinder name="bigArticleImage" required message="请选择文章大图" valueFormatter={info => {
                 if (info.fileList && info.fileList.length > 0) {
                   return info.fileList
                 }
@@ -235,6 +268,24 @@ export default class ArticleForm extends React.Component {
               <IceFormError name="navId"/>
             </Col>
           </Row>
+
+          <Row style={styles.formItem}>
+            <Col xxs="6" s="3" l="3" style={styles.formLabel} align="top">关联店铺：</Col>
+            <Col s="12" l="10">
+              <IceFormBinder name="shopIds">
+                <Combobox
+                  onInputUpdate={this.onShopInputComboBox}
+                  multiple
+                  fillProps="label"
+                  style={styles.input}
+                  filterLocal={false}
+                  placeholder="请输入店铺名称进行搜索"
+                  dataSource={shopList}
+                />
+              </IceFormBinder>
+            </Col>
+          </Row>
+
           <Row style={styles.formItem}>
             <Col>
               <div style={styles.editorWrap}>
@@ -279,8 +330,8 @@ const styles = {
     margin: '0 3px',
   },
   imageTips: {
-    fontSize:'12px',
-    margin:0,
+    fontSize: '12px',
+    margin: 0,
   },
 }
 

@@ -1,8 +1,19 @@
 import React, {Fragment} from 'react'
-import {Button, Pagination, Table, Select, Input, Icon, Form, Field} from '@icedesign/base'
+import {Button, Pagination, Table, Select, Input, Icon, Form, Field,Balloon} from '@icedesign/base'
 import DeleteBalloon from '@/components/DeleteBalloon'
 
 const FormItem = Form.Item
+
+const PopDetail = props => {
+  return (
+    <Fragment>
+      <h4>小程序路径：{`pages/ShopDetail?id=${props.shopDetail.id}`}</h4>
+      <hr/>
+      <h4>小程序二维码：</h4>
+      <img style={styles.qrcode} src={props.shopDetail.qrcodeInfo.httpUrl} alt="qrcode"/>
+    </Fragment>
+  )
+}
 
 export default class ShopList extends React.Component {
 
@@ -127,6 +138,15 @@ export default class ShopList extends React.Component {
             return (
               <Fragment>
                 <Button style={styles.buttonSpace} size="small" type="primary" onClick={()=>this.onEdit(record.id)}>编辑</Button>
+                <Balloon
+                  trigger={<Button size="small" style={styles.buttonSpace}>二维码</Button>}
+                  align="lt"
+                  alignment="edge"
+                  triggerType="click"
+                  style={styles.detailBalloon}
+                >
+                  <PopDetail shopDetail={record}/>
+                </Balloon>
                 <DeleteBalloon
                   trigger={deleteButton}
                   confirmDelete={()=>this.onDel(record.id)}
@@ -196,7 +216,13 @@ const styles = {
     overflow:'hidden',
     textOverflow:'ellipsis',
     whiteSpace:'nowrap',
-  }
+  },
+  qrcode:{
+    width:'150px'
+  },
+  detailBalloon :{
+    width:'250px',
+  },
 }
 
 

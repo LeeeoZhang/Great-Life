@@ -79,6 +79,9 @@ export default class ArticleList extends React.Component {
             )
           }}/>
           <Table.Column title="作者" align="center" dataIndex="author"/>
+          <Table.Column title="关联文章" dataIndex="shopInfo" cell={value=>{
+            return value.map(info=>(<div style={{margin:'5px 0'}}>{info.title}</div>))
+          }}/>
           <Table.Column title="创建时间" dataIndex="ctime"/>
           <Table.Column width={100} align="center" title="操作" cell={(value, index, record) => (
             <Fragment>
@@ -133,5 +136,6 @@ const styles = {
   },
   tableImage:{
     width:'80px',
-  }
+  },
+
 }

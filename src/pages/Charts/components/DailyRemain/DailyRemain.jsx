@@ -1,14 +1,20 @@
 import React, {Component, Fragment} from 'react'
 import IceContainer from '@icedesign/container'
+import {Select} from '@icedesign/base'
 import './DailyRemain.scss'
 
 const styles = {
   title: {
-    margin: '0 0 10px',
     fontSize: '18px',
-    paddingBottom: '15px',
     fontWeight: 'bold',
+    margin:0,
+  },
+  header:{
+    display:'flex',
+    justifyContent:'space-between',
+    alignItems:'center',
     borderBottom: '1px solid #eee',
+    padding:'16px 0'
   },
 }
 
@@ -46,11 +52,21 @@ const DailyRemain = props => {
     return formatData
   }
 
+  function changeType (value) {
+    props.getRemainData(value)
+  }
+
   const colors = ['#096dd9','#1890ff','#40a9ff','#69c0ff','#91d5ff','#bae7ff']
 
   return (
     <IceContainer>
-      <h4 style={styles.title}>近7日留存率</h4>
+      <header style={styles.header}>
+        <h4 style={styles.title}>近7日留存率</h4>
+        <Select defaultValue="0" onChange={changeType} style={{width:160}}>
+          <Select.Option value="0">新增留存</Select.Option>
+          <Select.Option value="1">活跃留存</Select.Option>
+        </Select>
+      </header>
       <div className="remain-data-wrap">
         {
           formatRemainList().map((row, index) => {

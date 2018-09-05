@@ -1,4 +1,9 @@
 import TemplateMessage from './TemplateMessage'
-import {withAuth} from '@/utils'
+import {withAuth,getAuth} from '@/utils'
 
-export default withAuth()(TemplateMessage)
+function isAuth(){
+  const authList = getAuth()
+  return authList.type === 1
+}
+
+export default withAuth(isAuth)(TemplateMessage)
